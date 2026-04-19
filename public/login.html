@@ -13,131 +13,153 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(145deg, #0c1120 0%, #0f1e38 50%, #0c1120 100%);
+      background: #0b0f1c;
       padding: 20px;
       -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -25%; left: 15%;
+      width: 65vw; height: 65vw;
+      background: radial-gradient(ellipse, rgba(37,99,235,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%; right: 5%;
+      width: 50vw; height: 50vw;
+      background: radial-gradient(ellipse, rgba(99,102,241,.12) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .card {
       background: #ffffff;
       border-radius: 20px;
-      padding: 40px 36px 32px;
+      padding: 40px 36px 34px;
       width: 100%;
       max-width: 390px;
-      box-shadow: 0 32px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+      box-shadow: 0 40px 100px rgba(0,0,0,.62), 0 0 0 1px rgba(255,255,255,.07);
+      position: relative;
+      z-index: 1;
     }
+
+    .card-logo {
+      width: 44px; height: 44px;
+      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 22px rgba(37,99,235,.40);
+      margin-bottom: 24px;
+    }
+    .card-logo svg { width: 22px; height: 22px; color: #fff; }
 
     .card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .card-title {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -.03em;
+      color: #0d1526;
+      letter-spacing: -.04em;
     }
 
-    .field { margin-bottom: 18px; }
+    .field { margin-bottom: 16px; }
 
     .field label {
       display: block;
-      font-size: .68rem;
+      font-size: .63rem;
       font-weight: 700;
-      color: #64748b;
+      color: #56687e;
       text-transform: uppercase;
-      letter-spacing: .08em;
+      letter-spacing: .09em;
       margin-bottom: 7px;
     }
 
     .field input {
       width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: .95rem;
+      padding: 10px 13px;
+      border: 1.5px solid #dbe3f0;
+      border-radius: 9px;
+      font-size: .9rem;
       font-family: inherit;
-      color: #0f172a;
+      color: #0d1526;
       outline: none;
-      transition: border-color .15s, box-shadow .15s, background .15s;
-      background: #f8fafc;
+      transition: border-color .13s, box-shadow .13s, background .13s;
+      background: #f6f8fd;
     }
 
     .field input:focus {
       border-color: #2563eb;
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.14);
     }
 
     .submit {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 8px;
       padding: 12px;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      background: linear-gradient(175deg, #3b82f6 0%, #1d4ed8 100%);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      font-size: .95rem;
+      border-radius: 9px;
+      font-size: .9rem;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      transition: box-shadow .15s, transform .1s;
-      box-shadow: 0 4px 14px rgba(37,99,235,.35);
+      transition: box-shadow .15s, background .15s, transform .1s;
+      box-shadow: 0 4px 14px rgba(37,99,235,.38), 0 2px 6px rgba(37,99,235,.18);
       letter-spacing: -.01em;
     }
-    .submit:hover { box-shadow: 0 6px 20px rgba(37,99,235,.45); }
+    .submit:hover { background: linear-gradient(175deg, #2563eb 0%, #1741b8 100%); box-shadow: 0 6px 22px rgba(37,99,235,.48); }
     .submit:active { transform: scale(.98); }
     .submit:disabled { opacity: .65; cursor: not-allowed; }
 
     .error {
-      margin-top: 14px;
-      padding: 10px 14px;
-      background: #fef2f2;
+      margin-top: 12px;
+      padding: 10px 13px;
+      background: #fee2e2;
       border: 1px solid #fecaca;
-      border-radius: 9px;
-      font-size: .82rem;
-      color: #dc2626;
+      border-radius: 8px;
+      font-size: .81rem;
+      color: #991b1b;
       display: none;
     }
 
     .footer-link {
       display: block;
-      margin-top: 24px;
+      margin-top: 22px;
       text-align: center;
-      font-size: .79rem;
+      font-size: .78rem;
       color: #94a3b8;
       text-decoration: none;
-      transition: color .15s;
+      transition: color .13s;
     }
-    .footer-link:hover { color: #64748b; }
+    .footer-link:hover { color: #56687e; }
 
     #langToggle {
       display: inline-flex; align-items: center; justify-content: center;
-      padding: 5px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px;
-      background: #fff; cursor: pointer; font-size: .71rem; font-weight: 700;
-      letter-spacing: .06em; color: #64748b; font-family: inherit; line-height: 1;
-      transition: border-color .15s, color .15s, background .15s;
-      user-select: none; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      padding: 5px 12px; border: 1.5px solid #dbe3f0; border-radius: 20px;
+      background: #f6f8fd; cursor: pointer; font-size: .7rem; font-weight: 700;
+      letter-spacing: .07em; color: #56687e; font-family: inherit; line-height: 1;
+      transition: border-color .13s, color .13s, background .13s;
+      user-select: none; white-space: nowrap; box-shadow: 0 1px 3px rgba(13,21,38,.05);
     }
     #langToggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
     #langToggle:active { transform: scale(.95); }
 
-    .card-logo {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 20px rgba(37,99,235,.35);
-      margin-bottom: 22px;
-    }
-    .card-logo svg { width: 20px; height: 20px; color: #fff; }
-
     @media (max-width: 480px) {
       body { align-items: flex-start; padding: 0; }
-      .card { padding: 32px 20px 24px; border-radius: 0; width: 100%; max-width: 100%; min-height: 100vh; }
+      .card { padding: 32px 20px 28px; border-radius: 0; width: 100%; max-width: 100%; min-height: 100svh; }
       .field input { font-size: 1rem; }
       .submit { font-size: 1rem; padding: 13px; }
     }
