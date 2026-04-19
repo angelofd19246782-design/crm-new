@@ -164,8 +164,10 @@
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const errEl = document.getElementById('errorMsg');
+      const errEl  = document.getElementById('errorMsg');
+      const btn    = document.getElementById('submitBtn');
       errEl.style.display = 'none';
+      btn.disabled = true;
       try {
         const res = await fetch('/auth/login', {
           method: 'POST',
@@ -176,11 +178,17 @@
           }),
         });
         const data = await res.json();
-        if (!res.ok) { errEl.textContent = data.error || t('Login failed', 'Ошибка входа'); errEl.style.display = 'block'; return; }
+        if (!res.ok) {
+          errEl.textContent = data.error || t('Login failed', 'Ошибка входа');
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          return;
+        }
         window.location.href = data.role === 'admin' ? '/admin' : '/employee';
       } catch (_) {
         errEl.textContent = t('Connection error. Please try again.', 'Ошибка соединения. Попробуйте снова.');
         errEl.style.display = 'block';
+        btn.disabled = false;
       }
     });
 

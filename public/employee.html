@@ -12,7 +12,7 @@
       --success: #059669; --danger: #dc2626; --danger-light: #fef2f2;
       --sidebar: #111827;
       --bg: #f8fafc; --surface: #fff;
-      --border: #e2e8f0;
+      --border: #e2e8f0; --border-dark: #cbd5e1;
       --text: #1e293b; --muted: #64748b; --subtle: #94a3b8;
       --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
       --r: 8px; --r-lg: 12px;
@@ -124,7 +124,7 @@
 
     .att-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; background:var(--bg); margin-bottom:6px; border:1px solid var(--border); transition:border-color .15s; }
     .att-item:last-child { margin-bottom:0; }
-    .att-item:hover { border-color:var(--border-dark, #cbd5e1); }
+    .att-item:hover { border-color:var(--border-dark); }
     .att-icon { color:var(--primary); flex-shrink:0; opacity:.7; }
     .att-icon svg { width:16px; height:16px; }
     .att-link { flex:1; color:var(--text); text-decoration:none; font-size:.84rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -242,6 +242,9 @@
 </div>
 
 <script>
+// ── Rebranding: change APP_NAME to rename/rebrand the product ──
+const APP_NAME = 'CRM';
+
 let allApps = [], filterStatus = '', currentTab = 'all', currentId = null;
 
 let lang = localStorage.getItem('lang') || 'en';
@@ -255,6 +258,8 @@ function toggleLanguage() {
 
 function applyLang() {
   document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+  document.querySelector('.sb-name').textContent = APP_NAME;
+  document.title = APP_NAME + (lang === 'en' ? ' — Employee' : ' — Сотрудник');
   document.getElementById('sbSection').textContent = t('Applications', 'Заявки');
   document.getElementById('navTxtAll').textContent = t('All Applications', 'Все заявки');
   document.getElementById('navTxtMine').textContent = t('Assigned to Me', 'Мои заявки');

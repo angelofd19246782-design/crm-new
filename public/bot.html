@@ -304,6 +304,10 @@
 </div>
 
 <script>
+// ── Rebranding: change BOT_NAME / BOT_NAME_RU to rename the bot ──
+const BOT_NAME    = 'Request Assistant';
+const BOT_NAME_RU = 'Помощник по заявкам';
+
 const D = { name: '', phone: '', email: '', comment: '', files: [] };
 let appId = null;
 
@@ -318,8 +322,9 @@ function toggleLanguage() {
 
 function applyLang() {
   document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
-  document.getElementById('hdrName').textContent = t('Request Assistant', 'Помощник по заявкам');
+  document.getElementById('hdrName').textContent = lang === 'ru' ? BOT_NAME_RU : BOT_NAME;
   document.getElementById('hdrOnline').textContent = t('Online', 'Онлайн');
+  document.title = BOT_NAME;
   startOver();
 }
 

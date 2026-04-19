@@ -278,6 +278,45 @@ app.delete('/api/users/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
+// ── Employee statistics (admin only) ─────────────────────────────────────────
+app.get('/api/employee-stats', requireAdmin, (req, res) => {
+  const rows = db.prepare(`
+    SELECT u.id, u.username,
+      COUNT(CASE WHEN a.deleted_at IS NULL THEN 1 END) AS total_all,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.status='new'         THEN 1 END) AS new_all,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.status='in_progress' THEN 1 END) AS ip_all,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.status='completed'   THEN 1 END) AS comp_all,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.status='incomplete'  THEN 1 END) AS incomp_all,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND date(a.created_at)=date('now') THEN 1 END) AS total_today,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND date(a.created_at)=date('now') AND a.status='new'         THEN 1 END) AS new_today,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND date(a.created_at)=date('now') AND a.status='in_progress' THEN 1 END) AS ip_today,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND date(a.created_at)=date('now') AND a.status='completed'   THEN 1 END) AS comp_today,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND date(a.created_at)=date('now') AND a.status='incomplete'  THEN 1 END) AS incomp_today,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-6 days') THEN 1 END) AS total_week,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-6 days') AND a.status='new'         THEN 1 END) AS new_week,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-6 days') AND a.status='in_progress' THEN 1 END) AS ip_week,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-6 days') AND a.status='completed'   THEN 1 END) AS comp_week,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-6 days') AND a.status='incomplete'  THEN 1 END) AS incomp_week,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-29 days') THEN 1 END) AS total_month,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-29 days') AND a.status='new'         THEN 1 END) AS new_month,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-29 days') AND a.status='in_progress' THEN 1 END) AS ip_month,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-29 days') AND a.status='completed'   THEN 1 END) AS comp_month,
+      COUNT(CASE WHEN a.deleted_at IS NULL AND a.created_at >= date('now','-29 days') AND a.status='incomplete'  THEN 1 END) AS incomp_month
+    FROM users u
+    LEFT JOIN applications a ON a.assigned_employee_id = u.id
+    WHERE u.role = 'employee'
+    GROUP BY u.id
+    ORDER BY u.username
+  `).all();
+  res.json(rows.map(r => ({
+    id: Number(r.id), username: r.username,
+    today: { total: r.total_today, new: r.new_today,  in_progress: r.ip_today,  completed: r.comp_today,  incomplete: r.incomp_today  },
+    week:  { total: r.total_week,  new: r.new_week,   in_progress: r.ip_week,   completed: r.comp_week,   incomplete: r.incomp_week   },
+    month: { total: r.total_month, new: r.new_month,  in_progress: r.ip_month,  completed: r.comp_month,  incomplete: r.incomp_month  },
+    all:   { total: r.total_all,   new: r.new_all,    in_progress: r.ip_all,    completed: r.comp_all,    incomplete: r.incomp_all    },
+  })));
+});
+
 // ── Public web intake (no auth — for bot.html) ────────────────────────────────
 app.post('/api/intake', (req, res) => {
   const { name, phone, email, comment } = req.body;

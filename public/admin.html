@@ -63,17 +63,17 @@
     .btn-ghost   { background:var(--surface); color:var(--text); border:1.5px solid var(--border); }
     .btn-ghost:hover { background:var(--bg); }
     .btn-sm { padding:5px 11px; font-size:.76rem; }
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:14px; margin-bottom:22px; }
-    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px 20px; box-shadow:var(--shadow-sm); }
-    .stat-label { font-size:.72rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
-    .stat-val { font-size:1.75rem; font-weight:800; color:var(--text); line-height:1; }
-    .stat-sub { font-size:.73rem; color:var(--subtle); margin-top:4px; }
-    .stat-card.s-primary .stat-val { color:var(--primary); }
-    .stat-card.s-blue    .stat-val { color:#1d4ed8; }
-    .stat-card.s-amber   .stat-val { color:var(--warning); }
-    .stat-card.s-green   .stat-val { color:var(--success); }
-    .stat-card.s-red     .stat-val { color:var(--danger); }
-    .stat-card.s-gray    .stat-val { color:var(--muted); }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:14px; margin-bottom:24px; }
+    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:22px 22px 18px; box-shadow:var(--shadow); border-top:3px solid transparent; }
+    .stat-label { font-size:.69rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; }
+    .stat-val { font-size:2rem; font-weight:800; color:var(--text); line-height:1; }
+    .stat-sub { font-size:.73rem; color:var(--subtle); margin-top:6px; }
+    .stat-card.s-primary { border-top-color:var(--primary); }    .stat-card.s-primary .stat-val { color:var(--primary); }
+    .stat-card.s-blue    { border-top-color:#1d4ed8; }            .stat-card.s-blue    .stat-val { color:#1d4ed8; }
+    .stat-card.s-amber   { border-top-color:var(--warning); }     .stat-card.s-amber   .stat-val { color:var(--warning); }
+    .stat-card.s-green   { border-top-color:var(--success); }     .stat-card.s-green   .stat-val { color:var(--success); }
+    .stat-card.s-red     { border-top-color:var(--danger); }      .stat-card.s-red     .stat-val { color:var(--danger); }
+    .stat-card.s-gray    { border-top-color:var(--subtle); }      .stat-card.s-gray    .stat-val { color:var(--muted); }
 
     .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
     .card-hdr { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
@@ -180,6 +180,42 @@
     }
     #langToggle:hover { border-color:#2563eb; color:#2563eb; background:#eff6ff; }
     #langToggle:active { transform:scale(.95); }
+
+    /* ── Board view ── */
+    .board { display:flex; gap:12px; overflow-x:auto; align-items:flex-start; padding-bottom:8px; }
+    .board-col { flex:1; min-width:210px; background:var(--bg); border-radius:var(--r-lg); border:1px solid var(--border); overflow:hidden; }
+    .board-col-hdr { padding:10px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; background:var(--surface); }
+    .board-col-count { font-size:.73rem; background:var(--border); color:var(--muted); padding:1px 7px; border-radius:99px; font-weight:700; margin-left:auto; }
+    .board-cards { padding:10px; display:flex; flex-direction:column; gap:7px; max-height:62vh; overflow-y:auto; min-height:52px; }
+    .bcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:11px 12px; cursor:pointer; transition:box-shadow .15s,border-color .15s; }
+    .bcard:hover { box-shadow:var(--shadow-md); border-color:var(--border-dark); }
+    .bcard-name { font-size:.85rem; font-weight:700; color:var(--text); margin-bottom:3px; }
+    .bcard-phone { font-size:.77rem; color:var(--muted); margin-bottom:5px; }
+    .bcard-row { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:7px; }
+    .bcard-tag { font-size:.71rem; background:var(--bg); color:var(--muted); padding:1px 6px; border-radius:4px; border:1px solid var(--border); }
+    .bcard-foot { display:flex; align-items:center; justify-content:space-between; }
+    .bcard-date { font-size:.7rem; color:var(--subtle); }
+    .bcard-btn { padding:3px 9px; font-size:.72rem; font-weight:600; background:var(--primary-light); color:var(--primary); border:none; border-radius:5px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+    .bcard-btn:hover { background:var(--primary); color:#fff; }
+    .board-empty { text-align:center; padding:24px 12px; color:var(--subtle); font-size:.8rem; }
+
+    /* ── Employee stats ── */
+    .emp-stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:14px; }
+    .emp-stat-hdr { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .emp-stat-name { font-size:.95rem; font-weight:700; flex:1; }
+    .emp-stat-tag { font-size:.72rem; color:var(--muted); background:var(--bg); padding:2px 8px; border-radius:4px; border:1px solid var(--border); }
+    .emp-periods { display:grid; grid-template-columns:repeat(4,1fr); }
+    .emp-period { padding:16px 18px; border-right:1px solid var(--border); }
+    .emp-period:last-child { border-right:none; }
+    .emp-period-lbl { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:10px; }
+    .emp-ring-row { display:flex; align-items:center; gap:12px; }
+    .ring-outer { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ring-inner { width:36px; height:36px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:800; color:var(--text); }
+    .emp-counts { display:flex; flex-direction:column; gap:3px; }
+    .emp-count-row { font-size:.71rem; color:var(--muted); display:flex; align-items:center; gap:4px; }
+    .emp-count-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .emp-count-val { font-weight:700; min-width:16px; color:var(--text); }
+    .emp-no-data { text-align:center; padding:48px; color:var(--subtle); font-size:.88rem; }
   </style>
 </head>
 <body>
@@ -214,6 +250,10 @@
     <button class="nav-btn" id="nav-users" onclick="showView('users')">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
       <span id="navTxtUsers">Users</span>
+    </button>
+    <button class="nav-btn" id="nav-empstats" onclick="showView('empstats')">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      <span id="navTxtEmpStats">Employee Stats</span>
     </button>
   </div>
 
@@ -325,20 +365,8 @@
             <input class="search-input" id="searchInput" placeholder="Search name or phone…" oninput="renderApps()">
           </div>
         </div>
-        <div class="table-scroll">
-          <table>
-            <thead><tr>
-              <th>#</th>
-              <th class="th-name">Name</th>
-              <th class="th-phone">Phone</th>
-              <th class="th-source">Source</th>
-              <th class="th-status">Status</th>
-              <th class="th-assigned">Assigned</th>
-              <th class="th-date">Date</th>
-              <th></th>
-            </tr></thead>
-            <tbody id="appsBody"></tbody>
-          </table>
+        <div style="padding:14px 14px 6px">
+          <div id="boardWrap"></div>
           <div id="appsEmpty" class="empty-state" style="display:none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
             <p id="appsEmptyMsg">No applications match your filter.</p>
@@ -369,6 +397,11 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Employee Stats -->
+    <div id="view-empstats" style="display:none">
+      <div id="empStatsContent"></div>
     </div>
 
     <!-- Users -->
@@ -432,8 +465,11 @@
 </div>
 
 <script>
+// ── Rebranding: change APP_NAME to rename/rebrand the product ──
+const APP_NAME = 'CRM';
+
 let allApps = [], employees = [], filterStatus = '', currentId = null, isNew = false;
-let currentView = 'dashboard';
+let currentView = 'dashboard', lastEmpStats = [];
 
 let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
@@ -446,6 +482,8 @@ function toggleLanguage() {
 
 function applyLang() {
   document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+  document.querySelector('.sb-name').textContent = APP_NAME;
+  document.title = APP_NAME + (lang === 'en' ? ' — Admin' : ' — Администратор');
 
   // Sidebar
   document.getElementById('sbSecMain').textContent = t('Main', 'Главная');
@@ -454,6 +492,7 @@ function applyLang() {
   document.getElementById('navTxtApps').textContent = t('Applications', 'Заявки');
   document.getElementById('navTxtTrash').textContent = t('Trash', 'Корзина');
   document.getElementById('navTxtUsers').textContent = t('Users', 'Пользователи');
+  document.getElementById('navTxtEmpStats').textContent = t('Employee Stats', 'Стат. сотрудников');
   document.getElementById('sbRole').textContent = t('Administrator', 'Администратор');
   document.getElementById('sbSignout').textContent = t('Sign out', 'Выйти');
 
@@ -524,8 +563,9 @@ function applyLang() {
   updateViewTitle();
   renderApps();
   renderRecent();
-  if (currentView === 'trash') loadTrash();
-  if (currentView === 'users') loadUsers();
+  if (currentView === 'trash')    loadTrash();
+  if (currentView === 'users')    loadUsers();
+  if (currentView === 'empstats') renderEmpStats(lastEmpStats);
 }
 
 async function init() {
@@ -563,38 +603,58 @@ async function loadApps() {
 
 function renderApps() {
   const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const list = allApps.filter(a => {
-    if (filterStatus && a.status !== filterStatus) return false;
-    if (q && !a.name.toLowerCase().includes(q) && !(a.phone||'').includes(q)) return false;
-    return true;
-  });
-  const tbody = document.getElementById('appsBody');
-  const empty = document.getElementById('appsEmpty');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  if (empty) empty.style.display = list.length ? 'none' : 'block';
-  list.forEach(a => {
-    const tr = document.createElement('tr');
-    tr.className = 'clickable';
-    tr.innerHTML = `
-      <td style="color:var(--muted);font-size:.78rem">#${a.queue_number||a.id}</td>
-      <td style="font-weight:600">${x(a.name)}</td>
-      <td style="color:var(--muted)">${x(a.phone||'—')}</td>
-      <td><span style="font-size:.75rem;background:var(--bg);border-radius:4px;padding:2px 7px;color:var(--muted)">${x(a.source||'—')}</span></td>
-      <td><span class="badge badge-${a.status}"><span class="badge-dot"></span>${sl(a.status)}</span></td>
-      <td style="color:var(--muted)">${x(a.assigned_username||'—')}</td>
-      <td style="color:var(--muted);font-size:.78rem;white-space:nowrap">${fd(a.created_at)}</td>
-      <td>
-        <div style="display:flex;gap:4px">
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail(${a.id})">${t('Open', 'Открыть')}</button>
-          <button class="btn btn-sm" style="background:var(--danger-light);color:var(--danger);border:none" onclick="event.stopPropagation();softDel(${a.id})">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:13px;height:13px"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-          </button>
+  const boardWrap = document.getElementById('boardWrap');
+  const emptyEl   = document.getElementById('appsEmpty');
+  if (!boardWrap) return;
+
+  const statuses = ['new', 'in_progress', 'completed', 'incomplete'];
+  const statusLabels = {
+    new: t('New','Новые'), in_progress: t('In Progress','В работе'),
+    completed: t('Completed','Завершено'), incomplete: t('Incomplete','Незавершено'),
+  };
+  const visibleStatuses = filterStatus ? [filterStatus] : statuses;
+  const searched = allApps.filter(a => !q || a.name.toLowerCase().includes(q) || (a.phone||'').includes(q));
+  const totalVisible = searched.filter(a => !filterStatus || a.status === filterStatus);
+  if (!totalVisible.length) {
+    if (emptyEl) emptyEl.style.display = 'block';
+    boardWrap.innerHTML = '';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;display:block"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>`;
+
+  const cols = visibleStatuses.map(s => {
+    const cards = searched.filter(a => a.status === s);
+    const cardsHtml = cards.length ? cards.map(a => `
+      <div class="bcard" onclick="openDetail(${a.id})">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px">
+          <div class="bcard-name">${x(a.name)}</div>
+          <span style="font-size:.7rem;color:var(--subtle);white-space:nowrap;padding-top:1px">#${a.queue_number||a.id}</span>
         </div>
-      </td>`;
-    tr.addEventListener('click', () => openDetail(a.id));
-    tbody.appendChild(tr);
-  });
+        <div class="bcard-phone">${x(a.phone||'—')}</div>
+        <div class="bcard-row">
+          ${a.source ? `<span class="bcard-tag">${x(a.source)}</span>` : ''}
+          ${a.assigned_username ? `<span class="bcard-tag" style="color:var(--primary);border-color:var(--primary-light)">${x(a.assigned_username)}</span>` : ''}
+        </div>
+        <div class="bcard-foot">
+          <span class="bcard-date">${fd(a.created_at)}</span>
+          <div style="display:flex;gap:4px">
+            <button class="bcard-btn" onclick="event.stopPropagation();openDetail(${a.id})">${t('Open','Открыть')}</button>
+            <button class="bcard-btn" style="background:var(--danger-light);color:var(--danger);padding:3px 7px" onclick="event.stopPropagation();softDel(${a.id})" title="${t('Move to Trash','В корзину')}">${trashIcon}</button>
+          </div>
+        </div>
+      </div>`).join('') : `<div class="board-empty">${t('No items','Нет заявок')}</div>`;
+    return `<div class="board-col">
+      <div class="board-col-hdr">
+        <span class="badge badge-${s}"><span class="badge-dot"></span>${statusLabels[s]}</span>
+        <span class="board-col-count">${cards.length}</span>
+      </div>
+      <div class="board-cards">${cardsHtml}</div>
+    </div>`;
+  }).join('');
+
+  boardWrap.innerHTML = `<div class="board">${cols}</div>`;
 }
 
 function renderRecent() {
@@ -688,6 +748,57 @@ async function loadUsers() {
     tbody.appendChild(tr);
   });
 }
+async function loadEmpStats() {
+  const r = await fetch('/api/employee-stats');
+  lastEmpStats = r.ok ? await r.json() : [];
+  renderEmpStats(lastEmpStats);
+}
+
+function renderEmpStats(emps) {
+  const el = document.getElementById('empStatsContent');
+  if (!el) return;
+  if (!emps.length) {
+    el.innerHTML = `<div class="emp-no-data">${t('No employees found.', 'Сотрудников не найдено.')}</div>`;
+    return;
+  }
+  const periods = [
+    { key: 'today', label: t('Today', 'Сегодня') },
+    { key: 'week',  label: t('Last 7 days', 'Последние 7 дней') },
+    { key: 'month', label: t('Last 30 days', 'Последние 30 дней') },
+    { key: 'all',   label: t('All Time', 'За всё время') },
+  ];
+  el.innerHTML = emps.map(emp => {
+    const periodsHtml = periods.map(p => {
+      const s = emp[p.key];
+      const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0;
+      const ring = s.total > 0
+        ? `conic-gradient(#10b981 ${pct}%, #e2e8f0 0)`
+        : '#e2e8f0';
+      return `<div class="emp-period">
+        <div class="emp-period-lbl">${p.label}</div>
+        <div class="emp-ring-row">
+          <div class="ring-outer" style="background:${ring}">
+            <div class="ring-inner">${s.total}</div>
+          </div>
+          <div class="emp-counts">
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#3b82f6"></span><span class="emp-count-val">${s.new}</span>${t('new','новых')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#f59e0b"></span><span class="emp-count-val">${s.in_progress}</span>${t('in progress','в работе')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#10b981"></span><span class="emp-count-val">${s.completed}</span>${t('done','готово')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#ef4444"></span><span class="emp-count-val">${s.incomplete}</span>${t('incomplete','незавершено')}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="emp-stat-card">
+      <div class="emp-stat-hdr">
+        <div class="emp-stat-name">${x(emp.username)}</div>
+        <span class="emp-stat-tag">${t('Employee', 'Сотрудник')}</span>
+      </div>
+      <div class="emp-periods">${periodsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
 async function createUser() {
   const username = document.getElementById('nu').value.trim();
   const password = document.getElementById('np').value;
@@ -721,20 +832,22 @@ function updateViewTitle() {
     apps:      t('Applications', 'Заявки'),
     trash:     t('Trash', 'Корзина'),
     users:     t('User Management', 'Управление пользователями'),
+    empstats:  t('Employee Statistics', 'Статистика сотрудников'),
   };
   document.getElementById('viewTitle').textContent = titles[currentView] || currentView;
 }
 
 function showView(v) {
   currentView = v;
-  ['dashboard','apps','trash','users'].forEach(n => {
+  ['dashboard','apps','trash','users','empstats'].forEach(n => {
     document.getElementById(`view-${n}`).style.display = n === v ? 'block' : 'none';
     document.getElementById(`nav-${n}`)?.classList.toggle('active', n === v);
   });
   updateViewTitle();
   document.getElementById('newAppBtn').style.display = v === 'apps' ? 'inline-flex' : 'none';
-  if (v === 'trash') loadTrash();
-  if (v === 'users') loadUsers();
+  if (v === 'trash')    loadTrash();
+  if (v === 'users')    loadUsers();
+  if (v === 'empstats') loadEmpStats();
 }
 
 function openDrawer() {
