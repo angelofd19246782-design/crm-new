@@ -316,6 +316,9 @@
     .success-icon svg { width: 26px; height: 26px; color: #fff; }
     .success-label { font-size: .84rem; font-weight: 700; color: #0f172a; }
 
+    .step-progress { height:3px; background:#e8edf3; flex-shrink:0; overflow:hidden; }
+    .step-progress-fill { height:100%; background:linear-gradient(90deg,#3b82f6,#2563eb); transition:width .5s cubic-bezier(.4,0,.2,1); width:0%; }
+
     #langToggle {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 5px 13px; border: 1.5px solid #e2e8f0; border-radius: 20px;
@@ -345,6 +348,7 @@
     <button id="langToggle" onclick="toggleLanguage()">RU</button>
   </div>
 
+  <div class="step-progress"><div class="step-progress-fill" id="stepFill"></div></div>
   <div class="msgs" id="msgs"></div>
   <div class="input-zone" id="inputZone"></div>
 
@@ -377,6 +381,11 @@ function applyLang() {
 
 const msgsEl    = document.getElementById('msgs');
 const inputZone = document.getElementById('inputZone');
+
+function setStepProgress(pct) {
+  const el = document.getElementById('stepFill');
+  if (el) el.style.width = pct + '%';
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -589,6 +598,7 @@ function showFileInput({ onDone, onSkip }) {
 /* ── Flow steps ── */
 
 async function stepGreeting() {
+  setStepProgress(0);
   await say([
     { text: t("Hi! I'm your request assistant.", 'Привет! Я ваш помощник по заявкам.'), delay: 700 },
     { text: t("I'll help you submit a request \u2014 it only takes a minute.", 'Я помогу вам отправить заявку \u2014 это займёт всего минуту.'), delay: 1000 },
@@ -598,6 +608,7 @@ async function stepGreeting() {
 }
 
 async function stepName() {
+  setStepProgress(15);
   await say({ text: t("What's your full name?", 'Как вас зовут?'), delay: 500 });
   showTextInput({
     placeholder: t('Your name\u2026', 'Ваше имя\u2026'),
@@ -606,6 +617,7 @@ async function stepName() {
 }
 
 async function stepPhone() {
+  setStepProgress(35);
   await say({ text: t("Nice to meet you, {name}! What's your phone number?", 'Приятно познакомиться, {name}! Какой у вас номер телефона?').replace('{name}', D.name), delay: 700 });
   showTextInput({
     type: 'tel',
@@ -615,6 +627,7 @@ async function stepPhone() {
 }
 
 async function stepEmail() {
+  setStepProgress(50);
   await say({ text: t('Any email address we can reach you at?', 'Есть ли у вас email для связи?'), delay: 600 });
   showTextInput({
     type: 'email',
@@ -628,6 +641,7 @@ async function stepEmail() {
 }
 
 async function stepComment() {
+  setStepProgress(65);
   await say({ text: t("What's your request or question? Describe it briefly.", 'Опишите ваш запрос или вопрос.'), delay: 700 });
   showTextarea({
     placeholder: t('Describe your request\u2026', 'Опишите запрос\u2026'),
@@ -644,6 +658,7 @@ async function stepComment() {
 }
 
 async function stepFiles() {
+  setStepProgress(78);
   await say([
     { text: t('Would you like to attach any files?', 'Хотите прикрепить файлы?'), delay: 600 },
     { text: t('Documents, photos, or anything relevant.', 'Документы, фото или другие материалы.'), delay: 700 },
@@ -680,6 +695,7 @@ function showFileStep() {
 }
 
 async function stepConfirm() {
+  setStepProgress(90);
   const emailVal   = D.email   || t('Not provided', 'Не указано');
   const commentVal = D.comment || t('Not provided', 'Не указано');
   const filesVal   = D.files.length ? t('{n} file(s) selected', 'Файлов: {n}').replace('{n}', D.files.length) : t('None', 'Нет');
@@ -786,6 +802,7 @@ async function submitApp() {
       successMsgs.push({ text: t('Note: some files could not be uploaded: ', 'Примечание: не удалось загрузить: ') + failedUploads.map(esc).join(', '), delay: 600 });
     }
     await say(successMsgs);
+    setStepProgress(100);
     addSuccessCard();
     showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
 
@@ -813,6 +830,7 @@ function startOver() {
   D.name = D.phone = D.email = D.comment = '';
   D.files = [];
   appId   = null;
+  setStepProgress(0);
   msgsEl.innerHTML    = '';
   inputZone.innerHTML = '';
   stepGreeting();
