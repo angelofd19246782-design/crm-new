@@ -36,7 +36,7 @@
       height: min(720px, calc(100svh - 40px));
       background: #fff;
       border-radius: 22px;
-      box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.07);
+      box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.07), 0 0 80px rgba(37,99,235,.1);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -61,13 +61,14 @@
       padding: 14px 18px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
-      background: #fff;
+      background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 60%);
     }
     .hdr-av {
       width: 40px; height: 40px; border-radius: 50%;
-      background: var(--primary);
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(37,99,235,.35);
     }
     .hdr-av svg { width: 20px; height: 20px; color: #fff; }
     .hdr-info { flex: 1; }
@@ -112,6 +113,7 @@
       background: var(--bot-bubble);
       color: var(--text);
       border-radius: 18px 18px 18px 4px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.07);
     }
     .user-bubble {
       background: var(--user-bubble);
@@ -138,21 +140,22 @@
     }
 
     .sum-card {
-      margin-top: 8px;
+      margin-top: 10px;
       background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       overflow: hidden;
       font-size: .82rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,.06);
     }
     .sum-row {
-      display: flex; gap: 10px;
-      padding: 7px 12px;
-      border-bottom: 1px solid var(--border);
+      display: flex; gap: 12px;
+      padding: 8px 14px;
+      border-bottom: 1px solid #f1f5f9;
     }
     .sum-row:last-child { border-bottom: none; }
-    .sum-lbl { font-weight: 600; color: var(--muted); min-width: 64px; flex-shrink: 0; }
-    .sum-val { color: var(--text); word-break: break-word; }
+    .sum-lbl { font-weight: 700; color: #64748b; min-width: 72px; flex-shrink: 0; font-size: .78rem; }
+    .sum-val { color: #0f172a; word-break: break-word; font-size: .84rem; }
 
     .files-bubble { display: flex; flex-direction: column; gap: 5px; }
     .fb-item {
@@ -275,10 +278,34 @@
       color: var(--primary);
       font-size: .88rem; font-weight: 600;
       cursor: pointer; font-family: inherit;
-      transition: background .15s, color .15s, box-shadow .15s;
+      transition: background .15s, color .15s, box-shadow .15s, border-color .15s;
       text-align: center;
     }
     .iz-action-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,.25); }
+    .iz-action-btn:first-child {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(37,99,235,.3);
+    }
+    .iz-action-btn:first-child:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 20px rgba(37,99,235,.4);
+    }
+
+    .success-card {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 20px 16px 12px; gap: 8px;
+    }
+    .success-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 20px rgba(16,185,129,.35);
+    }
+    .success-icon svg { width: 26px; height: 26px; color: #fff; }
+    .success-label { font-size: .84rem; font-weight: 700; color: #0f172a; }
 
     #langToggle {
       display: inline-flex; align-items: center; justify-content: center;
@@ -750,6 +777,7 @@ async function submitApp() {
       successMsgs.push({ text: t('Note: some files could not be uploaded: ', 'Примечание: не удалось загрузить: ') + failedUploads.map(esc).join(', '), delay: 600 });
     }
     await say(successMsgs);
+    addSuccessCard();
     showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
 
   } catch (err) {
@@ -757,6 +785,19 @@ async function submitApp() {
     await say({ text: t('Something went wrong: ', 'Ошибка: ') + err.message, delay: 500 });
     showActions([{ label: t('Try again', 'Повторить'), action: submitApp }]);
   }
+}
+
+function addSuccessCard() {
+  const card = document.createElement('div');
+  card.className = 'success-card';
+  card.innerHTML = `
+    <div class="success-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <div class="success-label">${t('Request submitted successfully!', 'Заявка успешно отправлена!')}</div>
+  `;
+  msgsEl.appendChild(card);
+  scrollDown();
 }
 
 function startOver() {
