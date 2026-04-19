@@ -2,354 +2,340 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Request Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Request</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent:  #2563eb;
-      --accent-d: #1d4ed8;
-      --accent-l: #eff6ff;
-      --accent-ring: rgba(37,99,235,.14);
-      --text:   #0d1526;
-      --text-2: #3a4a5e;
-      --muted:  #64748b;
-      --subtle: #94a3b8;
-      --bord:   #e3e9f2;
-      --ease: cubic-bezier(.4,0,.2,1);
+      --blue:        #2563eb;
+      --blue-dark:   #1d4ed8;
+      --blue-light:  #eff6ff;
+      --blue-ring:   rgba(37,99,235,.14);
+      --text:        #0d1526;
+      --text-2:      #374151;
+      --muted:       #6b7280;
+      --subtle:      #9ca3af;
+      --border:      #e4e9f2;
+      --border-dark: #c6d0e2;
+      --bg:          #f2f5fb;
+      --surface:     #ffffff;
+      --success:     #059669;
+      --danger:      #dc2626;
+      --danger-light:#fee2e2;
+      --ease:        cubic-bezier(.4,0,.2,1);
+      --r:           10px;
+      --r-lg:        14px;
+      --r-xl:        20px;
     }
 
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-      background: #0c1018;
+      background: var(--bg);
       min-height: 100vh; min-height: 100svh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 36px 20px 64px;
       -webkit-font-smoothing: antialiased;
-      position: relative;
-      overflow: hidden;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Ambient glow layers */
-    body::before, body::after {
-      content: ''; position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-    }
-    body::before {
-      width: 700px; height: 700px; top: -200px; left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(circle, rgba(37,99,235,.16) 0%, transparent 65%);
-    }
-    body::after {
-      width: 500px; height: 500px; bottom: -150px; right: -100px;
-      background: radial-gradient(circle, rgba(99,37,235,.10) 0%, transparent 60%);
-    }
+    .page { width: 100%; max-width: 520px; }
 
-    .chat-window {
-      position: relative; z-index: 1;
-      width: 100%; max-width: 460px;
-      height: min(730px, calc(100svh - 40px));
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 40px 100px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.08), 0 0 60px rgba(37,99,235,.08);
-      display: flex; flex-direction: column;
-      overflow: hidden;
+    /* ── Brand header ── */
+    .brand {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding: 0 2px;
     }
-
-    /* Progress bar — hairline at very top */
-    .step-progress { height: 2px; background: #eef1f8; flex-shrink: 0; overflow: hidden; }
-    .step-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width .5s var(--ease); width: 0%; }
-
-    /* Header */
-    .hdr {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 18px; border-bottom: 1px solid #f0f3fa;
-      flex-shrink: 0; background: #fff;
-    }
-    .hdr-av {
-      width: 38px; height: 38px; border-radius: 12px;
-      background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; box-shadow: 0 4px 12px rgba(37,99,235,.32);
-    }
-    .hdr-av svg { width: 18px; height: 18px; color: #fff; }
-    .hdr-info { flex: 1; min-width: 0; }
-    .hdr-name { font-size: .88rem; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
-    .hdr-status { display: flex; align-items: center; gap: 5px; font-size: .71rem; color: var(--muted); margin-top: 2px; }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; flex-shrink: 0; animation: pulse 2.4s ease infinite; }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .55; }
-    }
-
-    /* Messages area */
-    .msgs {
-      flex: 1; overflow-y: auto;
-      padding: 18px 16px 10px;
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .msgs::-webkit-scrollbar { width: 3px; }
-    .msgs::-webkit-scrollbar-track { background: transparent; }
-    .msgs::-webkit-scrollbar-thumb { background: #dde3ee; border-radius: 2px; }
-
-    .bot-row  { display: flex; align-items: flex-end; gap: 7px; margin-bottom: 3px; }
-    .user-row { display: flex; justify-content: flex-end; margin-bottom: 3px; }
-
-    .msg-av {
-      width: 26px; height: 26px; border-radius: 8px;
+    .brand-left { display: flex; align-items: center; gap: 10px; }
+    .brand-logo {
+      width: 34px; height: 34px;
       background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+      border-radius: 9px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; align-self: flex-end;
-      box-shadow: 0 2px 6px rgba(37,99,235,.28);
+      box-shadow: 0 4px 14px rgba(37,99,235,.30);
     }
-    .msg-av svg { width: 12px; height: 12px; color: #fff; }
-    .bot-row.hide-av .msg-av { visibility: hidden; }
+    .brand-logo svg { width: 16px; height: 16px; color: #fff; }
+    .brand-name { font-size: .92rem; font-weight: 700; color: var(--text); letter-spacing: -.02em; }
 
-    .col { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+    .lang-btn {
+      display: inline-flex; align-items: center;
+      padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px;
+      background: var(--surface); cursor: pointer; font-size: .7rem; font-weight: 700;
+      letter-spacing: .07em; color: var(--muted); font-family: inherit;
+      transition: border-color .13s, color .13s, background .13s;
+      user-select: none;
+    }
+    .lang-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 
-    .bubble {
-      max-width: 290px; padding: 10px 13px;
-      font-size: .87rem; line-height: 1.55; word-break: break-word;
-    }
-    .bot-bubble {
-      background: #f2f5fc; color: var(--text);
-      border-radius: 16px 16px 16px 4px;
-      box-shadow: 0 1px 3px rgba(13,21,38,.06);
-    }
-    .user-bubble {
-      background: linear-gradient(145deg, #3b82f6, #2563eb);
-      color: #fff; border-radius: 16px 16px 4px 16px;
-      box-shadow: 0 2px 8px rgba(37,99,235,.28);
-    }
-
-    /* Typing indicator */
-    .typing-bubble {
-      background: #f2f5fc; border-radius: 16px 16px 16px 4px;
-      padding: 11px 15px; display: flex; align-items: center; gap: 4px;
-    }
-    .typing-bubble span {
-      display: block; width: 6px; height: 6px;
-      border-radius: 50%; background: #94a3b8;
-      animation: bounce 1.2s ease-in-out infinite;
-    }
-    .typing-bubble span:nth-child(2) { animation-delay: .15s; }
-    .typing-bubble span:nth-child(3) { animation-delay: .30s; }
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: .45; }
-      30% { transform: translateY(-5px); opacity: 1; }
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow: 0 2px 12px rgba(13,21,38,.07), 0 8px 32px rgba(13,21,38,.06), 0 0 0 1px rgba(13,21,38,.04);
+      overflow: hidden;
     }
 
-    /* Summary card */
-    .sum-card {
-      margin-top: 8px; background: #fff;
-      border: 1px solid #e3e9f2; border-radius: 14px;
-      overflow: hidden; font-size: .83rem;
-      box-shadow: 0 2px 10px rgba(13,21,38,.07);
-      max-width: 290px;
+    /* ── Step indicator ── */
+    .step-bar {
+      padding: 22px 28px 0;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .sum-row {
-      display: flex; gap: 10px; padding: 8px 13px;
-      border-bottom: 1px solid #f2f5fb;
+    .step-label { font-size: .74rem; font-weight: 600; color: var(--muted); letter-spacing: .01em; }
+    .step-dots { display: flex; gap: 5px; align-items: center; }
+    .step-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border);
+      transition: background .2s var(--ease), transform .2s var(--ease);
     }
-    .sum-row:last-child { border-bottom: none; }
-    .sum-lbl { font-weight: 700; color: var(--muted); min-width: 68px; flex-shrink: 0; font-size: .76rem; }
-    .sum-val { color: var(--text); word-break: break-word; font-size: .83rem; line-height: 1.45; }
+    .step-dot.active { background: var(--blue); transform: scale(1.28); }
+    .step-dot.done   { background: #93c5fd; }
 
-    /* File bubbles */
-    .files-bubble { display: flex; flex-direction: column; gap: 4px; }
-    .fb-item {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,.15); border-radius: 8px;
-      padding: 4px 9px; font-size: .77rem;
-    }
-    .fb-item svg { width: 12px; height: 12px; flex-shrink: 0; opacity: .85; }
-
-    /* Input zone */
-    .input-zone {
-      border-top: 1px solid #f0f3fa; padding: 11px 14px;
-      background: #fff; flex-shrink: 0;
+    .step-track { height: 2px; background: #eaeeF7; margin: 10px 0 0; }
+    .step-track-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #6366f1);
+      transition: width .38s var(--ease);
     }
 
-    .iz-row { display: flex; gap: 7px; align-items: center; }
-    .iz-input {
-      flex: 1; padding: 9px 15px;
-      border: 1px solid var(--bord); border-radius: 22px;
-      font-size: .87rem; font-family: inherit;
-      color: var(--text); background: #f7f9fd;
-      outline: none; transition: border-color .13s var(--ease), box-shadow .13s var(--ease), background .13s;
+    /* ── Form body ── */
+    .form-body { padding: 26px 28px 20px; }
+
+    .step-title {
+      font-size: 1.2rem; font-weight: 800; color: var(--text);
+      letter-spacing: -.03em; margin-bottom: 6px; line-height: 1.25;
     }
-    .iz-input:focus {
-      border-color: var(--accent); background: #fff;
-      box-shadow: 0 0 0 3px var(--accent-ring);
+    .step-desc {
+      font-size: .84rem; color: var(--muted); margin-bottom: 22px; line-height: 1.55;
     }
-    .iz-send {
-      width: 40px; height: 40px;
-      background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%); color: #fff;
-      border: none; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0;
-      transition: box-shadow .13s, transform .1s;
-      box-shadow: 0 3px 12px rgba(37,99,235,.36);
+
+    .field-group { display: flex; flex-direction: column; gap: 18px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      display: flex; align-items: baseline; gap: 5px;
+      font-size: .7rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .08em;
     }
-    .iz-send:hover { box-shadow: 0 5px 18px rgba(37,99,235,.46); }
-    .iz-send:active { transform: scale(.93); }
-    .iz-send svg { width: 16px; height: 16px; }
-    .iz-skip-row { text-align: center; margin-top: 7px; }
-    .iz-skip-btn {
+    .field-opt {
+      font-size: .64rem; font-weight: 600; color: var(--subtle);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .field input, .field textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--border); border-radius: var(--r);
+      font-size: .95rem; font-family: inherit; color: var(--text);
+      background: #fafbfd; line-height: 1.5;
+      outline: none;
+      transition: border-color .13s var(--ease), box-shadow .13s var(--ease), background .13s;
+    }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--blue); background: var(--surface);
+      box-shadow: 0 0 0 3px var(--blue-ring);
+    }
+    .field input.err { border-color: var(--danger); }
+    .field textarea { resize: vertical; min-height: 108px; }
+    .field-err {
+      font-size: .74rem; color: var(--danger); font-weight: 500;
+      display: none;
+    }
+    .field-err.show { display: block; }
+
+    /* ── Drop zone ── */
+    .dropzone {
+      border: 2px dashed var(--border-dark); border-radius: var(--r-lg);
+      padding: 30px 20px; text-align: center;
+      position: relative; cursor: pointer; background: #fafbfd;
+      transition: border-color .18s var(--ease), background .18s var(--ease);
+    }
+    .dropzone:hover, .dropzone.over {
+      border-color: var(--blue); background: var(--blue-light);
+    }
+    .dropzone input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .dz-icon { margin-bottom: 10px; }
+    .dz-icon svg { width: 26px; height: 26px; color: var(--subtle); }
+    .dz-title { font-size: .88rem; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
+    .dz-sub   { font-size: .76rem; color: var(--muted); }
+
+    .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .file-item {
+      display: flex; align-items: center; gap: 9px;
+      background: var(--blue-light); border: 1px solid rgba(37,99,235,.13);
+      border-radius: 8px; padding: 7px 10px;
+    }
+    .file-item svg { width: 14px; height: 14px; color: var(--blue); flex-shrink: 0; }
+    .fi-name {
+      flex: 1; font-size: .81rem; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .fi-rm {
       background: none; border: none; cursor: pointer;
-      font-size: .76rem; color: var(--muted); font-family: inherit;
-      padding: 2px 0; transition: color .12s;
+      color: var(--subtle); font-size: .95rem; padding: 0 2px;
+      line-height: 1; flex-shrink: 0; transition: color .12s;
     }
-    .iz-skip-btn:hover { color: var(--text); }
+    .fi-rm:hover { color: var(--danger); }
 
-    /* Textarea zone */
-    .iz-ta-wrap { display: flex; flex-direction: column; gap: 7px; }
-    .iz-ta {
-      width: 100%; padding: 9px 13px;
-      border: 1px solid var(--bord); border-radius: 12px;
-      font-size: .87rem; font-family: inherit;
-      color: var(--text); background: #f7f9fd;
-      outline: none; resize: none;
-      transition: border-color .13s, box-shadow .13s, background .13s; line-height: 1.5;
+    /* ── Review block ── */
+    .review-block {
+      background: var(--bg); border-radius: var(--r-lg);
+      border: 1px solid var(--border); overflow: hidden;
     }
-    .iz-ta:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px var(--accent-ring); }
-    .iz-ta-actions { display: flex; justify-content: space-between; align-items: center; }
-    .iz-send-btn {
-      padding: 7px 18px;
-      background: linear-gradient(145deg, #3b82f6, #1d4ed8); color: #fff;
-      border: none; border-radius: 20px; font-size: .83rem; font-weight: 600;
-      cursor: pointer; font-family: inherit;
-      transition: box-shadow .13s, transform .1s;
-      box-shadow: 0 3px 10px rgba(37,99,235,.3);
+    .review-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 11px 16px; border-bottom: 1px solid var(--border);
     }
-    .iz-send-btn:hover { box-shadow: 0 5px 16px rgba(37,99,235,.42); }
-    .iz-send-btn:active { transform: scale(.97); }
+    .review-row:last-child { border-bottom: none; }
+    .review-lbl {
+      font-size: .68rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .07em;
+      width: 68px; flex-shrink: 0; padding-top: 2px;
+    }
+    .review-val {
+      flex: 1; font-size: .86rem; color: var(--text);
+      line-height: 1.5; word-break: break-word;
+    }
+    .review-val.empty { color: var(--subtle); font-style: italic; }
+    .review-edit {
+      background: none; border: none; cursor: pointer;
+      color: var(--blue); font-size: .73rem; font-weight: 600;
+      font-family: inherit; padding: 0; white-space: nowrap;
+      flex-shrink: 0; transition: color .12s;
+    }
+    .review-edit:hover { color: var(--blue-dark); text-decoration: underline; }
 
-    /* File upload zone */
-    .iz-file-wrap { display: flex; flex-direction: column; gap: 7px; }
-    .iz-dz {
-      border: 1.5px dashed var(--bord); border-radius: 12px;
-      padding: 18px 14px; text-align: center;
-      position: relative; cursor: pointer;
-      background: #f9fbff;
-      transition: border-color .18s, background .18s;
-    }
-    .iz-dz:hover, .iz-dz.over { border-color: var(--accent); background: var(--accent-l); }
-    .iz-dz input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .dz-icon { color: var(--subtle); margin-bottom: 6px; }
-    .dz-icon svg { width: 20px; height: 20px; }
-    .dz-label { font-size: .81rem; color: var(--text-2); font-weight: 600; }
-    .dz-hint  { font-size: .71rem; color: var(--muted); margin-top: 3px; }
-    .iz-flist { display: flex; flex-direction: column; gap: 4px; }
-    .iz-fitem {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--accent-l); border-radius: 8px;
-      padding: 5px 10px; font-size: .79rem; color: var(--text);
-      border: 1px solid rgba(37,99,235,.12);
-    }
-    .iz-fitem svg { width: 12px; height: 12px; color: var(--accent); flex-shrink: 0; }
-    .iz-fitem span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .iz-fitem button { background: none; border: none; cursor: pointer; color: var(--subtle); font-size: .88rem; padding: 0; line-height: 1; flex-shrink: 0; transition: color .12s; }
-    .iz-fitem button:hover { color: #dc2626; }
-    .iz-file-actions { display: flex; justify-content: space-between; align-items: center; }
-
-    /* Choice buttons */
-    .iz-actions { display: flex; flex-direction: column; gap: 7px; }
-    .iz-action-btn {
-      width: 100%; padding: 11px 18px;
-      border: 1px solid var(--bord); border-radius: 12px;
-      background: #f7f9fd; color: var(--text-2);
-      font-size: .86rem; font-weight: 600;
-      cursor: pointer; font-family: inherit;
-      transition: background .13s, color .13s, border-color .13s, box-shadow .13s, transform .1s;
-      text-align: center;
-    }
-    .iz-action-btn:hover { background: #fff; border-color: var(--accent); color: var(--accent); box-shadow: 0 2px 8px rgba(37,99,235,.12); }
-    .iz-action-btn:active { transform: scale(.98); }
-    .iz-action-btn:first-child {
-      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
-      color: #fff; border-color: transparent;
-      box-shadow: 0 4px 14px rgba(37,99,235,.32);
-    }
-    .iz-action-btn:first-child:hover {
-      background: linear-gradient(145deg, #2563eb, #1741b8);
-      box-shadow: 0 6px 20px rgba(37,99,235,.42);
+    /* Submit error */
+    .submit-err {
+      margin-top: 12px; padding: 10px 14px;
+      background: var(--danger-light); border: 1px solid #fecaca;
+      border-radius: 8px; font-size: .82rem; color: #991b1b;
     }
 
-    /* Success state */
-    .success-card {
+    /* ── Footer ── */
+    .form-foot {
+      padding: 4px 28px 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .btn-back {
+      flex-shrink: 0; padding: 12px 16px;
+      border: 1.5px solid var(--border); border-radius: var(--r);
+      background: var(--surface); color: var(--text-2);
+      font-size: .88rem; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: border-color .13s, background .13s;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .btn-back svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .btn-back:hover { background: #f5f7fc; border-color: var(--border-dark); }
+    .btn-next {
+      flex: 1; padding: 13px 20px;
+      background: linear-gradient(175deg, #3b82f6 0%, #1d4ed8 100%); color: #fff;
+      border: none; border-radius: var(--r);
+      font-size: .95rem; font-weight: 700; font-family: inherit;
+      cursor: pointer; letter-spacing: -.01em;
+      transition: box-shadow .13s, background .13s, transform .1s var(--ease);
+      box-shadow: 0 4px 16px rgba(37,99,235,.34);
+    }
+    .btn-next:hover { background: linear-gradient(175deg, #2563eb 0%, #1741b8 100%); box-shadow: 0 6px 22px rgba(37,99,235,.44); }
+    .btn-next:active { transform: scale(.98); }
+    .btn-next:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; transform: none; }
+
+    /* ── Trust line ── */
+    .trust-line {
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 0 28px 18px;
+      font-size: .72rem; color: var(--subtle); border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .trust-line svg { width: 11px; height: 11px; flex-shrink: 0; opacity: .8; }
+
+    /* ── Success screen ── */
+    .success-screen {
       display: flex; flex-direction: column; align-items: center;
-      padding: 18px 16px 10px; gap: 7px; text-align: center;
+      padding: 52px 32px 44px; text-align: center;
     }
     .success-icon {
-      width: 50px; height: 50px;
-      background: linear-gradient(145deg, #10b981 0%, #059669 100%);
-      border-radius: 50%;
+      width: 64px; height: 64px;
+      background: linear-gradient(145deg, #10b981, #059669); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 20px rgba(16,185,129,.36);
-      animation: pop .3s var(--ease) both;
+      box-shadow: 0 8px 24px rgba(5,150,105,.26);
+      margin-bottom: 20px;
     }
-    @keyframes pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .success-icon svg { width: 24px; height: 24px; color: #fff; }
-    .success-label { font-size: .83rem; font-weight: 700; color: var(--text); }
-
-    /* Lang toggle */
-    #langToggle {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 4px 11px; border: 1px solid #dde3ee; border-radius: 20px;
-      background: #fff; cursor: pointer; font-size: .69rem; font-weight: 700;
-      letter-spacing: .06em; color: var(--muted); font-family: inherit; line-height: 1;
-      transition: border-color .13s, color .13s, background .13s;
-      user-select: none; white-space: nowrap; flex-shrink: 0;
+    .success-icon svg { width: 30px; height: 30px; color: #fff; }
+    .success-title {
+      font-size: 1.28rem; font-weight: 800; color: var(--text);
+      letter-spacing: -.03em; margin-bottom: 10px;
     }
-    #langToggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-l); }
-    #langToggle:active { transform: scale(.95); }
+    .success-msg {
+      font-size: .88rem; color: var(--muted); line-height: 1.6;
+      max-width: 320px; margin-bottom: 30px;
+    }
+    .btn-again {
+      padding: 11px 22px;
+      border: 1.5px solid var(--border); border-radius: var(--r);
+      background: var(--surface); color: var(--text-2);
+      font-size: .84rem; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: background .13s, border-color .13s;
+    }
+    .btn-again:hover { background: #f5f7fc; border-color: var(--border-dark); }
 
-    /* Mobile */
-    @media (max-width: 520px) {
-      body { padding: 0; align-items: flex-end; }
-      .chat-window { max-width: 100%; height: 100svh; border-radius: 0; box-shadow: none; }
-      .iz-send { width: 42px; height: 42px; }
-      .iz-action-btn { padding: 13px 18px; font-size: .9rem; }
-      .iz-input, .iz-ta { font-size: 1rem; }
-      .msgs { padding: 14px 13px 8px; }
-      .bubble { padding: 10px 12px; }
-      .input-zone { padding: 10px 13px; }
+    /* ── Mobile ── */
+    @media (max-width: 560px) {
+      body { padding: 0 0 48px; }
+      .page { padding: 0 12px; }
+      .brand { margin: 16px 4px 14px; }
+      .step-bar { padding: 18px 20px 0; }
+      .form-body { padding: 22px 20px 18px; }
+      .form-foot { padding: 4px 20px 22px; }
+      .trust-line { padding: 14px 20px 18px; }
+      .field input, .field textarea { font-size: 1rem; padding: 13px 14px; }
+      .btn-next { font-size: 1rem; padding: 14px 20px; }
+      .btn-back { padding: 13px 15px; }
+      .step-title { font-size: 1.08rem; }
+      .success-screen { padding: 44px 24px 36px; }
     }
   </style>
 </head>
 <body>
-<div class="chat-window">
 
-  <div class="hdr">
-    <div class="hdr-av">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
-      </svg>
+<div class="page">
+
+  <div class="brand">
+    <div class="brand-left">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/>
+        </svg>
+      </div>
+      <span class="brand-name" id="brandName">CRM</span>
     </div>
-    <div class="hdr-info">
-      <div class="hdr-name" id="hdrName">Request Assistant</div>
-      <div class="hdr-status"><span class="status-dot"></span><span id="hdrOnline">Online</span></div>
-    </div>
-    <button id="langToggle" onclick="toggleLanguage()">RU</button>
+    <button class="lang-btn" id="langToggle" onclick="toggleLanguage()">RU</button>
   </div>
 
-  <div class="step-progress"><div class="step-progress-fill" id="stepFill"></div></div>
-  <div class="msgs" id="msgs"></div>
-  <div class="input-zone" id="inputZone"></div>
+  <div class="card" id="mainCard"></div>
 
 </div>
 
 <script>
-// ── Rebranding: change BOT_NAME / BOT_NAME_RU to rename the bot ──
-const BOT_NAME    = 'Request Assistant';
-const BOT_NAME_RU = 'Помощник по заявкам';
+// ── Rebranding ──
+const COMPANY_NAME = 'CRM';
 
+// ── State ──
 const D = { name: '', phone: '', email: '', comment: '', files: [] };
-let appId = null;
+let step = 1;
+let fromReview = false;
+let submitting = false;
+let submitted  = false;
+let submitErr  = '';
+const STEPS    = 4;
 
 let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 function toggleLanguage() {
   lang = lang === 'en' ? 'ru' : 'en';
@@ -359,402 +345,275 @@ function toggleLanguage() {
 
 function applyLang() {
   document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
-  document.getElementById('hdrName').textContent = lang === 'ru' ? BOT_NAME_RU : BOT_NAME;
-  document.getElementById('hdrOnline').textContent = t('Online', 'Онлайн');
-  document.title = BOT_NAME;
-  startOver();
+  document.getElementById('brandName').textContent  = COMPANY_NAME;
+  document.title = t('Submit a Request', 'Отправить заявку') + ' \u2014 ' + COMPANY_NAME;
+  render();
 }
 
-const msgsEl    = document.getElementById('msgs');
-const inputZone = document.getElementById('inputZone');
-
-function setStepProgress(pct) {
-  const el = document.getElementById('stepFill');
-  if (el) el.style.width = pct + '%';
+// ── Render ──
+function render() {
+  const card = document.getElementById('mainCard');
+  card.innerHTML = submitted ? successHTML() : cardHTML();
+  if (!submitted) attachEvents();
+  const firstInput = card.querySelector('input:not([type=file]), textarea');
+  if (firstInput && !submitting) setTimeout(() => firstInput.focus(), 60);
 }
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+function cardHTML() {
+  const pct = ((step - 1) / STEPS) * 100;
+  const dots = Array.from({ length: STEPS }, (_, i) => {
+    const cls = i + 1 < step ? 'done' : i + 1 === step ? 'active' : '';
+    return '<div class="step-dot ' + cls + '"></div>';
+  }).join('');
 
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return (
+    '<div class="step-bar">' +
+      '<span class="step-label">' + esc(t('Step','Шаг')) + ' ' + step + ' ' + esc(t('of','из')) + ' ' + STEPS + '</span>' +
+      '<div class="step-dots">' + dots + '</div>' +
+    '</div>' +
+    '<div class="step-track"><div class="step-track-fill" style="width:' + pct + '%"></div></div>' +
+    '<div class="form-body">' + stepHTML() + '</div>' +
+    footHTML() +
+    '<div class="trust-line">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>' +
+      '<span>' + esc(t('Your information is handled securely', 'Ваши данные обрабатываются безопасно')) + '</span>' +
+    '</div>'
+  );
 }
 
-function scrollDown() {
-  msgsEl.scrollTo({ top: msgsEl.scrollHeight, behavior: 'smooth' });
+function stepHTML() {
+  if (step === 1) return step1HTML();
+  if (step === 2) return step2HTML();
+  if (step === 3) return step3HTML();
+  if (step === 4) return step4HTML();
+  return '';
 }
 
-const AV_HTML = `<div class="msg-av"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div>`;
-
-function addBot(html) {
-  const lastRow = msgsEl.lastElementChild;
-  const hideAv  = lastRow && lastRow.classList.contains('bot-row');
-  const row = document.createElement('div');
-  row.className = 'bot-row' + (hideAv ? ' hide-av' : '');
-  const col = document.createElement('div');
-  col.className = 'col';
-  col.innerHTML = `<div class="bubble bot-bubble">${html}</div>`;
-  row.innerHTML = AV_HTML;
-  row.appendChild(col);
-  msgsEl.appendChild(row);
-  scrollDown();
+function step1HTML() {
+  return (
+    '<div class="step-title">' + esc(t('Your contact details', 'Ваши контакты')) + '</div>' +
+    '<div class="step-desc">' + esc(t('Submit your request and we will contact you shortly.', 'Отправьте заявку, и мы свяжемся с вами.')) + '</div>' +
+    '<div class="field-group">' +
+      '<div class="field">' +
+        '<label for="f-name">' + esc(t('Full Name', 'Имя и фамилия')) + '</label>' +
+        '<input id="f-name" type="text" autocomplete="name" placeholder="' + esc(t('Enter your full name…', 'Введите ваше имя…')) + '" value="' + esc(D.name) + '">' +
+        '<div class="field-err" id="err-name">' + esc(t('Please enter your name', 'Укажите ваше имя')) + '</div>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label for="f-phone">' + esc(t('Phone Number', 'Номер телефона')) + '</label>' +
+        '<input id="f-phone" type="tel" autocomplete="tel" placeholder="' + esc(t('+1 555 000 0000', '+7 999 000 0000')) + '" value="' + esc(D.phone) + '">' +
+        '<div class="field-err" id="err-phone">' + esc(t('Please enter your phone number', 'Укажите номер телефона')) + '</div>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
-function addUser(text) {
-  const row = document.createElement('div');
-  row.className = 'user-row';
-  row.innerHTML = `<div class="bubble user-bubble">${esc(text)}</div>`;
-  msgsEl.appendChild(row);
-  scrollDown();
+function step2HTML() {
+  return (
+    '<div class="step-title">' + esc(t('Additional details', 'Дополнительные сведения')) + '</div>' +
+    '<div class="step-desc">' + esc(t('Both fields are optional — fill in what you can.', 'Оба поля необязательны.')) + '</div>' +
+    '<div class="field-group">' +
+      '<div class="field">' +
+        '<label for="f-email">Email<span class="field-opt">' + esc(t('optional', 'необязательно')) + '</span></label>' +
+        '<input id="f-email" type="email" autocomplete="email" placeholder="your@email.com" value="' + esc(D.email) + '">' +
+      '</div>' +
+      '<div class="field">' +
+        '<label for="f-comment">' + esc(t('Message', 'Сообщение')) + '<span class="field-opt">' + esc(t('optional', 'необязательно')) + '</span></label>' +
+        '<textarea id="f-comment" rows="4" placeholder="' + esc(t('Describe your request or question…', 'Опишите ваш запрос или вопрос…')) + '">' + esc(D.comment) + '</textarea>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
-function addUserRaw(html) {
-  const row = document.createElement('div');
-  row.className = 'user-row';
-  row.innerHTML = `<div class="bubble user-bubble">${html}</div>`;
-  msgsEl.appendChild(row);
-  scrollDown();
+function step3HTML() {
+  const FILE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>';
+  const fileListHTML = D.files.map((f, i) =>
+    '<div class="file-item">' + FILE_SVG + '<span class="fi-name">' + esc(f.name) + '</span><button class="fi-rm" data-i="' + i + '" aria-label="Remove">&#x2715;</button></div>'
+  ).join('');
+
+  return (
+    '<div class="step-title">' + esc(t('Documents', 'Документы')) + '</div>' +
+    '<div class="step-desc">' + esc(t('Attach any relevant files. This step is optional.', 'Прикрепите нужные файлы. Этот шаг необязателен.')) + '</div>' +
+    '<div class="dropzone" id="dropzone">' +
+      '<input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt">' +
+      '<div class="dz-icon">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>' +
+      '</div>' +
+      '<div class="dz-title">' + esc(t('Upload documents', 'Загрузить документы')) + '</div>' +
+      '<div class="dz-sub">' + esc(t('PDF, Word, images \u00b7 max 10\u00a0MB each', 'PDF, Word, изображения \u00b7 макс. 10\u00a0МБ')) + '</div>' +
+    '</div>' +
+    (fileListHTML ? '<div class="file-list" id="fileList">' + fileListHTML + '</div>' : '<div class="file-list" id="fileList"></div>')
+  );
 }
 
-function showTyping() {
-  if (document.getElementById('typing-row')) return;
-  const row = document.createElement('div');
-  row.id = 'typing-row';
-  row.className = 'bot-row';
-  row.innerHTML = `${AV_HTML}<div class="col"><div class="typing-bubble"><span></span><span></span><span></span></div></div>`;
-  msgsEl.appendChild(row);
-  scrollDown();
-}
-function hideTyping() { document.getElementById('typing-row')?.remove(); }
+function step4HTML() {
+  const na       = t('Not provided', 'Не указано');
+  const emailVal = D.email   || na;
+  const commVal  = D.comment || na;
+  const filesVal = D.files.length ? (D.files.length + ' ' + t('file(s)', 'файл(ов)')) : t('None', 'Нет');
+  const editTxt  = esc(t('Edit', 'Изменить'));
 
-function showActions(buttons) {
-  const wrap = document.createElement('div');
-  wrap.className = 'iz-actions';
-  buttons.forEach(({ label, action }) => {
-    const btn = document.createElement('button');
-    btn.className = 'iz-action-btn';
-    btn.textContent = label;
-    btn.addEventListener('click', () => {
-      inputZone.innerHTML = '';
-      addUser(label);
-      if (action) action();
-    });
-    wrap.appendChild(btn);
-  });
-  inputZone.innerHTML = '';
-  inputZone.appendChild(wrap);
+  const emClass = v => v === na ? ' class="review-val empty"' : ' class="review-val"';
+
+  return (
+    '<div class="step-title">' + esc(t('Review your request', 'Проверьте заявку')) + '</div>' +
+    '<div class="step-desc">' + esc(t('Everything look right? Submit when ready.', 'Всё верно? Отправьте, когда будете готовы.')) + '</div>' +
+    '<div class="review-block">' +
+      '<div class="review-row"><span class="review-lbl">' + esc(t('Name','Имя')) + '</span><span class="review-val">' + esc(D.name) + '</span><button class="review-edit" onclick="editFromReview(1)">' + editTxt + '</button></div>' +
+      '<div class="review-row"><span class="review-lbl">' + esc(t('Phone','Телефон')) + '</span><span class="review-val">' + esc(D.phone) + '</span><button class="review-edit" onclick="editFromReview(1)">' + editTxt + '</button></div>' +
+      '<div class="review-row"><span class="review-lbl">Email</span><span' + emClass(emailVal) + '>' + esc(emailVal) + '</span><button class="review-edit" onclick="editFromReview(2)">' + editTxt + '</button></div>' +
+      '<div class="review-row"><span class="review-lbl">' + esc(t('Message','Сообщение')) + '</span><span' + emClass(commVal) + '>' + esc(commVal.length > 100 ? commVal.slice(0,100)+'\u2026' : commVal) + '</span><button class="review-edit" onclick="editFromReview(2)">' + editTxt + '</button></div>' +
+      '<div class="review-row"><span class="review-lbl">' + esc(t('Files','Файлы')) + '</span><span class="review-val">' + esc(filesVal) + '</span><button class="review-edit" onclick="editFromReview(3)">' + editTxt + '</button></div>' +
+    '</div>' +
+    (submitErr ? '<div class="submit-err">' + esc(submitErr) + '</div>' : '')
+  );
 }
 
-async function say(items) {
-  inputZone.innerHTML = '';
-  for (const item of (Array.isArray(items) ? items : [items])) {
-    const text  = typeof item === 'string' ? item : item.text;
-    const html  = item.html ? text : esc(text);
-    const delay = item.delay != null ? item.delay : Math.min(400 + text.length * 14, 1400);
-    showTyping();
-    await sleep(delay);
-    hideTyping();
-    addBot(html);
-  }
+function footHTML() {
+  const showBack = step > 1 && !submitting;
+  let nextLabel;
+  if (submitting)  nextLabel = t('Submitting\u2026', 'Отправка\u2026');
+  else if (step === STEPS) nextLabel = t('Submit request', 'Отправить заявку');
+  else             nextLabel = t('Continue', 'Продолжить');
+
+  const backBtn = showBack
+    ? '<button class="btn-back" id="btnBack">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>' +
+        esc(t('Back', 'Назад')) +
+      '</button>'
+    : '';
+
+  return (
+    '<div class="form-foot">' +
+      backBtn +
+      '<button class="btn-next" id="btnNext"' + (submitting ? ' disabled' : '') + '>' + esc(nextLabel) + '</button>' +
+    '</div>'
+  );
 }
 
-function showTextInput({ type = 'text', placeholder = '', onSend, skip }) {
-  inputZone.innerHTML = `
-    <div class="iz-row">
-      <input class="iz-input" id="izIn" type="${type}" placeholder="${esc(placeholder)}" autocomplete="off">
-      <button class="iz-send" id="izSend" aria-label="Send">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
-        </svg>
-      </button>
-    </div>
-    ${skip ? `<div class="iz-skip-row"><button class="iz-skip-btn" id="izSkip">${esc(skip.label)}</button></div>` : ''}
-  `;
-  const inp = document.getElementById('izIn');
-  inp.focus();
-
-  const submit = () => {
-    const v = inp.value.trim();
-    if (!v) { inp.style.borderColor = '#ef4444'; setTimeout(() => inp.style.borderColor = '', 400); return; }
-    inputZone.innerHTML = '';
-    onSend(v);
-  };
-
-  document.getElementById('izSend').addEventListener('click', submit);
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
-
-  if (skip) {
-    document.getElementById('izSkip')?.addEventListener('click', () => {
-      inputZone.innerHTML = '';
-      skip.action();
-    });
-  }
+function successHTML() {
+  return (
+    '<div class="success-screen">' +
+      '<div class="success-icon">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+      '</div>' +
+      '<div class="success-title">' + esc(t('Request submitted!', 'Заявка отправлена!')) + '</div>' +
+      '<div class="success-msg">' + esc(t('Thank you for your request. We will contact you shortly.', 'Спасибо за вашу заявку. Мы свяжемся с вами в ближайшее время.')) + '</div>' +
+      '<button class="btn-again" onclick="startOver()">' + esc(t('Submit another request', 'Отправить ещё одну заявку')) + '</button>' +
+    '</div>'
+  );
 }
 
-function showTextarea({ placeholder = '', onSend, skip }) {
-  inputZone.innerHTML = `
-    <div class="iz-ta-wrap">
-      <textarea class="iz-ta" id="izTa" placeholder="${esc(placeholder)}" rows="3"></textarea>
-      <div class="iz-ta-actions">
-        ${skip ? `<button class="iz-skip-btn" id="izSkip">${esc(skip.label)}</button>` : '<span></span>'}
-        <button class="iz-send-btn" id="izSend">${esc(t('Send', 'Отправить'))}</button>
-      </div>
-    </div>
-  `;
-  const ta = document.getElementById('izTa');
-  ta.focus();
+// ── Events ──
+function attachEvents() {
+  const btnNext = document.getElementById('btnNext');
+  const btnBack = document.getElementById('btnBack');
+  if (btnNext) btnNext.addEventListener('click', handleNext);
+  if (btnBack) btnBack.addEventListener('click', handleBack);
 
-  document.getElementById('izSend').addEventListener('click', () => {
-    inputZone.innerHTML = '';
-    onSend(ta.value.trim() || null);
-  });
-  document.getElementById('izSkip')?.addEventListener('click', () => {
-    inputZone.innerHTML = '';
-    if (skip) skip.action();
-  });
-}
-
-function showFileInput({ onDone, onSkip }) {
-  let selected = [];
-
-  inputZone.innerHTML = `
-    <div class="iz-file-wrap">
-      <div class="iz-dz" id="izDz">
-        <input type="file" id="izFiles" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt">
-        <div class="dz-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-          </svg>
-        </div>
-        <div class="dz-label">${esc(t('Drop files here or click to upload', 'Перетащите файлы или нажмите для выбора'))}</div>
-        <div class="dz-hint">${esc(t('PDF, Word, images \u00b7 max 10\u00a0MB each', 'PDF, Word, изображения \u00b7 макс. 10\u00a0МБ'))}</div>
-      </div>
-      <div class="iz-flist" id="izFlist"></div>
-      <div class="iz-file-actions">
-        <button class="iz-skip-btn" id="izSkip">${esc(t('Skip, no files', 'Пропустить'))}</button>
-        <button class="iz-send-btn" id="izDone" disabled>${esc(t('Continue', 'Продолжить'))}</button>
-      </div>
-    </div>
-  `;
-
-  const dz      = document.getElementById('izDz');
-  const fileIn  = document.getElementById('izFiles');
-  const flist   = document.getElementById('izFlist');
-  const doneBtn = document.getElementById('izDone');
-
-  function renderList() {
-    flist.innerHTML = selected.map((f, i) => `
-      <div class="iz-fitem">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-        </svg>
-        <span>${esc(f.name)}</span>
-        <button data-i="${i}" aria-label="Remove">&#x2715;</button>
-      </div>`).join('');
-    flist.querySelectorAll('button[data-i]').forEach(btn =>
-      btn.addEventListener('click', () => { selected.splice(+btn.dataset.i, 1); renderList(); updateDone(); })
-    );
-  }
-
-  function updateDone() { doneBtn.disabled = selected.length === 0; }
-
-  function addFiles(files) {
-    for (const f of files) {
-      if (!selected.find(x => x.name === f.name && x.size === f.size)) selected.push(f);
+  if (step === 3) {
+    const dz       = document.getElementById('dropzone');
+    const fileInp  = document.getElementById('fileInput');
+    if (dz) {
+      dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
+      dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+      dz.addEventListener('drop',      e => { e.preventDefault(); dz.classList.remove('over'); addFiles(e.dataTransfer.files); });
     }
-    renderList(); updateDone();
+    if (fileInp) fileInp.addEventListener('change', () => { addFiles(fileInp.files); fileInp.value = ''; });
+    document.querySelectorAll('.fi-rm').forEach(btn => {
+      btn.addEventListener('click', () => { D.files.splice(+btn.dataset.i, 1); render(); });
+    });
   }
 
-  fileIn.addEventListener('change', () => { addFiles(fileIn.files); fileIn.value = ''; });
-  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
-  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
-  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); addFiles(e.dataTransfer.files); });
-
-  doneBtn.addEventListener('click', () => {
-    inputZone.innerHTML = '';
-    D.files = selected;
-    onDone(selected);
-  });
-  document.getElementById('izSkip').addEventListener('click', () => {
-    inputZone.innerHTML = '';
-    onSkip();
-  });
-}
-
-/* ── Flow steps ── */
-
-async function stepGreeting() {
-  setStepProgress(0);
-  await say([
-    { text: t("Hi! I'm your request assistant.", 'Привет! Я ваш помощник по заявкам.'), delay: 700 },
-    { text: t("I'll help you submit a request \u2014 it only takes a minute.", 'Я помогу вам отправить заявку \u2014 это займёт всего минуту.'), delay: 1000 },
-    { text: t('Ready to get started?', 'Готовы начать?'), delay: 700 },
-  ]);
-  showActions([{ label: t('Get started', 'Начать'), action: stepName }]);
-}
-
-async function stepName() {
-  setStepProgress(15);
-  await say({ text: t("What's your full name?", 'Как вас зовут?'), delay: 500 });
-  showTextInput({
-    placeholder: t('Your name\u2026', 'Ваше имя\u2026'),
-    onSend: v => { D.name = v; addUser(v); stepPhone(); },
-  });
-}
-
-async function stepPhone() {
-  setStepProgress(35);
-  await say({ text: t("Nice to meet you, {name}! What's your phone number?", 'Приятно познакомиться, {name}! Какой у вас номер телефона?').replace('{name}', D.name), delay: 700 });
-  showTextInput({
-    type: 'tel',
-    placeholder: t('+1 555 000 0000', '+7 999 000 0000'),
-    onSend: v => { D.phone = v; addUser(v); stepEmail(); },
-  });
-}
-
-async function stepEmail() {
-  setStepProgress(50);
-  await say({ text: t('Any email address we can reach you at?', 'Есть ли у вас email для связи?'), delay: 600 });
-  showTextInput({
-    type: 'email',
-    placeholder: t('your@email.com', 'your@email.com'),
-    onSend: v => { D.email = v; addUser(v); stepComment(); },
-    skip: {
-      label: t('Skip, no email', 'Пропустить, нет email'),
-      action: () => { addUser(t('No email', 'Нет email')); stepComment(); },
-    },
-  });
-}
-
-async function stepComment() {
-  setStepProgress(65);
-  await say({ text: t("What's your request or question? Describe it briefly.", 'Опишите ваш запрос или вопрос.'), delay: 700 });
-  showTextarea({
-    placeholder: t('Describe your request\u2026', 'Опишите запрос\u2026'),
-    onSend: v => {
-      D.comment = v || '';
-      addUser(v ? (v.length > 80 ? v.slice(0, 80) + '\u2026' : v) : t('No message', 'Нет сообщения'));
-      stepFiles();
-    },
-    skip: {
-      label: t('Skip', 'Пропустить'),
-      action: () => { addUser(t('No message', 'Нет сообщения')); stepFiles(); },
-    },
-  });
-}
-
-async function stepFiles() {
-  setStepProgress(78);
-  await say([
-    { text: t('Would you like to attach any files?', 'Хотите прикрепить файлы?'), delay: 600 },
-    { text: t('Documents, photos, or anything relevant.', 'Документы, фото или другие материалы.'), delay: 700 },
-  ]);
-  showActions([
-    { label: t('Attach files', 'Прикрепить файлы'), action: showFileStep },
-    { label: t('No, skip', 'Нет, пропустить'), action: () => { D.files = []; addUser(t('No files', 'Без файлов')); stepConfirm(); } },
-  ]);
-}
-
-function showFileStep() {
-  showFileInput({
-    onDone: files => {
-      const filesHtml = `
-        <div class="files-bubble">
-          <div style="font-size:.78rem;opacity:.8;margin-bottom:4px">${t('{n} file(s) selected', 'Файлов: {n}').replace('{n}', files.length)}</div>
-          ${files.slice(0, 5).map(f => `
-            <div class="fb-item">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-              </svg>
-              <span>${esc(f.name)}</span>
-            </div>`).join('')}
-          ${files.length > 5 ? `<div style="font-size:.74rem;opacity:.7">+ ${files.length - 5} more</div>` : ''}
-        </div>`;
-      addUserRaw(filesHtml);
-      stepConfirm();
-    },
-    onSkip: () => {
-      D.files = [];
-      stepConfirm();
-    },
-  });
-}
-
-async function stepConfirm() {
-  setStepProgress(90);
-  const emailVal   = D.email   || t('Not provided', 'Не указано');
-  const commentVal = D.comment || t('Not provided', 'Не указано');
-  const filesVal   = D.files.length ? t('{n} file(s) selected', 'Файлов: {n}').replace('{n}', D.files.length) : t('None', 'Нет');
-
-  const summaryHtml = `${esc(t("Here's what I have:", 'Вот что я записал:'))}
-    <div class="sum-card">
-      <div class="sum-row"><span class="sum-lbl">${esc(t('Name', 'Имя'))}</span><span class="sum-val">${esc(D.name)}</span></div>
-      <div class="sum-row"><span class="sum-lbl">${esc(t('Phone', 'Телефон'))}</span><span class="sum-val">${esc(D.phone)}</span></div>
-      <div class="sum-row"><span class="sum-lbl">Email</span><span class="sum-val">${esc(emailVal)}</span></div>
-      <div class="sum-row"><span class="sum-lbl">${esc(t('Message', 'Сообщение'))}</span><span class="sum-val">${esc(commentVal.length > 80 ? commentVal.slice(0,80)+'\u2026' : commentVal)}</span></div>
-      <div class="sum-row"><span class="sum-lbl">${esc(t('Files', 'Файлы'))}</span><span class="sum-val">${esc(filesVal)}</span></div>
-    </div>`;
-
-  await say([
-    { text: summaryHtml, html: true, delay: 800 },
-    { text: t('Shall I submit this?', 'Отправить заявку?'), delay: 700 },
-  ]);
-  showActions([
-    { label: t('Submit request', 'Отправить заявку'), action: submitApp },
-    { label: t('Edit details', 'Изменить данные'),    action: stepEditDetails },
-  ]);
-}
-
-async function stepEditDetails() {
-  await say({ text: t('What would you like to change?', 'Что хотите изменить?'), delay: 400 });
-  showActions([
-    { label: t('Name', 'Имя'),         action: () => stepEditField('name') },
-    { label: t('Phone', 'Телефон'),    action: () => stepEditField('phone') },
-    { label: t('Email', 'Email'),      action: () => stepEditField('email') },
-    { label: t('Message', 'Сообщение'), action: () => stepEditField('comment') },
-    { label: t('Back to summary', 'Вернуться к заявке'), action: stepConfirm },
-  ]);
-}
-
-async function stepEditField(field) {
-  if (field === 'name') {
-    await say({ text: t("What's your name?", 'Как вас зовут?'), delay: 400 });
-    showTextInput({ placeholder: t('Your name\u2026', 'Ваше имя\u2026'), onSend: v => { D.name = v; addUser(v); stepConfirm(); } });
-  } else if (field === 'phone') {
-    await say({ text: t("What's your phone number?", 'Ваш номер телефона?'), delay: 400 });
-    showTextInput({ type: 'tel', placeholder: t('+1 555 000 0000', '+7 999 000 0000'), onSend: v => { D.phone = v; addUser(v); stepConfirm(); } });
-  } else if (field === 'email') {
-    await say({ text: t('Your email address?', 'Ваш email?'), delay: 400 });
-    showTextInput({
-      type: 'email', placeholder: 'your@email.com',
-      onSend: v => { D.email = v; addUser(v); stepConfirm(); },
-      skip: { label: t('No email', 'Нет email'), action: () => { D.email = ''; addUser(t('No email', 'Нет email')); stepConfirm(); } },
-    });
-  } else if (field === 'comment') {
-    await say({ text: t('Describe your request.', 'Опишите ваш запрос.'), delay: 400 });
-    showTextarea({
-      placeholder: t('Describe your request\u2026', 'Опишите запрос\u2026'),
-      onSend: v => { D.comment = v || ''; addUser(v || t('No message', 'Нет сообщения')); stepConfirm(); },
-      skip: { label: t('Skip', 'Пропустить'), action: () => { D.comment = ''; stepConfirm(); } },
+  if (step === 1 || step === 2) {
+    document.querySelectorAll('.field input').forEach(inp => {
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleNext(); } });
     });
   }
 }
 
+function addFiles(files) {
+  for (const f of files) {
+    if (!D.files.find(x => x.name === f.name && x.size === f.size)) D.files.push(f);
+  }
+  render();
+}
+
+// ── Navigation ──
+function saveStep() {
+  if (step === 1) {
+    const n = document.getElementById('f-name');
+    const p = document.getElementById('f-phone');
+    if (n) D.name  = n.value.trim();
+    if (p) D.phone = p.value.trim();
+  } else if (step === 2) {
+    const e = document.getElementById('f-email');
+    const c = document.getElementById('f-comment');
+    if (e) D.email   = e.value.trim();
+    if (c) D.comment = c.value.trim();
+  }
+}
+
+function validateStep() {
+  if (step !== 1) return true;
+  const nameEl  = document.getElementById('f-name');
+  const phoneEl = document.getElementById('f-phone');
+  const errName  = document.getElementById('err-name');
+  const errPhone = document.getElementById('err-phone');
+  let ok = true;
+  if (!nameEl.value.trim()) {
+    errName.classList.add('show'); nameEl.classList.add('err'); ok = false;
+  } else {
+    errName.classList.remove('show'); nameEl.classList.remove('err');
+  }
+  if (!phoneEl.value.trim()) {
+    errPhone.classList.add('show'); phoneEl.classList.add('err'); ok = false;
+  } else {
+    errPhone.classList.remove('show'); phoneEl.classList.remove('err');
+  }
+  if (!ok) { (nameEl.value.trim() ? phoneEl : nameEl).focus(); }
+  return ok;
+}
+
+function handleNext() {
+  saveStep();
+  if (!validateStep()) return;
+  if (step === STEPS) { submitApp(); return; }
+  if (fromReview) { step = 4; fromReview = false; }
+  else            { step++; }
+  submitErr = '';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleBack() {
+  saveStep();
+  if (fromReview) { step = 4; fromReview = false; }
+  else            { step = Math.max(1, step - 1); }
+  submitErr = '';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function editFromReview(targetStep) {
+  fromReview = true;
+  step = targetStep;
+  submitErr = '';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Submission ──
 async function submitApp() {
-  if (!D.name.trim() || !D.phone.trim()) {
-    await say({ text: t('Please provide your name and phone number.', 'Пожалуйста, укажите имя и телефон.'), delay: 400 });
-    showActions([{ label: t('Edit details', 'Изменить данные'), action: stepEditDetails }]);
-    return;
-  }
-
-  inputZone.innerHTML = '';
-  await say({ text: t('Sending your request\u2026', 'Отправляем заявку\u2026'), delay: 500 });
+  submitting = true;
+  submitErr  = '';
+  render();
 
   try {
     const res = await fetch('/api/intake', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      body:    JSON.stringify({
         name:    D.name,
         phone:   D.phone,
         email:   D.email   || null,
@@ -762,66 +621,49 @@ async function submitApp() {
       }),
     });
     if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || 'HTTP ' + res.status);
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'HTTP ' + res.status);
     }
     const { id } = await res.json();
-    appId = id;
 
     const failedUploads = [];
     for (const file of D.files) {
       const fd = new FormData();
       fd.append('file', file);
-      const upRes = await fetch(`/api/intake/${id}/attachment`, { method: 'POST', body: fd });
-      if (!upRes.ok) {
-        const upErr = await upRes.json().catch(() => ({}));
-        console.warn('File upload failed:', file.name, upErr.error || upRes.status);
+      const up = await fetch('/api/intake/' + id + '/attachment', { method: 'POST', body: fd });
+      if (!up.ok) {
+        const upErr = await up.json().catch(() => ({}));
+        console.warn('Upload failed:', file.name, upErr.error || up.status);
         failedUploads.push(file.name);
       }
     }
 
-    const successMsgs = [
-      { text: t('Thank you for your request!', 'Спасибо за заявку!'), delay: 600 },
-      { text: t('We will contact you soon.', 'Мы скоро с вами свяжемся.'), delay: 800 },
-    ];
-    if (failedUploads.length) {
-      successMsgs.push({ text: t('Note: some files could not be uploaded: ', 'Примечание: не удалось загрузить: ') + failedUploads.map(esc).join(', '), delay: 600 });
-    }
-    await say(successMsgs);
-    setStepProgress(100);
-    addSuccessCard();
-    showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
+    submitting = false;
+    submitted  = true;
+    render();
 
   } catch (err) {
     console.error('Submit error:', err);
-    await say({ text: t('Something went wrong: ', 'Ошибка: ') + err.message, delay: 500 });
-    showActions([{ label: t('Try again', 'Повторить'), action: submitApp }]);
+    submitting = false;
+    submitErr  = t('Something went wrong: ', 'Ошибка: ') + err.message;
+    render();
   }
 }
 
-function addSuccessCard() {
-  const card = document.createElement('div');
-  card.className = 'success-card';
-  card.innerHTML = `
-    <div class="success-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    </div>
-    <div class="success-label">${t('Request submitted successfully!', 'Заявка успешно отправлена!')}</div>
-  `;
-  msgsEl.appendChild(card);
-  scrollDown();
-}
-
+// ── Reset ──
 function startOver() {
   D.name = D.phone = D.email = D.comment = '';
-  D.files = [];
-  appId   = null;
-  setStepProgress(0);
-  msgsEl.innerHTML    = '';
-  inputZone.innerHTML = '';
-  stepGreeting();
+  D.files    = [];
+  step       = 1;
+  fromReview = false;
+  submitting = false;
+  submitted  = false;
+  submitErr  = '';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ── Boot ──
 applyLang();
 </script>
 </body>

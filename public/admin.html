@@ -52,45 +52,58 @@
 
     body { font-family: system-ui,-apple-system,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 
-    /* ── Layout ── */
-    .layout { display:flex; height:100vh; overflow:hidden; }
-    .sidebar { width:248px; background:#0d1117; display:flex; flex-direction:column; flex-shrink:0; border-right:1px solid rgba(255,255,255,.05); }
-    .main    { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+    /* ── Top Nav ── */
+    .topnav { position:fixed; top:0; left:0; right:0; height:60px; z-index:600; background:#0d1117; display:flex; align-items:center; padding:0 20px; border-bottom:1px solid rgba(255,255,255,.055); }
+    .tn-left { display:flex; align-items:center; gap:9px; flex-shrink:0; min-width:148px; }
+    .tn-logo { width:28px; height:28px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(37,99,235,.5); }
+    .tn-logo svg { width:14px; height:14px; color:#fff; }
+    .tn-name { font-size:.86rem; font-weight:700; color:#e2e8f0; letter-spacing:-.02em; }
+    .tn-center { flex:1; display:flex; align-items:center; justify-content:center; gap:1px; }
+    .tn-link { display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border:none; background:none; cursor:pointer; color:rgba(255,255,255,.38); font-size:.8rem; font-weight:500; font-family:inherit; border-radius:7px; transition:color .12s,background .12s; white-space:nowrap; }
+    .tn-link svg { width:14px; height:14px; opacity:.6; transition:opacity .12s; flex-shrink:0; }
+    .tn-link:hover { color:rgba(255,255,255,.72); background:rgba(255,255,255,.06); }
+    .tn-link:hover svg { opacity:1; }
+    .tn-link.active { color:#93c5fd; background:rgba(37,99,235,.16); }
+    .tn-link.active svg { color:#60a5fa; opacity:1; }
+    .nav-badge { display:inline-flex; align-items:center; justify-content:center; min-width:17px; height:17px; padding:0 4px; background:rgba(37,99,235,.25); color:#7cb9f4; border-radius:99px; font-size:.62rem; font-weight:700; margin-left:2px; line-height:1; }
+    .tn-right { display:flex; align-items:center; gap:8px; flex-shrink:0; min-width:148px; justify-content:flex-end; }
+    .tn-back { display:none; align-items:center; gap:5px; padding:5px 10px; border:none; background:rgba(255,255,255,.07); cursor:pointer; color:rgba(255,255,255,.6); border-radius:7px; font-size:.78rem; font-weight:500; font-family:inherit; transition:background .12s,color .12s; white-space:nowrap; }
+    .tn-back:hover { background:rgba(255,255,255,.12); color:#fff; }
+    .tn-back svg { width:14px; height:14px; flex-shrink:0; }
+    .tn-case-title { font-size:.8rem; font-weight:600; color:rgba(255,255,255,.6); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-    /* ── Sidebar ── */
-    .sb-brand { padding:17px 16px 14px; border-bottom:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:10px; }
-    .sb-logo { width:30px; height:30px; background:linear-gradient(145deg,#3b82f6 0%,#1d4ed8 100%); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 10px rgba(37,99,235,.55); }
-    .sb-logo svg { width:16px; height:16px; color:#fff; }
-    .sb-name { font-size:.88rem; font-weight:700; color:#e2e8f0; letter-spacing:-.02em; }
-    .sb-section { padding:16px 16px 4px; font-size:.6rem; font-weight:700; color:rgba(255,255,255,.18); text-transform:uppercase; letter-spacing:.12em; }
-    .sb-nav { padding:2px 8px 4px; }
-    .nav-btn { display:flex; align-items:center; gap:8px; width:100%; padding:6px 9px; border:none; background:none; border-radius:7px; cursor:pointer; color:rgba(255,255,255,.36); font-size:.8rem; font-weight:500; font-family:inherit; transition:background .12s var(--ease),color .12s var(--ease); text-align:left; margin-bottom:1px; white-space:nowrap; overflow:hidden; position:relative; }
-    .nav-btn svg { width:14px; height:14px; flex-shrink:0; opacity:.7; transition:opacity .12s; }
-    .nav-btn:hover { background:rgba(255,255,255,.06); color:rgba(255,255,255,.75); }
-    .nav-btn:hover svg { opacity:1; }
-    .nav-btn.active { background:rgba(37,99,235,.18); color:#93c5fd; }
-    .nav-btn.active svg { color:#60a5fa; opacity:1; }
-    .nav-btn.active::before { content:''; position:absolute; left:0; top:5px; bottom:5px; width:2px; background:#3b82f6; border-radius:0 2px 2px 0; }
-    .sb-footer { margin-top:auto; padding:10px 12px 13px; border-top:1px solid rgba(255,255,255,.05); }
-    .sb-user { display:flex; align-items:center; gap:9px; padding:5px 3px 9px; }
-    .sb-user-av { width:26px; height:26px; border-radius:7px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.66rem; font-weight:700; flex-shrink:0; letter-spacing:.02em; }
-    .sb-user-info { flex:1; min-width:0; }
-    .sb-user strong { display:block; color:#d4dce8; font-size:.79rem; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .sb-user span { display:block; color:rgba(255,255,255,.24); font-size:.7rem; margin-top:1px; }
-    .sb-signout { display:flex; align-items:center; gap:6px; background:none; border:none; cursor:pointer; color:rgba(255,255,255,.22); font-size:.77rem; font-family:inherit; padding:0; transition:color .12s; }
-    .sb-signout:hover { color:#f87171; }
-    .sb-signout svg { width:13px; height:13px; }
+    /* User dropdown */
+    .tn-user { position:relative; }
+    .tn-av-btn { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; border:none; cursor:pointer; font-size:.73rem; font-weight:700; display:flex; align-items:center; justify-content:center; letter-spacing:.02em; transition:box-shadow .12s; box-shadow:0 0 0 2px rgba(59,130,246,.3); }
+    .tn-av-btn:hover { box-shadow:0 0 0 3px rgba(59,130,246,.5); }
+    .tn-dropdown { position:absolute; top:calc(100% + 8px); right:0; width:224px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:0 12px 40px rgba(13,21,38,.18),0 0 0 1px rgba(13,21,38,.03); z-index:1000; display:none; overflow:hidden; animation:popIn .12s var(--ease); }
+    .tn-dropdown.open { display:block; }
+    .tn-drop-hdr { padding:11px 14px 10px; display:flex; align-items:center; gap:9px; background:var(--surface-2); border-bottom:1px solid var(--border); }
+    .tn-drop-av { width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0; }
+    .tn-drop-name { font-size:.83rem; font-weight:700; color:var(--text); line-height:1.2; }
+    .tn-drop-role { font-size:.7rem; color:var(--muted); margin-top:1px; }
+    .tn-drop-divider { height:1px; background:var(--border); margin:2px 0; }
+    .tn-drop-item { display:flex; align-items:center; gap:8px; padding:7px 14px; width:100%; border:none; background:none; cursor:pointer; font-size:.81rem; color:var(--text); font-family:inherit; text-align:left; text-decoration:none; transition:background .1s; white-space:nowrap; }
+    .tn-drop-item:hover { background:var(--surface-2); color:var(--text); }
+    .tn-drop-item svg { width:13px; height:13px; color:var(--muted); flex-shrink:0; }
+    .tn-drop-item.danger { color:var(--danger); }
+    .tn-drop-item.danger:hover { background:var(--danger-light); }
+    .tn-drop-item.danger svg { color:var(--danger); }
 
-    /* ── Topbar ── */
-    .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; height:60px; display:flex; align-items:center; gap:14px; flex-shrink:0; box-shadow:0 1px 0 var(--border); }
-    .topbar h2 { font-size:.95rem; font-weight:700; color:var(--text); flex:1; letter-spacing:-.02em; }
-    .topbar-actions { display:flex; gap:8px; align-items:center; }
+    /* ── App Shell ── */
+    .app-shell { height:calc(100vh - 60px); margin-top:60px; display:flex; flex-direction:column; overflow:hidden; }
 
     /* ── Content ── */
-    .content { flex:1; overflow-y:auto; padding:28px 28px 40px; }
+    .content { flex:1; overflow-y:auto; padding:24px 28px 40px; position:relative; }
     .content::-webkit-scrollbar { width:5px; }
     .content::-webkit-scrollbar-track { background:transparent; }
     .content::-webkit-scrollbar-thumb { background:var(--border-dark); border-radius:3px; }
+
+    /* ── Bottom tabs (mobile only) ── */
+    .bottom-tabs { display:none; position:fixed; bottom:0; left:0; right:0; height:58px; background:var(--surface); border-top:1px solid var(--border); z-index:590; align-items:stretch; padding-bottom:env(safe-area-inset-bottom,0); }
+    .bt-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; border:none; background:none; cursor:pointer; color:var(--subtle); font-size:.6rem; font-weight:600; font-family:inherit; transition:color .12s; padding:6px 0 0; }
+    .bt-item.active { color:var(--primary); }
+    .bt-item svg { width:21px; height:21px; }
 
     .btn { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border:none; border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer; font-family:inherit; transition:background .13s var(--ease),box-shadow .13s var(--ease),transform .1s var(--ease); line-height:1; white-space:nowrap; letter-spacing:-.01em; }
     .btn svg { width:13px; height:13px; }
@@ -225,19 +238,6 @@
     .role-tag.admin { background:var(--primary-light); color:var(--primary); border-color:rgba(37,99,235,.2); }
     .source-tag { display:inline-flex; font-size:.74rem; font-weight:500; padding:2px 8px; border-radius:5px; background:var(--surface-2); color:var(--muted); border:1px solid var(--border); }
 
-    .topbar-user-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; flex-shrink:0; letter-spacing:.02em; box-shadow:0 2px 8px rgba(37,99,235,.28); }
-
-    #langToggle {
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:5px 12px; border:1.5px solid var(--border); border-radius:20px;
-      background:var(--surface); cursor:pointer; font-size:.71rem; font-weight:700;
-      letter-spacing:.06em; color:var(--muted); font-family:inherit; line-height:1;
-      transition:border-color .15s,color .15s,background .15s;
-      user-select:none; white-space:nowrap; box-shadow:var(--shadow-xs);
-    }
-    #langToggle:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
-    #langToggle:active { transform:scale(.95); }
-
     /* ── Board view ── */
     .board { display:flex; gap:12px; overflow-x:auto; align-items:flex-start; padding-bottom:12px; }
     .board::-webkit-scrollbar { height:4px; }
@@ -341,29 +341,14 @@
     .board-col.drag-over .board-cards { background:var(--primary-light); }
 
     /* ── Mobile adaptation ── */
-    .mob-menu-btn { display:none; }
-    .mob-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:599; }
-
     @media (max-width: 768px) {
-      .sidebar {
-        position:fixed; left:-244px; top:0; height:100vh; z-index:600;
-        width:244px; transition:left .25s cubic-bezier(.4,0,.2,1);
-      }
-      .sidebar.mob-open { left:0; }
-      .mob-sidebar-overlay.open { display:block; }
-      .mob-menu-btn {
-        display:flex; align-items:center; justify-content:center;
-        width:36px; height:36px; border:none; background:none; cursor:pointer;
-        color:var(--text); border-radius:7px; flex-shrink:0; padding:0;
-      }
-      .mob-menu-btn svg { width:22px; height:22px; }
-      .mob-menu-btn:hover { background:var(--bg); }
-      .topbar { padding:0 12px; gap:8px; }
-      .topbar-actions { gap:4px; }
-      #openFormBtn span, #botLink span { display:none; }
-      #openFormBtn, #botLink { padding:7px 9px; }
-      .topbar-user-av { display:none; }
-      .content { padding:14px; }
+      .tn-center { display:none; }
+      .topnav { padding:0 14px; }
+      .tn-left { min-width:0; }
+      .tn-right { min-width:0; gap:6px; }
+      .bottom-tabs { display:flex; }
+      .app-shell { height:calc(100vh - 60px - 58px); }
+      .content { padding:12px 12px 12px; }
       .stats-grid { grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
       .stat-val { font-size:1.6rem; }
       .stat-card { padding:16px 16px 14px; }
@@ -406,8 +391,10 @@
       .chart-bar-wrap { height:160px; }
       .fg input, .fg select, .fg textarea,
       .search-input, .note-input-row input { font-size:1rem; }
-      #view-dashboard .table-scroll table,
       #view-trash .table-scroll table { min-width:520px; }
+      .rpt-kpi-strip { grid-template-columns:repeat(2,1fr); }
+      .rpt-charts-grid { grid-template-columns:1fr; }
+      .rpt-insights-grid { grid-template-columns:1fr; }
       #view-users .table-scroll table { display:block; }
       #view-users .table-scroll thead { display:none; }
       #view-users .table-scroll tbody { display:block; }
@@ -421,213 +408,381 @@
       #view-users .table-scroll td:nth-child(3) { display:none; }
       #view-users .table-scroll td:nth-child(4) { margin-left:auto; }
     }
+
+    /* ── Case workspace ─────────────────────────────────────────── */
+    #view-case {
+      position:absolute; inset:0; z-index:10;
+      display:none; flex-direction:column;
+      background:var(--bg); overflow:hidden;
+    }
+    .case-layout { flex:1; display:flex; overflow:hidden; min-height:0; }
+
+    /* Left identity panel */
+    .case-left { width:300px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border); overflow-y:auto; display:flex; flex-direction:column; }
+    .case-left::-webkit-scrollbar { width:4px; }
+    .case-left::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+    .case-left-top { padding:13px 18px 11px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .case-back-link { display:inline-flex; align-items:center; gap:4px; color:var(--muted); font-size:.76rem; font-weight:600; cursor:pointer; border:none; background:none; padding:3px 0; font-family:inherit; transition:color .12s; }
+    .case-back-link:hover { color:var(--text); }
+    .case-back-link svg { width:13px; height:13px; }
+    .case-num { color:var(--subtle); font-size:.74rem; font-weight:600; margin-left:auto; font-variant-numeric:tabular-nums; }
+
+    .case-identity { padding:20px 18px 16px; border-bottom:1px solid var(--border); }
+    .case-av-large { width:52px; height:52px; border-radius:14px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:800; margin-bottom:12px; }
+    .case-name-hl { font-size:1.12rem; font-weight:800; color:var(--text); letter-spacing:-.03em; line-height:1.25; margin-bottom:10px; word-break:break-word; }
+
+    /* Stage button — primary interaction */
+    .case-stage-btn { display:inline-flex; align-items:center; gap:7px; padding:6px 11px 6px 8px; border-radius:99px; font-size:.8rem; font-weight:700; cursor:pointer; border:1.5px solid; font-family:inherit; transition:box-shadow .12s,transform .1s; letter-spacing:-.01em; }
+    .case-stage-btn:active { transform:scale(.97); }
+    .case-stage-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .case-stage-chev { width:11px; height:11px; opacity:.55; flex-shrink:0; }
+    .case-stage-btn.s-new         { background:#dbeafe; color:#1e40af; border-color:#bfdbfe; } .case-stage-btn.s-new .case-stage-dot { background:#3b82f6; }
+    .case-stage-btn.s-in_progress { background:#fef3c7; color:#92400e; border-color:#fde68a; } .case-stage-btn.s-in_progress .case-stage-dot { background:#f59e0b; }
+    .case-stage-btn.s-completed   { background:#d1fae5; color:#065f46; border-color:#a7f3d0; } .case-stage-btn.s-completed .case-stage-dot   { background:#10b981; }
+    .case-stage-btn.s-incomplete  { background:#fee2e2; color:#991b1b; border-color:#fecaca; } .case-stage-btn.s-incomplete .case-stage-dot  { background:#ef4444; }
+
+    /* Left panel sections */
+    .case-section { padding:14px 18px; border-bottom:1px solid var(--border); }
+    .case-section:last-child { border-bottom:none; flex:1; }
+    .case-sec-lbl { font-size:.6rem; font-weight:700; color:var(--subtle); text-transform:uppercase; letter-spacing:.1em; margin-bottom:9px; }
+
+    /* Editable fields */
+    .case-field { display:flex; align-items:baseline; gap:0; padding:4px 5px; border-radius:6px; cursor:pointer; transition:background .12s; margin:0 -5px; }
+    .case-field:hover { background:var(--surface-2); }
+    .case-field-lbl { font-size:.7rem; color:var(--muted); width:68px; flex-shrink:0; font-weight:500; padding-top:1px; }
+    .case-field-val { font-size:.83rem; color:var(--text); font-weight:500; flex:1; word-break:break-all; line-height:1.4; }
+    .case-field-val.cf-muted { color:var(--subtle); }
+    .case-field-input { font-size:.83rem; color:var(--text); font-weight:500; flex:1; border:1px solid var(--primary); border-radius:5px; padding:1px 6px; background:var(--surface); outline:none; font-family:inherit; box-shadow:var(--primary-ring); width:100%; }
+
+    /* Age indicator */
+    .case-age-val { font-size:.83rem; font-weight:500; }
+    .case-age-val.age-ok { color:var(--muted); }
+    .case-age-val.age-warn { color:var(--warning); font-weight:600; }
+    .case-age-val.age-urgent { color:var(--danger); font-weight:700; }
+
+    /* Assign button */
+    .case-assign-btn { display:flex; align-items:center; gap:8px; padding:6px 9px 6px 7px; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); cursor:pointer; font-family:inherit; width:100%; transition:border-color .12s,background .12s; text-align:left; }
+    .case-assign-btn:hover { border-color:var(--border-dark); background:var(--surface-3); }
+    .case-assign-av { width:24px; height:24px; border-radius:7px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; flex-shrink:0; }
+    .case-assign-av.unset { background:var(--surface-3); border:1.5px dashed var(--border-dark); color:var(--subtle); }
+    .case-assign-name { flex:1; font-size:.82rem; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .case-assign-name.unset { color:var(--subtle); }
+    .case-assign-chev { width:12px; height:12px; color:var(--subtle); flex-shrink:0; }
+
+    /* Right panel — timeline */
+    .case-right { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; background:var(--bg); }
+    .case-tl-scroll { flex:1; overflow-y:auto; padding:24px 28px 12px; }
+    .case-tl-scroll::-webkit-scrollbar { width:5px; }
+    .case-tl-scroll::-webkit-scrollbar-thumb { background:var(--border-dark); border-radius:3px; }
+
+    /* Timeline items */
+    .tl-system { display:flex; align-items:center; gap:10px; padding:5px 0; margin-bottom:4px; }
+    .tl-sys-dot-col { width:28px; display:flex; justify-content:center; flex-shrink:0; }
+    .tl-sys-dot { width:7px; height:7px; border-radius:50%; background:var(--border-dark); flex-shrink:0; }
+    .tl-sys-dot.d-blue  { background:var(--primary); }
+    .tl-sys-dot.d-green { background:var(--success); }
+    .tl-sys-dot.d-amber { background:var(--warning); }
+    .tl-sys-dot.d-red   { background:var(--danger); }
+    .tl-sys-text { font-size:.78rem; color:var(--muted); flex:1; }
+    .tl-sys-time { font-size:.71rem; color:var(--subtle); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+    .tl-note { display:flex; gap:10px; padding:2px 0 14px; align-items:flex-start; }
+    .tl-av { width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.67rem; font-weight:700; flex-shrink:0; margin-top:2px; }
+    .tl-av-client { background:linear-gradient(145deg,#6366f1,#4338ca); }
+    .tl-av-file { background:var(--surface-3); color:var(--muted); border:1px solid var(--border); }
+    .tl-av-file svg { width:13px; height:13px; }
+    .tl-note-body { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; transition:border-color .13s; }
+    .tl-note-body:hover { border-color:var(--border-dark); }
+    .tl-note-hdr { display:flex; align-items:center; gap:7px; margin-bottom:5px; }
+    .tl-note-author { font-size:.77rem; font-weight:700; color:var(--text); }
+    .tl-note-time { font-size:.71rem; color:var(--subtle); font-variant-numeric:tabular-nums; }
+    .tl-note-del { margin-left:auto; background:none; border:none; cursor:pointer; color:var(--subtle); padding:2px 3px; border-radius:4px; display:flex; transition:color .12s,background .12s; opacity:0; flex-shrink:0; }
+    .tl-note-body:hover .tl-note-del { opacity:1; }
+    .tl-note-del:hover { color:var(--danger); background:var(--danger-light); }
+    .tl-note-del svg { width:12px; height:12px; }
+    .tl-note-text { font-size:.84rem; color:var(--text); line-height:1.55; white-space:pre-wrap; word-break:break-word; }
+    .tl-client-lbl { font-size:.66rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; display:block; }
+    .tl-file-link { font-size:.84rem; font-weight:600; color:var(--primary); text-decoration:none; word-break:break-all; }
+    .tl-file-link:hover { text-decoration:underline; }
+    .tl-file-meta { display:block; font-size:.74rem; color:var(--muted); margin-top:3px; }
+    .tl-empty { text-align:center; padding:40px 16px; color:var(--subtle); font-size:.83rem; }
+
+    /* Compose area */
+    .case-compose { padding:12px 28px 14px; border-top:1px solid var(--border); background:var(--surface); display:flex; gap:10px; align-items:flex-start; flex-shrink:0; }
+    .compose-av { width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,#3b82f6,#1d4ed8); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.67rem; font-weight:700; flex-shrink:0; margin-top:3px; }
+    .compose-wrap { flex:1; border:1.5px solid var(--border); border-radius:10px; background:var(--surface); overflow:hidden; transition:border-color .13s,box-shadow .13s; }
+    .compose-wrap:focus-within { border-color:var(--primary); box-shadow:var(--primary-ring); }
+    .compose-textarea { width:100%; padding:8px 12px; border:none; outline:none; font-size:.84rem; font-family:inherit; color:var(--text); background:transparent; resize:none; min-height:36px; max-height:120px; line-height:1.5; display:block; overflow-y:auto; }
+    .compose-foot { padding:5px 10px 6px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); }
+    .compose-attach-lbl { display:inline-flex; align-items:center; gap:5px; font-size:.74rem; font-weight:600; color:var(--muted); cursor:pointer; padding:3px 5px; border-radius:5px; transition:color .12s,background .12s; }
+    .compose-attach-lbl:hover { color:var(--text); background:var(--surface-2); }
+    .compose-attach-lbl svg { width:12px; height:12px; }
+
+    /* Action bar */
+    .case-action-bar { flex-shrink:0; padding:11px 28px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .btn-archive { display:inline-flex; align-items:center; gap:6px; padding:8px 13px; border:1.5px solid var(--border); border-radius:8px; background:transparent; color:var(--muted); font-size:.79rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; }
+    .btn-archive:hover { background:var(--danger-light); color:var(--danger); border-color:transparent; }
+    .btn-archive svg { width:13px; height:13px; }
+    .btn-next-stage { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; background:linear-gradient(175deg,#3b82f6 0%,#1d4ed8 100%); color:#fff; border:none; border-radius:9px; font-size:.84rem; font-weight:700; cursor:pointer; font-family:inherit; transition:box-shadow .13s,background .13s,transform .1s; box-shadow:var(--shadow-blue); letter-spacing:-.01em; white-space:nowrap; }
+    .btn-next-stage:hover { box-shadow:0 6px 22px rgba(37,99,235,.44); background:linear-gradient(175deg,#2563eb 0%,#1741b8 100%); }
+    .btn-next-stage:active { transform:scale(.98); }
+    .btn-next-stage:disabled { opacity:.45; cursor:not-allowed; box-shadow:none; transform:none; }
+    .btn-next-stage svg { width:14px; height:14px; }
+
+    /* Popovers */
+    .popover { position:fixed; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:0 8px 32px rgba(13,21,38,.12),0 0 0 1px rgba(13,21,38,.04); z-index:1100; min-width:180px; overflow:hidden; animation:popIn .12s var(--ease); }
+    @keyframes popIn { from{opacity:0;transform:scale(.95) translateY(-4px)} to{opacity:1;transform:none} }
+    .pop-lbl { padding:8px 12px 4px; font-size:.6rem; font-weight:700; color:var(--subtle); text-transform:uppercase; letter-spacing:.09em; }
+    .pop-divider { height:1px; background:var(--border); margin:3px 0; }
+    .pop-item { display:flex; align-items:center; gap:9px; padding:8px 12px; cursor:pointer; font-size:.82rem; font-weight:500; color:var(--text); transition:background .1s; border:none; background:none; width:100%; text-align:left; font-family:inherit; white-space:nowrap; }
+    .pop-item:hover { background:var(--surface-2); }
+    .pop-item.active { background:var(--primary-light); color:var(--primary); font-weight:700; }
+    .pop-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+    /* Topbar back button */
+
+    /* ── Pipeline screen ── */
+    .pipeline-hdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .view-toggle { display:inline-flex; background:var(--surface); border:1.5px solid var(--border); border-radius:9px; overflow:hidden; flex-shrink:0; box-shadow:var(--shadow-xs); }
+    .vt-btn { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; font-size:.77rem; font-weight:600; border:none; background:none; cursor:pointer; color:var(--muted); font-family:inherit; transition:background .12s,color .12s; white-space:nowrap; line-height:1; }
+    .vt-btn svg { width:12px; height:12px; }
+    .vt-btn.active { background:var(--primary); color:#fff; }
+
+    .alert-strip { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+    .alert-strip:empty { margin-bottom:0; }
+    .pl-alert { display:inline-flex; align-items:center; gap:7px; padding:7px 12px 7px 10px; border-radius:9px; font-size:.79rem; font-weight:600; cursor:pointer; transition:transform .12s,box-shadow .12s; border:1.5px solid; }
+    .pl-alert:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.1); }
+    .pl-alert:active { transform:scale(.97); }
+    .pl-alert-warn   { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+    .pl-alert-danger { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .pl-alert-count  { font-size:.72rem; font-weight:800; background:rgba(0,0,0,.08); border-radius:99px; padding:1px 7px; line-height:1.5; }
+
+    .quick-filters { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+    .qf-btn { display:inline-flex; align-items:center; gap:5px; padding:5px 13px; border-radius:99px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; font-size:.78rem; font-weight:600; color:var(--muted); font-family:inherit; transition:all .13s; white-space:nowrap; }
+    .qf-btn:hover { border-color:var(--border-dark); color:var(--text); background:var(--surface-2); }
+    .qf-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); box-shadow:0 2px 8px rgba(37,99,235,.3); }
+    .qf-count { font-size:.69rem; font-weight:700; padding:0 5px; border-radius:99px; line-height:1.5; }
+    .qf-btn:not(.active) .qf-count { background:var(--surface-3); color:var(--muted); }
+    .qf-btn.active .qf-count { background:rgba(255,255,255,.22); color:#fff; }
+
+    /* Minimal pipeline cards */
+    .pcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:11px 12px 9px; cursor:pointer; transition:box-shadow .15s,border-color .15s,transform .12s; animation:cardIn .14s ease-out both; }
+    .pcard:hover { box-shadow:0 4px 16px rgba(13,21,38,.10); border-color:var(--border-dark); transform:translateY(-1px); }
+    .pcard[data-status="new"]         { border-left:3px solid #3b82f6; padding-left:10px; }
+    .pcard[data-status="in_progress"] { border-left:3px solid #f59e0b; padding-left:10px; }
+    .pcard[data-status="completed"]   { border-left:3px solid #10b981; padding-left:10px; }
+    .pcard[data-status="incomplete"]  { border-left:3px solid #ef4444; padding-left:10px; }
+    .pcard-top { display:flex; align-items:flex-start; justify-content:space-between; gap:6px; margin-bottom:5px; }
+    .pcard-name { font-size:.84rem; font-weight:700; color:var(--text); letter-spacing:-.01em; line-height:1.3; }
+    .pcard-num { font-size:.68rem; color:var(--subtle); white-space:nowrap; font-weight:600; padding-top:1px; flex-shrink:0; }
+    .pcard-meta { display:flex; align-items:center; gap:5px; }
+    .pcard-age { font-size:.7rem; font-weight:600; padding:2px 6px; border-radius:5px; white-space:nowrap; }
+    .pcard-age.age-ok     { background:var(--surface-2); color:var(--muted); border:1px solid var(--border); }
+    .pcard-age.age-warn   { background:#fef3c7; color:#92400e; border:1px solid #fde68a; }
+    .pcard-age.age-urgent { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+    .pcard-source { font-size:.7rem; color:var(--subtle); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80px; }
+    .pcard-av { width:18px; height:18px; border-radius:5px; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.6rem; font-weight:700; flex-shrink:0; margin-left:auto; }
+
+    /* Pipeline list view */
+    .pl-list { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); overflow:hidden; box-shadow:var(--shadow); }
+    .pl-row { display:flex; align-items:center; padding:9px 16px; border-bottom:1px solid var(--border); cursor:pointer; gap:10px; transition:background .12s; }
+    .pl-row:last-child { border-bottom:none; }
+    .pl-row:hover { background:var(--surface-2); }
+    .pl-row-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .pl-row-dot.s-new         { background:#3b82f6; }
+    .pl-row-dot.s-in_progress { background:#f59e0b; }
+    .pl-row-dot.s-completed   { background:#10b981; }
+    .pl-row-dot.s-incomplete  { background:#ef4444; }
+    .pl-row-name { font-size:.83rem; font-weight:600; color:var(--text); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pl-row-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .pl-row-source { font-size:.73rem; color:var(--subtle); max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pl-row-age { font-size:.73rem; font-weight:600; padding:2px 7px; border-radius:5px; white-space:nowrap; }
+    .pl-row-age.age-ok     { background:var(--surface-2); color:var(--muted); }
+    .pl-row-age.age-warn   { background:#fef3c7; color:#92400e; }
+    .pl-row-age.age-urgent { background:#fee2e2; color:#991b1b; }
+    .pl-row-av { width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:700; flex-shrink:0; }
+    .pl-row-num { font-size:.71rem; color:var(--subtle); white-space:nowrap; font-weight:600; min-width:32px; text-align:right; }
+
+    /* ── Reports / Analytics ── */
+    .rpt-kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+    .rpt-kpi { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px 18px; box-shadow:var(--shadow-sm); }
+    .rpt-kpi-lbl { font-size:.67rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+    .rpt-kpi-val { font-size:2rem; font-weight:800; color:var(--text); letter-spacing:-.05em; line-height:1; margin-bottom:4px; font-variant-numeric:tabular-nums; }
+    .rpt-kpi-val.kpi-danger { color:var(--danger); }
+    .rpt-kpi-val.kpi-warn   { color:var(--warning); }
+    .rpt-kpi-ctx { font-size:.71rem; color:var(--subtle); }
+
+    .rpt-sec { margin-bottom:24px; }
+    .rpt-sec-hdr { font-size:.67rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.09em; margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+    .rpt-sec-hdr::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .rpt-insights-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+    .rpt-insight { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--border); border-radius:var(--r-lg); padding:14px 16px 12px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow-sm); }
+    .rpt-insight.iw { border-left-color:var(--warning); }
+    .rpt-insight.id { border-left-color:var(--danger); }
+    .rpt-insight.io { border-left-color:var(--success); }
+    .rpt-insight-top { display:flex; align-items:flex-start; gap:10px; }
+    .rpt-insight-n { font-size:1.7rem; font-weight:800; letter-spacing:-.04em; line-height:1; flex-shrink:0; font-variant-numeric:tabular-nums; color:var(--text); }
+    .rpt-insight-n.iw { color:var(--warning); }
+    .rpt-insight-n.id { color:var(--danger); }
+    .rpt-insight-n.io { color:var(--success); }
+    .rpt-insight-desc { font-size:.81rem; color:var(--text-2); line-height:1.45; padding-top:3px; }
+    .rpt-insight-act { background:none; border:none; cursor:pointer; font-size:.76rem; font-weight:700; color:var(--primary); font-family:inherit; padding:0; text-align:left; transition:color .12s; }
+    .rpt-insight-act:hover { color:var(--primary-dark); text-decoration:underline; }
+
+    .rpt-charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .rpt-chart-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+    .rpt-chart-hdr { padding:12px 16px 11px; border-bottom:1px solid rgba(0,0,0,.05); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .rpt-chart-hdr h4 { font-size:.84rem; font-weight:700; color:var(--text); letter-spacing:-.01em; margin:0; }
+    .rpt-chart-hdr span { font-size:.7rem; color:var(--muted); font-weight:500; }
+    .rpt-chart-body { padding:14px 16px 16px; height:180px; position:relative; }
+
+    .rpt-team-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+    .rpt-team-wrap table { width:100%; border-collapse:collapse; font-size:.83rem; }
+    .rpt-team-wrap th { padding:9px 16px; text-align:left; font-size:.66rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; background:var(--surface-2); border-bottom:1px solid var(--border); white-space:nowrap; }
+    .rpt-team-wrap th.r { text-align:right; }
+    .rpt-team-wrap td { padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .rpt-team-wrap tbody tr:last-child td { border-bottom:none; }
+    .rpt-team-wrap td.r { text-align:right; }
+    .rpt-team-wrap tbody tr:hover td { background:rgba(37,99,235,.025); }
+    .rpt-tm-name { display:flex; align-items:center; gap:9px; font-weight:600; }
+    .rpt-tm-av { width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; flex-shrink:0; }
+    .rpt-conv { font-weight:700; font-variant-numeric:tabular-nums; }
+    .rpt-conv.high { color:var(--success); }
+    .rpt-conv.mid  { color:var(--warning); }
+    .rpt-conv.low  { color:var(--danger); }
+
+    /* Case workspace mobile */
+    @media (max-width:768px) {
+      .pipeline-hdr { flex-wrap:wrap; }
+      .alert-strip { gap:6px; }
+      .pl-row-source { display:none; }
+      .case-layout { flex-direction:column; }
+      .case-left { width:100%; max-height:42vh; border-right:none; border-bottom:1px solid var(--border); }
+      .case-tl-scroll { padding:14px 14px 8px; }
+      .case-compose { padding:10px 14px 12px; }
+      .case-action-bar { padding:10px 14px; }
+      .case-av-large { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:8px; }
+      .case-name-hl { font-size:.95rem; }
+    }
   </style>
 </head>
 <body>
-<div class="mob-sidebar-overlay" id="mobOverlay" onclick="closeMobileMenu()"></div>
-<div class="layout">
-
-<aside class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/></svg>
+<nav class="topnav" id="topnav">
+  <div class="tn-left">
+    <div class="tn-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/></svg>
     </div>
-    <span class="sb-name">CRM</span>
+    <span class="tn-name" id="tnName">CRM</span>
   </div>
-
-  <div class="sb-section" id="sbSecMain">Main</div>
-  <div class="sb-nav">
-    <button class="nav-btn active" id="nav-dashboard" onclick="showView('dashboard')">
+  <div class="tn-center">
+    <button class="tn-link" id="tnav-apps" onclick="showView('apps')">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/></svg>
+      <span id="tnTxtApps">Pipeline</span><span class="nav-badge" id="navBadgeApps" style="display:none">0</span>
+    </button>
+    <button class="tn-link" id="tnav-dashboard" onclick="showView('dashboard')">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-      <span id="navTxtDashboard">Dashboard</span>
+      <span id="tnTxtDashboard">Reports</span>
     </button>
-    <button class="nav-btn" id="nav-apps" onclick="showView('apps')">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
-      <span id="navTxtApps">Applications</span>
-      <span class="nav-badge" id="navBadgeApps" style="display:none">0</span>
-    </button>
-    <button class="nav-btn" id="nav-trash" onclick="showView('trash')">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-      <span id="navTxtTrash">Trash</span>
-    </button>
-  </div>
-
-  <div class="sb-section" id="sbSecAdmin">Admin</div>
-  <div class="sb-nav">
-    <button class="nav-btn" id="nav-users" onclick="showView('users')">
+    <button class="tn-link" id="tnav-users" onclick="showView('users')">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-      <span id="navTxtUsers">Users</span>
+      <span id="tnTxtUsers">Team</span>
     </button>
-    <button class="nav-btn" id="nav-empstats" onclick="showView('empstats')">
+    <button class="tn-link" id="tnav-empstats" onclick="showView('empstats')">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-      <span id="navTxtEmpStats">Employee Stats</span>
+      <span id="tnTxtEmpStats">Stats</span>
     </button>
   </div>
-
-  <div class="sb-footer">
-    <div class="sb-user">
-      <div class="sb-user-av" id="sbUserAv">?</div>
-      <div class="sb-user-info">
-        <strong id="sbUsername">—</strong>
-        <span id="sbRole">Administrator</span>
+  <div class="tn-right">
+    <button class="tn-back" id="caseBackBtn" onclick="closeCase()" style="display:none">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+      <span id="tnBackTxt">Back</span>
+    </button>
+    <span class="tn-case-title" id="viewTitle" style="display:none"></span>
+    <button class="btn btn-primary btn-sm" id="newAppBtn" onclick="openCreate()" style="display:none">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      <span id="newAppTxt">New</span>
+    </button>
+    <div class="tn-user">
+      <button class="tn-av-btn" id="tnUserAvBtn" onclick="toggleUserMenu()"><span id="tnUserAv">?</span></button>
+      <div class="tn-dropdown" id="tnDropdown">
+        <div class="tn-drop-hdr">
+          <div class="tn-drop-av" id="tnDropAv">?</div>
+          <div><div class="tn-drop-name" id="tnDropName">—</div><div class="tn-drop-role" id="tnDropRole">Administrator</div></div>
+        </div>
+        <div class="tn-drop-divider"></div>
+        <a class="tn-drop-item" href="/bot" target="_blank" id="tnOpenFormItem">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+          <span id="tnTxtOpenForm">Open Form</span>
+        </a>
+        <button class="tn-drop-item" onclick="copyBotLink()" id="tnCopyLinkItem">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+          <span id="tnTxtCopyLink">Copy Link</span>
+        </button>
+        <button class="tn-drop-item" onclick="toggleLanguage()" id="tnLangItem">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"/></svg>
+          <span id="tnLangSpan">Switch to RU</span>
+        </button>
+        <div class="tn-drop-divider"></div>
+        <button class="tn-drop-item" onclick="showView('trash')" id="tnTrashItem">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+          <span id="tnTxtTrash">Trash</span>
+        </button>
+        <div class="tn-drop-divider"></div>
+        <button class="tn-drop-item danger" onclick="logout()" id="tnSignoutItem">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+          <span id="tnTxtSignout">Sign out</span>
+        </button>
       </div>
     </div>
-    <button class="sb-signout" onclick="logout()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-      <span id="sbSignout">Sign out</span>
-    </button>
   </div>
-</aside>
+</nav>
 
-<div class="main">
-  <div class="topbar">
-    <button class="mob-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
-    </button>
-    <h2 id="viewTitle">Dashboard</h2>
-    <div class="topbar-actions">
-      <button id="langToggle" onclick="toggleLanguage()">RU</button>
-      <a class="btn btn-ghost btn-sm" href="/bot" target="_blank" id="openFormBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-        <span id="openFormTxt">Open Form</span>
-      </a>
-      <button class="btn btn-ghost btn-sm" id="botLink" onclick="copyBotLink()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
-        <span id="botLinkTxt">Copy Link</span>
-      </button>
-      <button class="btn btn-primary btn-sm" id="newAppBtn" onclick="openCreate()" style="display:none">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-        <span id="newAppTxt">New Application</span>
-      </button>
-    </div>
-    <div class="topbar-user-av" id="topbarAv">?</div>
-  </div>
-
+<div class="app-shell">
   <div class="content">
 
-    <!-- Dashboard -->
-    <div id="view-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card s-primary">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg></div>
-          <div class="stat-label" id="statLblTotal">Total</div>
-          <div class="stat-val" id="st-total">—</div>
-          <div class="stat-sub" id="statSubTotal">active applications</div>
-        </div>
-        <div class="stat-card s-blue">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></div>
-          <div class="stat-label" id="statLblNew">New</div>
-          <div class="stat-val" id="st-new">—</div>
-          <div class="stat-sub" id="statSubNew">awaiting action</div>
-          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-new"></div></div>
-        </div>
-        <div class="stat-card s-amber">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-          <div class="stat-label" id="statLblProgress">In Progress</div>
-          <div class="stat-val" id="st-progress">—</div>
-          <div class="stat-sub" id="statSubProgress">being handled</div>
-          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-progress"></div></div>
-        </div>
-        <div class="stat-card s-green">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-          <div class="stat-label" id="statLblCompleted">Completed</div>
-          <div class="stat-val" id="st-completed">—</div>
-          <div class="stat-sub" id="statSubCompleted">resolved</div>
-          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-completed"></div></div>
-        </div>
-        <div class="stat-card s-red">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
-          <div class="stat-label" id="statLblIncomplete">Incomplete</div>
-          <div class="stat-val" id="st-incomplete">—</div>
-          <div class="stat-sub" id="statSubIncomplete">needs attention</div>
-          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-incomplete"></div></div>
-        </div>
-        <div class="stat-card s-gray">
-          <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></div>
-          <div class="stat-label" id="statLblTrash">In Trash</div>
-          <div class="stat-val" id="st-trash">—</div>
-          <div class="stat-sub" id="statSubTrash">soft-deleted</div>
-        </div>
-      </div>
-      <!-- Analytics charts row -->
-      <div class="charts-row">
-        <div class="chart-card">
-          <div class="chart-hdr">
-            <h3 id="chartLineTitle">Applications Over Time</h3>
-            <span class="chart-period" id="chartLinePeriod">Last 14 days</span>
-          </div>
-          <div class="chart-body">
-            <canvas id="chartLine" height="160"></canvas>
-          </div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-hdr">
-            <h3 id="chartDonutTitle">Status Distribution</h3>
-          </div>
-          <div class="chart-body chart-donut-inner">
-            <canvas id="chartDonut"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="chart-card chart-bar-card" id="chartEmpCard" style="display:none">
-        <div class="chart-hdr">
-          <h3 id="chartBarTitle">Employee Performance</h3>
-          <span class="chart-period" id="chartBarPeriod">All applications</span>
-        </div>
-        <div class="chart-bar-wrap">
-          <canvas id="chartBar"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr">
-          <h3 id="recentHdr">Recent Applications</h3>
-          <button class="btn btn-ghost btn-sm" id="viewAllBtn" onclick="showView('apps')">View all</button>
-        </div>
-        <div class="table-scroll">
-          <table>
-            <thead><tr>
-              <th>#</th>
-              <th class="th-name">Name</th>
-              <th class="th-phone">Phone</th>
-              <th class="th-source">Source</th>
-              <th class="th-status">Status</th>
-              <th class="th-assigned">Assigned</th>
-              <th class="th-date">Date</th>
-            </tr></thead>
-            <tbody id="recentBody"></tbody>
-          </table>
-          <div id="recentEmpty" class="empty-state" style="display:none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
-            <p id="recentEmptyMsg">No applications yet.</p>
-            <a href="/bot" target="_blank" id="emptyBotLink" class="btn btn-primary btn-sm" style="margin-top:16px;text-decoration:none">Open client form</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Reports / Analytics -->
+    <div id="view-dashboard"></div>
 
-    <!-- Applications -->
+    <!-- Applications / Pipeline -->
     <div id="view-apps" style="display:none">
-      <div class="card">
-        <div class="card-hdr" style="flex-wrap:wrap; gap:10px;">
-          <div class="filter-pills" id="filterPills">
-            <button class="pill active" data-s="" onclick="setFilter('')">All</button>
-            <button class="pill" data-s="new"         onclick="setFilter('new')">New</button>
-            <button class="pill" data-s="in_progress" onclick="setFilter('in_progress')">In Progress</button>
-            <button class="pill" data-s="completed"   onclick="setFilter('completed')">Completed</button>
-            <button class="pill" data-s="incomplete"  onclick="setFilter('incomplete')">Incomplete</button>
-          </div>
-          <div class="search-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
-            <input class="search-input" id="searchInput" placeholder="Search name or phone…" oninput="renderApps()">
-          </div>
+      <div class="pipeline-hdr">
+        <div style="flex:1"></div>
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+          <input class="search-input" id="searchInput" placeholder="Search name or phone…" oninput="renderApps()">
         </div>
-        <div style="padding:14px 14px 6px">
-          <div id="boardWrap"></div>
-          <div id="appsEmpty" class="empty-state" style="display:none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
-            <p id="appsEmptyMsg">No applications match your filter.</p>
-          </div>
+        <div class="view-toggle">
+          <button class="vt-btn active" id="vt-board" onclick="setPipelineView('board')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/></svg>
+            <span id="vtBoardTxt">Board</span>
+          </button>
+          <button class="vt-btn" id="vt-list" onclick="setPipelineView('list')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            <span id="vtListTxt">List</span>
+          </button>
         </div>
+      </div>
+      <div class="alert-strip" id="alertStrip"></div>
+      <div class="quick-filters">
+        <button class="qf-btn active" id="qf-all" onclick="setPipelineFilter('all')">
+          <span id="qfLblAll">All</span><span class="qf-count" id="qfc-all">0</span>
+        </button>
+        <button class="qf-btn" id="qf-mine" onclick="setPipelineFilter('mine')">
+          <span id="qfLblMine">Mine</span><span class="qf-count" id="qfc-mine">0</span>
+        </button>
+        <button class="qf-btn" id="qf-unassigned" onclick="setPipelineFilter('unassigned')">
+          <span id="qfLblUnassigned">Unassigned</span><span class="qf-count" id="qfc-unassigned">0</span>
+        </button>
+        <button class="qf-btn" id="qf-urgent" onclick="setPipelineFilter('urgent')">
+          <span id="qfLblUrgent">Urgent</span><span class="qf-count" id="qfc-urgent">0</span>
+        </button>
+      </div>
+      <div id="boardWrap"></div>
+      <div id="appsEmpty" class="empty-state" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+        <p id="appsEmptyMsg">No applications match your filter.</p>
       </div>
     </div>
 
@@ -658,6 +813,105 @@
     <!-- Employee Stats -->
     <div id="view-empstats" style="display:none">
       <div id="empStatsContent"></div>
+    </div>
+
+    <!-- Case Workspace -->
+    <div id="view-case" style="display:none">
+      <div class="case-layout">
+        <!-- Left: Identity panel -->
+        <div class="case-left">
+          <div class="case-left-top">
+            <button class="case-back-link" onclick="closeCase()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+              <span id="caseBreadcrumb">Applications</span>
+            </button>
+            <span class="case-num" id="caseNum">#—</span>
+          </div>
+
+          <div class="case-identity">
+            <div class="case-av-large" id="caseAv">?</div>
+            <div class="case-name-hl" id="caseName">—</div>
+            <button class="case-stage-btn s-new" id="caseStageBtn" onclick="openStagePopover(event)">
+              <span class="case-stage-dot"></span><span id="caseStageLabel">New</span>
+              <svg class="case-stage-chev" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </button>
+          </div>
+
+          <div class="case-section">
+            <div class="case-sec-lbl" id="csSec1">Assigned to</div>
+            <button class="case-assign-btn" id="caseAssignBtn" onclick="openAssignPopover(event)">
+              <div class="case-assign-av unset" id="caseAssignAv">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+              </div>
+              <span class="case-assign-name unset" id="caseAssignName">Unassigned</span>
+              <svg class="case-assign-chev" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </button>
+          </div>
+
+          <div class="case-section">
+            <div class="case-sec-lbl" id="csSec2">Contact</div>
+            <div class="case-field" onclick="startCaseEdit('phone')">
+              <span class="case-field-lbl" id="cfl-phone">Phone</span>
+              <span class="case-field-val" id="cf-phone">—</span>
+            </div>
+            <div class="case-field" onclick="startCaseEdit('email')">
+              <span class="case-field-lbl" id="cfl-email">Email</span>
+              <span class="case-field-val" id="cf-email">—</span>
+            </div>
+          </div>
+
+          <div class="case-section">
+            <div class="case-sec-lbl" id="csSec3">Details</div>
+            <div class="case-field" onclick="startCaseEdit('source')">
+              <span class="case-field-lbl" id="cfl-source">Source</span>
+              <span class="case-field-val" id="cf-source">—</span>
+            </div>
+            <div class="case-field" style="cursor:default">
+              <span class="case-field-lbl" id="cfl-created">Created</span>
+              <span class="case-field-val cf-muted" id="cf-created">—</span>
+            </div>
+            <div class="case-field" style="cursor:default">
+              <span class="case-field-lbl" id="cfl-age">Age</span>
+              <span class="case-age-val age-ok" id="cf-age">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Activity timeline -->
+        <div class="case-right">
+          <div class="case-tl-scroll" id="caseTlScroll">
+            <div id="caseTl"></div>
+          </div>
+          <div class="case-compose">
+            <div class="compose-av" id="composeAv">?</div>
+            <div class="compose-wrap">
+              <textarea class="compose-textarea" id="caseNoteInput" placeholder="Add a note…" rows="1" oninput="caseTaResize(this)"></textarea>
+              <div class="compose-foot">
+                <label class="compose-attach-lbl" for="caseFileInput">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+                  <span id="caseAttachTxt">Attach file</span>
+                </label>
+                <input type="file" id="caseFileInput" style="display:none" onchange="caseUploadFile()">
+                <button class="btn btn-primary btn-sm" id="caseNoteBtn" onclick="addCaseNote()">
+                  <span id="caseNoteBtnTxt">Add note</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky action bar -->
+      <div class="case-action-bar">
+        <button class="btn-archive" id="caseArchiveBtn" onclick="archiveCase()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+          <span id="caseArchiveTxt">Archive</span>
+        </button>
+        <button class="btn-next-stage" id="nextStageBtn" onclick="moveToNextStage()">
+          <span id="nextStageTxt">Move to next stage</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Users -->
@@ -708,6 +962,37 @@
 </div>
 </div>
 
+<nav class="bottom-tabs" id="bottomTabs">
+  <button class="bt-item" id="bt-apps" onclick="showView('apps')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/></svg>
+    <span id="btTxtApps">Pipeline</span>
+  </button>
+  <button class="bt-item" id="bt-dashboard" onclick="showView('dashboard')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+    <span id="btTxtDashboard">Reports</span>
+  </button>
+  <button class="bt-item" id="bt-users" onclick="showView('users')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+    <span id="btTxtUsers">Team</span>
+  </button>
+  <button class="bt-item" id="bt-more" onclick="toggleUserMenu()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+    <span id="btTxtMore">More</span>
+  </button>
+</nav>
+
+<!-- Stage picker popover -->
+<div id="stagePopover" class="popover" style="display:none">
+  <div class="pop-lbl" id="popStageLbl">Change stage</div>
+  <button class="pop-item" id="ps-new" onclick="changeStageFromCase('new')"><span class="pop-dot" style="background:#3b82f6"></span><span id="psl-new">New</span></button>
+  <button class="pop-item" id="ps-in_progress" onclick="changeStageFromCase('in_progress')"><span class="pop-dot" style="background:#f59e0b"></span><span id="psl-in_progress">In Progress</span></button>
+  <button class="pop-item" id="ps-completed" onclick="changeStageFromCase('completed')"><span class="pop-dot" style="background:#10b981"></span><span id="psl-completed">Completed</span></button>
+  <button class="pop-item" id="ps-incomplete" onclick="changeStageFromCase('incomplete')"><span class="pop-dot" style="background:#ef4444"></span><span id="psl-incomplete">Incomplete</span></button>
+</div>
+
+<!-- Assign picker popover -->
+<div id="assignPopover" class="popover" style="display:none"></div>
+
 <div class="drawer-backdrop" id="drawerBack" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-hdr">
@@ -724,9 +1009,12 @@
 // ── Rebranding: change APP_NAME to rename/rebrand the product ──
 const APP_NAME = 'CRM';
 
-let allApps = [], employees = [], filterStatus = '', currentId = null, isNew = false;
+let allApps = [], employees = [], currentId = null, isNew = false;
 let currentView = 'dashboard', lastEmpStats = [], isDragging = false;
-let chartLine = null, chartDonut = null, chartBar = null, lastStats = null;
+let pipelineFilter = 'all', pipelineView = 'board';
+let chartLine = null, chartStatusBar = null, lastStats = null;
+let caseApp = null, caseNotes = [], caseAtts = [], prevView = 'apps', currentUsername = '?';
+let stagePopOpen = false, assignPopOpen = false;
 
 let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
@@ -738,54 +1026,31 @@ function toggleLanguage() {
 }
 
 function applyLang() {
-  document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
-  document.querySelector('.sb-name').textContent = APP_NAME;
   document.title = APP_NAME + (lang === 'en' ? ' — Admin' : ' — Администратор');
 
-  // Sidebar
-  document.getElementById('sbSecMain').textContent = t('Main', 'Главная');
-  document.getElementById('sbSecAdmin').textContent = t('Admin', 'Администрация');
-  document.getElementById('navTxtDashboard').textContent = t('Dashboard', 'Панель');
-  document.getElementById('navTxtApps').textContent = t('Applications', 'Заявки');
-  document.getElementById('navTxtTrash').textContent = t('Trash', 'Корзина');
-  document.getElementById('navTxtUsers').textContent = t('Users', 'Пользователи');
-  document.getElementById('navTxtEmpStats').textContent = t('Employee Stats', 'Стат. сотрудников');
-  document.getElementById('sbRole').textContent = t('Administrator', 'Администратор');
-  document.getElementById('sbSignout').textContent = t('Sign out', 'Выйти');
+  // Top nav
+  const tnName = document.getElementById('tnName'); if (tnName) tnName.textContent = APP_NAME;
+  const tnTxtApps = document.getElementById('tnTxtApps'); if (tnTxtApps) tnTxtApps.textContent = t('Pipeline','Воронка');
+  const tnTxtDash = document.getElementById('tnTxtDashboard'); if (tnTxtDash) tnTxtDash.textContent = t('Reports','Отчёты');
+  const tnTxtUsers = document.getElementById('tnTxtUsers'); if (tnTxtUsers) tnTxtUsers.textContent = t('Team','Команда');
+  const tnTxtStats = document.getElementById('tnTxtEmpStats'); if (tnTxtStats) tnTxtStats.textContent = t('Stats','Стат.');
+  const tnTxtOF = document.getElementById('tnTxtOpenForm'); if (tnTxtOF) tnTxtOF.textContent = t('Open Form','Открыть форму');
+  const tnTxtCL = document.getElementById('tnTxtCopyLink'); if (tnTxtCL) tnTxtCL.textContent = t('Copy Link','Скопировать ссылку');
+  const tnLang = document.getElementById('tnLangSpan'); if (tnLang) tnLang.textContent = lang === 'en' ? 'Switch to RU' : 'Switch to EN';
+  const tnTxtTr = document.getElementById('tnTxtTrash'); if (tnTxtTr) tnTxtTr.textContent = t('Trash','Корзина');
+  const tnTxtSO = document.getElementById('tnTxtSignout'); if (tnTxtSO) tnTxtSO.textContent = t('Sign out','Выйти');
+  const tnDrRole = document.getElementById('tnDropRole'); if (tnDrRole) tnDrRole.textContent = t('Administrator','Администратор');
+  const tnBkTxt = document.getElementById('tnBackTxt'); if (tnBkTxt) tnBkTxt.textContent = t('Back','Назад');
 
-  // Topbar
-  document.getElementById('openFormTxt').textContent = t('Open Form', 'Открыть форму');
-  document.getElementById('botLinkTxt').textContent = t('Copy Link', 'Скопировать ссылку');
-  document.getElementById('newAppTxt').textContent = t('New Application', 'Новая заявка');
-  const ebl = document.getElementById('emptyBotLink');
-  if (ebl) ebl.textContent = t('Open client form', 'Открыть форму клиента');
+  // Bottom tabs
+  const btTxtApps = document.getElementById('btTxtApps'); if (btTxtApps) btTxtApps.textContent = t('Pipeline','Воронка');
+  const btTxtDash = document.getElementById('btTxtDashboard'); if (btTxtDash) btTxtDash.textContent = t('Reports','Отчёты');
+  const btTxtUsers = document.getElementById('btTxtUsers'); if (btTxtUsers) btTxtUsers.textContent = t('Team','Команда');
+  const btTxtMore = document.getElementById('btTxtMore'); if (btTxtMore) btTxtMore.textContent = t('More','Ещё');
 
-  // Stats
-  document.getElementById('statLblTotal').textContent = t('Total', 'Всего');
-  document.getElementById('statSubTotal').textContent = t('active applications', 'активных заявок');
-  document.getElementById('statLblNew').textContent = t('New', 'Новые');
-  document.getElementById('statSubNew').textContent = t('awaiting action', 'ожидают действий');
-  document.getElementById('statLblProgress').textContent = t('In Progress', 'В работе');
-  document.getElementById('statSubProgress').textContent = t('being handled', 'обрабатываются');
-  document.getElementById('statLblCompleted').textContent = t('Completed', 'Завершено');
-  document.getElementById('statSubCompleted').textContent = t('resolved', 'решено');
-  document.getElementById('statLblIncomplete').textContent = t('Incomplete', 'Незавершено');
-  document.getElementById('statSubIncomplete').textContent = t('needs attention', 'требует внимания');
-  document.getElementById('statLblTrash').textContent = t('In Trash', 'В корзине');
-  document.getElementById('statSubTrash').textContent = t('soft-deleted', 'удалено');
-
-  // Chart titles
-  const clt = document.getElementById('chartLineTitle'); if (clt) clt.textContent = t('Applications Over Time', 'Заявки по времени');
-  const clp = document.getElementById('chartLinePeriod'); if (clp) clp.textContent = t('Last 14 days', 'Последние 14 дней');
-  const cdt = document.getElementById('chartDonutTitle'); if (cdt) cdt.textContent = t('Status Distribution', 'Распределение статусов');
-  const cbt = document.getElementById('chartBarTitle'); if (cbt) cbt.textContent = t('Employee Performance', 'Эффективность сотрудников');
-  const cbp = document.getElementById('chartBarPeriod'); if (cbp) cbp.textContent = t('All applications', 'Все заявки');
-  if (lastStats) buildDonutChart(lastStats);
-  buildBarChart(allApps);
-
-  // Dashboard card
-  document.getElementById('recentHdr').textContent = t('Recent Applications', 'Последние заявки');
-  document.getElementById('viewAllBtn').textContent = t('View all', 'Все');
+  // New button
+  const newTxt = document.getElementById('newAppTxt'); if (newTxt) newTxt.textContent = t('New','Новое');
+  const ebl = document.getElementById('emptyBotLink'); if (ebl) ebl.textContent = t('Open client form','Открыть форму клиента');
 
   // Table headers
   document.querySelectorAll('.th-name').forEach(el => el.textContent = t('Name', 'Имя'));
@@ -799,22 +1064,24 @@ function applyLang() {
   document.querySelectorAll('.th-role').forEach(el => el.textContent = t('Role', 'Роль'));
   document.querySelectorAll('.th-created').forEach(el => el.textContent = t('Created', 'Создан'));
 
-  // Filter pills
-  document.querySelector('.pill[data-s=""]').textContent = t('All', 'Все');
-  document.querySelector('.pill[data-s="new"]').textContent = t('New', 'Новые');
-  document.querySelector('.pill[data-s="in_progress"]').textContent = t('In Progress', 'В работе');
-  document.querySelector('.pill[data-s="completed"]').textContent = t('Completed', 'Завершено');
-  document.querySelector('.pill[data-s="incomplete"]').textContent = t('Incomplete', 'Незавершено');
+  // Pipeline view toggle
+  const vtB = document.getElementById('vtBoardTxt'); if (vtB) vtB.textContent = t('Board','Доска');
+  const vtL = document.getElementById('vtListTxt');  if (vtL) vtL.textContent = t('List','Список');
+
+  // Pipeline quick filters
+  const qfAll = document.getElementById('qfLblAll');        if (qfAll) qfAll.textContent = t('All','Все');
+  const qfMine = document.getElementById('qfLblMine');      if (qfMine) qfMine.textContent = t('Mine','Мои');
+  const qfUna = document.getElementById('qfLblUnassigned'); if (qfUna) qfUna.textContent = t('Unassigned','Без исполнителя');
+  const qfUrg = document.getElementById('qfLblUrgent');     if (qfUrg) qfUrg.textContent = t('Urgent','Срочные');
 
   // Search
   const si = document.getElementById('searchInput');
   if (si) si.placeholder = t('Search name or phone\u2026', 'Поиск по имени или телефону\u2026');
 
   // Empty states
-  document.getElementById('recentEmptyMsg').textContent = t('No applications yet.', 'Нет заявок.');
-  document.getElementById('appsEmptyMsg').textContent = t('No applications match your filter.', 'Заявки не найдены.');
-  document.getElementById('trashEmptyMsg').textContent = t('Trash is empty.', 'Корзина пуста.');
-  document.getElementById('trashHdr').textContent = t('Trash', 'Корзина');
+  const appsEmptyEl = document.getElementById('appsEmptyMsg'); if (appsEmptyEl) appsEmptyEl.textContent = t('No applications match your filter.', 'Заявки не найдены.');
+  const trashEmptyEl = document.getElementById('trashEmptyMsg'); if (trashEmptyEl) trashEmptyEl.textContent = t('Trash is empty.', 'Корзина пуста.');
+  const trashHdrEl = document.getElementById('trashHdr'); if (trashHdrEl) trashHdrEl.textContent = t('Trash', 'Корзина');
 
   // Users page
   document.getElementById('usersCreateHdr').textContent = t('Create Account', 'Создать аккаунт');
@@ -826,9 +1093,28 @@ function applyLang() {
   document.querySelector('#nr option[value="admin"]').textContent = t('Admin', 'Администратор');
   document.getElementById('createUserBtn').textContent = t('Create Account', 'Создать аккаунт');
 
+  // Case workspace labels
+  const el_cs1 = document.getElementById('csSec1'); if (el_cs1) el_cs1.textContent = t('Assigned to','Назначено');
+  const el_cs2 = document.getElementById('csSec2'); if (el_cs2) el_cs2.textContent = t('Contact','Контакт');
+  const el_cs3 = document.getElementById('csSec3'); if (el_cs3) el_cs3.textContent = t('Details','Детали');
+  const el_cflphone = document.getElementById('cfl-phone'); if (el_cflphone) el_cflphone.textContent = t('Phone','Телефон');
+  const el_cflemail = document.getElementById('cfl-email'); if (el_cflemail) el_cflemail.textContent = t('Email','Email');
+  const el_cflsrc = document.getElementById('cfl-source'); if (el_cflsrc) el_cflsrc.textContent = t('Source','Источник');
+  const el_cflcreated = document.getElementById('cfl-created'); if (el_cflcreated) el_cflcreated.textContent = t('Created','Создана');
+  const el_cflage = document.getElementById('cfl-age'); if (el_cflage) el_cflage.textContent = t('Age','Возраст');
+  const el_attach = document.getElementById('caseAttachTxt'); if (el_attach) el_attach.textContent = t('Attach file','Прикрепить файл');
+  const el_notebtn = document.getElementById('caseNoteBtnTxt'); if (el_notebtn) el_notebtn.textContent = t('Add note','Добавить заметку');
+  const el_arch = document.getElementById('caseArchiveTxt'); if (el_arch) el_arch.textContent = t('Archive','Архивировать');
+  const el_psl = document.getElementById('popStageLbl'); if (el_psl) el_psl.textContent = t('Change stage','Изменить стадию');
+  const el_psnew = document.getElementById('psl-new'); if (el_psnew) el_psnew.textContent = t('New','Новая');
+  const el_pswip = document.getElementById('psl-in_progress'); if (el_pswip) el_pswip.textContent = t('In Progress','В работе');
+  const el_psdone = document.getElementById('psl-completed'); if (el_psdone) el_psdone.textContent = t('Completed','Завершено');
+  const el_psfail = document.getElementById('psl-incomplete'); if (el_psfail) el_psfail.textContent = t('Incomplete','Незавершено');
+  if (currentView === 'case' && caseApp) renderCase();
+
   updateViewTitle();
   renderApps();
-  renderRecent();
+  if (currentView === 'dashboard') renderDashboard();
   if (currentView === 'trash')    loadTrash();
   if (currentView === 'users')    loadUsers();
   if (currentView === 'empstats') renderEmpStats(lastEmpStats);
@@ -861,156 +1147,178 @@ function buildLineChart(apps) {
       datasets: [{
         data: counts,
         borderColor: '#2563eb',
-        backgroundColor: 'rgba(37,99,235,.07)',
+        backgroundColor: 'rgba(37,99,235,.04)',
         fill: true,
         tension: 0.4,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        pointBackgroundColor: '#2563eb',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 1.5,
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          titleColor: '#94a3b8',
-          bodyColor: '#f1f5f9',
-          padding: 10,
-          cornerRadius: 8,
-          callbacks: { label: c => ` ${c.parsed.y} ${t('apps', 'заявок')}` }
-        }
-      },
-      scales: {
-        x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', maxTicksLimit: 7 } },
-        y: { grid: { color: '#f1f5f9' }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', precision: 0 }, beginAtZero: true },
-      }
-    }
-  });
-}
-
-function buildDonutChart(s) {
-  const ctx = document.getElementById('chartDonut')?.getContext('2d');
-  if (!ctx) return;
-  if (chartDonut) chartDonut.destroy();
-  chartDonut = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: [t('New','Новые'), t('In Progress','В работе'), t('Completed','Завершено'), t('Incomplete','Незавершено')],
-      datasets: [{
-        data: [s.new, s.in_progress, s.completed, s.incomplete],
-        backgroundColor: ['#3b82f6','#f59e0b','#10b981','#ef4444'],
-        borderWidth: 0,
-        hoverOffset: 6,
-        borderRadius: 3,
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '68%',
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { font: { size: 11, family: CHART_DEFAULTS.font.family }, color: '#64748b', padding: 14, usePointStyle: true, pointStyleWidth: 7 }
-        },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          titleColor: '#94a3b8',
-          bodyColor: '#f1f5f9',
-          padding: 10,
-          cornerRadius: 8,
-        }
-      }
-    }
-  });
-}
-
-function buildBarChart(apps) {
-  const ctx = document.getElementById('chartBar')?.getContext('2d');
-  if (!ctx) return;
-  const counts = {};
-  apps.forEach(a => {
-    const name = a.assigned_username || t('Unassigned', 'Не назначено');
-    counts[name] = (counts[name] || 0) + 1;
-  });
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
-  const card = document.getElementById('chartEmpCard');
-  if (!sorted.length || sorted.length === 1 && sorted[0][0] === t('Unassigned','Не назначено')) {
-    if (card) card.style.display = 'none'; return;
-  }
-  if (card) card.style.display = '';
-  if (chartBar) chartBar.destroy();
-  const palette = ['#2563eb','#3b82f6','#60a5fa','#93c5fd','#7c3aed','#a78bfa','#0d9488','#34d399'];
-  chartBar = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: sorted.map(e => e[0]),
-      datasets: [{
-        data: sorted.map(e => e[1]),
-        backgroundColor: sorted.map((_, i) => palette[i % palette.length]),
-        borderRadius: 6,
-        borderSkipped: false,
-        barThickness: 28,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#2563eb',
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2,
+        borderWidth: 1.5,
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
           backgroundColor: '#0f172a',
-          titleColor: '#94a3b8',
+          titleColor: '#64748b',
           bodyColor: '#f1f5f9',
           padding: 10,
           cornerRadius: 8,
+          displayColors: false,
           callbacks: { label: c => ` ${c.parsed.y} ${t('apps', 'заявок')}` }
         }
       },
       scales: {
-        x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 11 }, color: '#64748b' } },
-        y: { grid: { color: '#f1f5f9' }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', precision: 0 }, beginAtZero: true },
+        x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', maxTicksLimit: 7 } },
+        y: { grid: { color: 'rgba(0,0,0,.04)' }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', precision: 0 }, beginAtZero: true },
       }
     }
   });
+}
+
+
+// ── Reports / Analytics ──────────────────────────────────────────────────────
+
+function renderDashboard() {
+  const el = document.getElementById('view-dashboard');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="rpt-kpi-strip" id="rptKpiStrip"></div>' +
+    '<div class="rpt-sec"><div class="rpt-sec-hdr">' + t('Needs Attention','Требует внимания') + '</div><div id="rptInsights"></div></div>' +
+    '<div class="rpt-sec"><div class="rpt-sec-hdr">' + t('Trends','Тренды') + '</div>' +
+      '<div class="rpt-charts-grid">' +
+        '<div class="rpt-chart-card"><div class="rpt-chart-hdr"><h4>' + t('Applications over time','Заявки по времени') + '</h4><span>' + t('Last 14 days','Последние 14 дней') + '</span></div><div class="rpt-chart-body"><canvas id="chartLine"></canvas></div></div>' +
+        '<div class="rpt-chart-card"><div class="rpt-chart-hdr"><h4>' + t('By status','По статусу') + '</h4></div><div class="rpt-chart-body"><canvas id="chartStatusBar"></canvas></div></div>' +
+      '</div></div>' +
+    '<div class="rpt-sec"><div class="rpt-sec-hdr">' + t('Team Performance','Команда') + '</div><div id="rptTeamTable"></div></div>';
+  renderDashKPIs();
+  renderDashInsights();
+  buildLineChart(allApps);
+  buildStatusBarChart();
+  renderDashTeamTable();
+}
+
+function renderDashKPIs() {
+  const el = document.getElementById('rptKpiStrip');
+  if (!el || !lastStats) return;
+  const total = lastStats.total || 0;
+  const completed = lastStats.completed || 0;
+  const convRate = total > 0 ? Math.round(completed / total * 100) : 0;
+  const openApps = allApps.filter(a => a.status === 'new' || a.status === 'in_progress');
+  const avgAge = openApps.length > 0 ? Math.round(openApps.reduce(function(s,a){ return s + appAge(a); }, 0) / openApps.length / 24) : 0;
+  const urgentCount = allApps.filter(a => a.status === 'new' && appAge(a) >= 48).length;
+  const urgCls = urgentCount > 0 ? ' kpi-danger' : '';
+  el.innerHTML =
+    '<div class="rpt-kpi"><div class="rpt-kpi-lbl">' + t('Total Active','Активных') + '</div><div class="rpt-kpi-val">' + total + '</div><div class="rpt-kpi-ctx">' + t('applications','заявок') + '</div></div>' +
+    '<div class="rpt-kpi"><div class="rpt-kpi-lbl">' + t('Conversion','Конверсия') + '</div><div class="rpt-kpi-val">' + convRate + '%</div><div class="rpt-kpi-ctx">' + t('completed / total','завершено / всего') + '</div></div>' +
+    '<div class="rpt-kpi"><div class="rpt-kpi-lbl">' + t('Avg Lead Age','Средний возраст') + '</div><div class="rpt-kpi-val">' + avgAge + t('d','д') + '</div><div class="rpt-kpi-ctx">' + t('open leads','открытых заявок') + '</div></div>' +
+    '<div class="rpt-kpi"><div class="rpt-kpi-lbl">' + t('Uncontacted >48h','Без контакта >48ч') + '</div><div class="rpt-kpi-val' + urgCls + '">' + urgentCount + '</div><div class="rpt-kpi-ctx">' + t('new, not acted on','новых, без действий') + '</div></div>';
+}
+
+function renderDashInsights() {
+  const el = document.getElementById('rptInsights');
+  if (!el) return;
+  const stale      = allApps.filter(a => a.status === 'in_progress' && appAge(a) > 168);
+  const unassigned = allApps.filter(a => !a.assigned_employee_id && a.status !== 'completed' && a.status !== 'incomplete');
+  const urgent     = allApps.filter(a => a.status === 'new' && appAge(a) >= 48);
+  const items = [];
+  if (stale.length > 0)
+    items.push('<div class="rpt-insight iw"><div class="rpt-insight-top"><div class="rpt-insight-n iw">' + stale.length + '</div><div class="rpt-insight-desc">' + t('leads in progress for more than 7 days','заявок в работе более 7 дней') + '</div></div><button class="rpt-insight-act" onclick="showView(\'apps\')">' + t('\u2192 View them','\u2192 Посмотреть') + '</button></div>');
+  if (unassigned.length > 0) {
+    var uc = unassigned.length > 3 ? 'id' : 'iw';
+    items.push('<div class="rpt-insight ' + uc + '"><div class="rpt-insight-top"><div class="rpt-insight-n ' + uc + '">' + unassigned.length + '</div><div class="rpt-insight-desc">' + t('unassigned active leads','активных заявок без исполнителя') + '</div></div><button class="rpt-insight-act" onclick="showView(\'apps\');setPipelineFilter(\'unassigned\')">' + t('\u2192 Assign now','\u2192 Назначить') + '</button></div>');
+  }
+  if (urgent.length > 0)
+    items.push('<div class="rpt-insight id"><div class="rpt-insight-top"><div class="rpt-insight-n id">' + urgent.length + '</div><div class="rpt-insight-desc">' + t('new leads not contacted for 48h+','новых заявок без контакта 48ч+') + '</div></div><button class="rpt-insight-act" onclick="showView(\'apps\');setPipelineFilter(\'urgent\')">' + t('\u2192 Open list','\u2192 Открыть список') + '</button></div>');
+  if (items.length === 0)
+    el.innerHTML = '<div class="rpt-insight io"><div class="rpt-insight-top"><div style="display:flex;align-items:center;gap:8px;color:var(--success)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:18px;height:18px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:.87rem;font-weight:600">' + t('All clear. No urgent issues.','Всё в порядке. Срочных задач нет.') + '</span></div></div></div>';
+  else
+    el.innerHTML = '<div class="rpt-insights-grid">' + items.join('') + '</div>';
+}
+
+function buildStatusBarChart() {
+  const el = document.getElementById('chartStatusBar');
+  if (!el || !lastStats) return;
+  const ctx = el.getContext('2d');
+  if (!ctx) return;
+  if (chartStatusBar) chartStatusBar.destroy();
+  var labels = [t('New','Новые'), t('In Progress','В работе'), t('Completed','Завершено'), t('Incomplete','Незавершено')];
+  var data   = [lastStats.new || 0, lastStats.in_progress || 0, lastStats.completed || 0, lastStats.incomplete || 0];
+  var fills  = ['rgba(37,99,235,.55)','rgba(217,119,6,.55)','rgba(5,150,105,.55)','rgba(220,38,38,.50)'];
+  chartStatusBar = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: data, backgroundColor: fills, borderWidth: 0, borderRadius: 3, barPercentage: 0.65 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f172a',
+          titleColor: '#64748b',
+          bodyColor: '#f1f5f9',
+          padding: 10,
+          cornerRadius: 8,
+          displayColors: false,
+          callbacks: { label: function(c){ return ' ' + c.parsed.x + ' ' + t('apps','заявок'); } }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,.04)' }, border: { display: false }, ticks: { font: { size: 11 }, color: '#94a3b8', precision: 0 } },
+        y: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 12 }, color: '#4b5563' } }
+      }
+    }
+  });
+}
+
+function renderDashTeamTable() {
+  const el = document.getElementById('rptTeamTable');
+  if (!el) return;
+  if (!lastEmpStats.length) {
+    el.innerHTML = '<div class="rpt-team-wrap" style="padding:28px;text-align:center"><p style="color:var(--muted);font-size:.84rem">' + t('No team data yet.','Данных о команде нет.') + '</p></div>';
+    return;
+  }
+  var sorted = lastEmpStats.slice().sort(function(a,b){
+    var pa = a.all.total > 0 ? a.all.completed / a.all.total : 0;
+    var pb = b.all.total > 0 ? b.all.completed / b.all.total : 0;
+    return pb - pa;
+  });
+  var rows = sorted.map(function(emp){
+    var pct = emp.all.total > 0 ? Math.round(emp.all.completed / emp.all.total * 100) : 0;
+    var cls = pct >= 75 ? 'high' : pct >= 40 ? 'mid' : 'low';
+    return '<tr><td><div class="rpt-tm-name"><div class="rpt-tm-av">' + x(emp.username).charAt(0).toUpperCase() + '</div>' + x(emp.username) + '</div></td><td class="r">' + emp.all.total + '</td><td class="r">' + emp.all.completed + '</td><td class="r"><span class="rpt-conv ' + cls + '">' + pct + '%</span></td></tr>';
+  }).join('');
+  el.innerHTML = '<div class="rpt-team-wrap"><table><thead><tr><th>' + t('Employee','Сотрудник') + '</th><th class="r">' + t('Assigned','Назначено') + '</th><th class="r">' + t('Completed','Завершено') + '</th><th class="r">' + t('Conversion','Конверсия') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
 async function init() {
   const r = await fetch('/auth/me');
   if (!r.ok) { location.href = '/login'; return; }
   const u = await r.json();
-  document.getElementById('sbUsername').textContent = u.username;
+  currentUsername = u.username;
   const initial = u.username.charAt(0).toUpperCase();
-  const sbAv = document.getElementById('sbUserAv');
-  if (sbAv) sbAv.textContent = initial;
-  const topAv = document.getElementById('topbarAv');
-  if (topAv) topAv.textContent = initial;
-  await Promise.all([loadEmployees(), loadApps(), loadStats()]);
-  updateViewTitle();
+  const tnAv = document.getElementById('tnUserAv'); if (tnAv) tnAv.textContent = initial;
+  const tnDropAv = document.getElementById('tnDropAv'); if (tnDropAv) tnDropAv.textContent = initial;
+  const tnDropName = document.getElementById('tnDropName'); if (tnDropName) tnDropName.textContent = u.username;
+  const tnDropRole = document.getElementById('tnDropRole'); if (tnDropRole) tnDropRole.textContent = t('Administrator','Администратор');
+  await Promise.all([loadEmployees(), loadApps(), loadStats(), loadEmpStats()]);
+  showView(currentView);
 }
 
 async function loadStats() {
   const r = await fetch('/api/stats');
   if (!r.ok) return;
   const s = await r.json();
-  document.getElementById('st-total').textContent     = s.total;
-  document.getElementById('st-new').textContent       = s.new;
-  document.getElementById('st-progress').textContent  = s.in_progress;
-  document.getElementById('st-completed').textContent = s.completed;
-  document.getElementById('st-incomplete').textContent= s.incomplete;
-  document.getElementById('st-trash').textContent     = s.in_trash;
   lastStats = s;
-  const tot = Math.max(s.total, 1);
-  const bars = { 'st-bar-new': s.new, 'st-bar-progress': s.in_progress, 'st-bar-completed': s.completed, 'st-bar-incomplete': s.incomplete };
-  Object.entries(bars).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.style.width = Math.round(val / tot * 100) + '%'; });
   const badge = document.getElementById('navBadgeApps');
   if (badge) { badge.textContent = s.total; badge.style.display = s.total > 0 ? '' : 'none'; }
-  buildDonutChart(s);
+  renderDashKPIs();
+  buildStatusBarChart();
 }
 
 async function loadEmployees() {
@@ -1022,9 +1330,36 @@ async function loadApps() {
   const r = await fetch('/api/applications');
   if (r.ok) allApps = await r.json();
   renderApps();
-  renderRecent();
   buildLineChart(allApps);
-  buildBarChart(allApps);
+  renderDashKPIs();
+  renderDashInsights();
+}
+
+function setPipelineFilter(f) {
+  pipelineFilter = f;
+  ['all','mine','unassigned','urgent'].forEach(k => {
+    document.getElementById(`qf-${k}`)?.classList.toggle('active', k === f);
+  });
+  renderApps();
+}
+
+function setPipelineView(v) {
+  pipelineView = v;
+  document.getElementById('vt-board')?.classList.toggle('active', v === 'board');
+  document.getElementById('vt-list')?.classList.toggle('active', v === 'list');
+  renderApps();
+}
+
+function appAge(app) {
+  return Math.floor((Date.now() - new Date(app.created_at||0)) / 3600000);
+}
+function ageLabel(hours) {
+  if (hours < 1) return t('<1h','<1ч');
+  if (hours < 24) return hours + t('h','ч');
+  return Math.floor(hours / 24) + t('d','д');
+}
+function ageClass(hours) {
+  return hours >= 72 ? 'age-urgent' : hours >= 48 ? 'age-warn' : 'age-ok';
 }
 
 function renderApps() {
@@ -1033,64 +1368,108 @@ function renderApps() {
   const emptyEl   = document.getElementById('appsEmpty');
   if (!boardWrap) return;
 
-  const statuses = ['new', 'in_progress', 'completed', 'incomplete'];
-  const statusLabels = {
-    new: t('New','Новые'), in_progress: t('In Progress','В работе'),
-    completed: t('Completed','Завершено'), incomplete: t('Incomplete','Незавершено'),
-  };
-  const visibleStatuses = filterStatus ? [filterStatus] : statuses;
   const searched = allApps.filter(a => !q || a.name.toLowerCase().includes(q) || (a.phone||'').includes(q));
-  const totalVisible = searched.filter(a => !filterStatus || a.status === filterStatus);
-  if (!totalVisible.length) {
+
+  // Update quick filter counts
+  const counts = {
+    all:        searched.length,
+    mine:       searched.filter(a => a.assigned_username === currentUsername).length,
+    unassigned: searched.filter(a => !a.assigned_employee_id).length,
+    urgent:     searched.filter(a => a.status === 'new' && appAge(a) >= 48).length,
+  };
+  ['all','mine','unassigned','urgent'].forEach(k => {
+    const el = document.getElementById(`qfc-${k}`);
+    if (el) el.textContent = counts[k];
+  });
+
+  // Render alert strip (based on full allApps, not search-filtered)
+  const strip = document.getElementById('alertStrip');
+  if (strip) {
+    const urgentCount     = allApps.filter(a => a.status === 'new' && appAge(a) >= 48).length;
+    const unassignedCount = allApps.filter(a => !a.assigned_employee_id && a.status !== 'completed' && a.status !== 'incomplete').length;
+    const warnSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:13px;height:13px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>';
+    const userSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:13px;height:13px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>';
+    const alerts = [];
+    if (urgentCount > 0)     alerts.push('<button class="pl-alert pl-alert-danger" onclick="setPipelineFilter(\'urgent\')">' + warnSvg + t('Uncontacted over 48h','Без контакта более 48ч') + '<span class="pl-alert-count">' + urgentCount + '</span></button>');
+    if (unassignedCount > 0) alerts.push('<button class="pl-alert pl-alert-warn" onclick="setPipelineFilter(\'unassigned\')">' + userSvg + t('Unassigned active apps','Активные без исполнителя') + '<span class="pl-alert-count">' + unassignedCount + '</span></button>');
+    strip.innerHTML = alerts.join('');
+  }
+
+  // Apply pipeline filter
+  let filtered;
+  switch (pipelineFilter) {
+    case 'mine':       filtered = searched.filter(a => a.assigned_username === currentUsername); break;
+    case 'unassigned': filtered = searched.filter(a => !a.assigned_employee_id); break;
+    case 'urgent':     filtered = searched.filter(a => a.status === 'new' && appAge(a) >= 48); break;
+    default:           filtered = searched;
+  }
+
+  if (!filtered.length) {
     if (emptyEl) emptyEl.style.display = 'block';
     boardWrap.innerHTML = '';
     return;
   }
   if (emptyEl) emptyEl.style.display = 'none';
 
+  if (pipelineView === 'list') {
+    renderPipelineList(filtered, boardWrap);
+  } else {
+    renderPipelineBoard(filtered, boardWrap);
+  }
+}
+
+function renderPipelineBoard(apps, wrap) {
+  const statuses = ['new', 'in_progress', 'completed', 'incomplete'];
+  const statusLabels = {
+    new: t('New','Новые'), in_progress: t('In Progress','В работе'),
+    completed: t('Completed','Завершено'), incomplete: t('Incomplete','Незавершено'),
+  };
   const canDrag = window.matchMedia('(pointer: fine)').matches;
 
-  const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;display:block"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>`;
-
-  const cols = visibleStatuses.map(s => {
-    const dragColAttrs = canDrag
-      ? `ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event,'${s}')"`
-      : '';
-    const cards = searched.filter(a => a.status === s);
+  const cols = statuses.map(s => {
+    const dragColAttrs = canDrag ? 'ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event,\'' + s + '\')"' : '';
+    const cards = apps.filter(a => a.status === s);
     const cardsHtml = cards.length ? cards.map(a => {
-      const dragCardAttrs = canDrag
-        ? `draggable="true" ondragstart="dragStart(event,${a.id},'${s}')" ondragend="dragEnd(event)"`
-        : '';
-      return `
-      <div class="bcard" data-status="${s}" ${dragCardAttrs} onclick="openDetail(${a.id})">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:2px">
-          <div class="bcard-name">${x(a.name)}</div>
-          <span class="bcard-num">#${a.queue_number||a.id}</span>
-        </div>
-        ${a.phone ? `<div class="bcard-phone">${x(a.phone)}</div>` : ''}
-        <div class="bcard-row">
-          ${a.source ? `<span class="bcard-tag">${x(a.source)}</span>` : ''}
-          ${a.assigned_username ? `<span class="bcard-assignee"><span class="bcard-assignee-av">${x(a.assigned_username).charAt(0).toUpperCase()}</span>${x(a.assigned_username)}</span>` : ''}
-        </div>
-        <div class="bcard-foot">
-          <span class="bcard-date">${fd(a.created_at)}</span>
-          <div style="display:flex;gap:4px">
-            <button class="bcard-btn" onclick="event.stopPropagation();openDetail(${a.id})">${t('Open','Открыть')}</button>
-            <button class="bcard-btn bcard-btn-del" onclick="event.stopPropagation();softDel(${a.id})" title="${t('Move to Trash','В корзину')}">${trashIcon}</button>
-          </div>
-        </div>
-      </div>`;
-    }).join('') : `<div class="board-empty">${t('No items','Нет заявок')}</div>`;
-    return `<div class="board-col" data-status="${s}" ${dragColAttrs}>
-      <div class="board-col-hdr">
-        <span class="badge badge-${s}"><span class="badge-dot"></span>${statusLabels[s]}</span>
-        <span class="board-col-count">${cards.length}</span>
-      </div>
-      <div class="board-cards">${cardsHtml}</div>
-    </div>`;
+      const hours = appAge(a);
+      const aClass = ageClass(hours);
+      const aLbl   = ageLabel(hours);
+      const dragCardAttrs = canDrag ? 'draggable="true" ondragstart="dragStart(event,' + a.id + ',\'' + s + '\')" ondragend="dragEnd(event)"' : '';
+      const assigneeHtml = a.assigned_username ? '<span class="pcard-av" title="' + x(a.assigned_username) + '">' + x(a.assigned_username).charAt(0).toUpperCase() + '</span>' : '';
+      const sourceHtml   = a.source ? '<span class="pcard-source">' + x(a.source) + '</span>' : '';
+      return '<div class="pcard" data-status="' + s + '" ' + dragCardAttrs + ' onclick="openCase(' + a.id + ')">'
+        + '<div class="pcard-top"><div class="pcard-name">' + x(a.name) + '</div><span class="pcard-num">#' + (a.queue_number||a.id) + '</span></div>'
+        + '<div class="pcard-meta"><span class="pcard-age ' + aClass + '">' + aLbl + '</span>' + sourceHtml + assigneeHtml + '</div>'
+        + '</div>';
+    }).join('') : '<div class="board-empty">' + t('No items','Нет заявок') + '</div>';
+    return '<div class="board-col" data-status="' + s + '" ' + dragColAttrs + '>'
+      + '<div class="board-col-hdr"><span class="badge badge-' + s + '"><span class="badge-dot"></span>' + statusLabels[s] + '</span><span class="board-col-count">' + cards.length + '</span></div>'
+      + '<div class="board-cards">' + cardsHtml + '</div></div>';
   }).join('');
+  wrap.innerHTML = '<div class="board">' + cols + '</div>';
+}
 
-  boardWrap.innerHTML = `<div class="board">${cols}</div>`;
+function renderPipelineList(apps, wrap) {
+  const sorted = [...apps].sort((a, b) => {
+    const au = appAge(a), bu = appAge(b);
+    const aU = a.status === 'new' && au >= 48 ? 1 : 0;
+    const bU = b.status === 'new' && bu >= 48 ? 1 : 0;
+    if (bU !== aU) return bU - aU;
+    return bu - au;
+  });
+  const dotMap = { new:'s-new', in_progress:'s-in_progress', completed:'s-completed', incomplete:'s-incomplete' };
+  const rows = sorted.map(a => {
+    const hours  = appAge(a);
+    const aClass = ageClass(hours);
+    const aLbl   = ageLabel(hours);
+    const sourceHtml   = a.source ? '<span class="pl-row-source">' + x(a.source) + '</span>' : '';
+    const assigneeHtml = a.assigned_username ? '<span class="pl-row-av" title="' + x(a.assigned_username) + '">' + x(a.assigned_username).charAt(0).toUpperCase() + '</span>' : '';
+    return '<div class="pl-row" onclick="openCase(' + a.id + ')">'
+      + '<span class="pl-row-dot ' + (dotMap[a.status]||'') + '"></span>'
+      + '<span class="pl-row-name">' + x(a.name) + '</span>'
+      + '<div class="pl-row-right">' + sourceHtml + '<span class="pl-row-age ' + aClass + '">' + aLbl + '</span>' + assigneeHtml + '<span class="pl-row-num">#' + (a.queue_number||a.id) + '</span></div>'
+      + '</div>';
+  }).join('');
+  wrap.innerHTML = '<div class="pl-list">' + rows + '</div>';
 }
 
 function renderRecent() {
@@ -1111,15 +1490,9 @@ function renderRecent() {
       <td><span class="badge badge-${a.status}"><span class="badge-dot"></span>${sl(a.status)}</span></td>
       <td style="color:var(--muted)">${x(a.assigned_username||'—')}</td>
       <td style="color:var(--muted);font-size:.78rem;white-space:nowrap">${fd(a.created_at)}</td>`;
-    tr.addEventListener('click', () => { showView('apps'); openDetail(a.id); });
+    tr.addEventListener('click', () => openCase(a.id));
     tbody.appendChild(tr);
   });
-}
-
-function setFilter(s) {
-  filterStatus = s;
-  document.querySelectorAll('.pill').forEach(b => b.classList.toggle('active', b.dataset.s === s));
-  renderApps();
 }
 
 async function loadTrash() {
@@ -1188,6 +1561,7 @@ async function loadEmpStats() {
   const r = await fetch('/api/employee-stats');
   lastEmpStats = r.ok ? await r.json() : [];
   renderEmpStats(lastEmpStats);
+  renderDashTeamTable();
 }
 
 function renderEmpStats(emps) {
@@ -1272,34 +1646,40 @@ async function delUser(id) {
 }
 
 function updateViewTitle() {
-  const titles = {
-    dashboard: t('Dashboard', 'Панель'),
-    apps:      t('Applications', 'Заявки'),
-    trash:     t('Trash', 'Корзина'),
-    users:     t('User Management', 'Управление пользователями'),
-    empstats:  t('Employee Statistics', 'Статистика сотрудников'),
-  };
-  document.getElementById('viewTitle').textContent = titles[currentView] || currentView;
+  const el = document.getElementById('viewTitle');
+  if (!el) return;
+  if (currentView === 'case' && caseApp) {
+    el.textContent = '#' + (caseApp.queue_number || caseApp.id) + ' \u2014 ' + caseApp.name;
+    el.style.display = '';
+  } else {
+    el.textContent = '';
+    el.style.display = 'none';
+  }
 }
 
-function toggleMobileMenu() {
-  document.querySelector('.sidebar').classList.toggle('mob-open');
-  document.getElementById('mobOverlay').classList.toggle('open');
+function toggleUserMenu() {
+  document.getElementById('tnDropdown').classList.toggle('open');
 }
-function closeMobileMenu() {
-  document.querySelector('.sidebar').classList.remove('mob-open');
-  document.getElementById('mobOverlay').classList.remove('open');
+function closeUserMenu() {
+  document.getElementById('tnDropdown').classList.remove('open');
 }
 
 function showView(v) {
   currentView = v;
-  closeMobileMenu();
-  ['dashboard','apps','trash','users','empstats'].forEach(n => {
-    document.getElementById(`view-${n}`).style.display = n === v ? 'block' : 'none';
-    document.getElementById(`nav-${n}`)?.classList.toggle('active', n === v);
+  closeUserMenu();
+  closeStagePopover();
+  closeAssignPopover();
+  ['dashboard','apps','trash','users','empstats','case'].forEach(n => {
+    const el = document.getElementById(`view-${n}`);
+    if (el) el.style.display = n === v ? (n === 'case' ? 'flex' : 'block') : 'none';
+    document.getElementById(`tnav-${n}`)?.classList.toggle('active', n === v && n !== 'case');
+    document.getElementById(`bt-${n}`)?.classList.toggle('active', n === v && n !== 'case');
   });
   updateViewTitle();
   document.getElementById('newAppBtn').style.display = v === 'apps' ? 'inline-flex' : 'none';
+  const backBtn = document.getElementById('caseBackBtn');
+  if (backBtn) backBtn.style.display = v === 'case' ? 'flex' : 'none';
+  if (v === 'dashboard') renderDashboard();
   if (v === 'trash')    loadTrash();
   if (v === 'users')    loadUsers();
   if (v === 'empstats') loadEmpStats();
@@ -1314,7 +1694,10 @@ function closeDrawer() {
   document.getElementById('drawerBack').classList.remove('open');
 }
 
-async function openDetail(id) {
+// ── Case workspace ─────────────────────────────────────────────────────────────
+
+async function openCase(id) {
+  prevView = currentView || 'apps';
   currentId = id; isNew = false;
   const [rApp, rNotes, rAtts] = await Promise.all([
     fetch(`/api/applications/${id}`),
@@ -1322,72 +1705,357 @@ async function openDetail(id) {
     fetch(`/api/applications/${id}/attachments`),
   ]);
   if (!rApp.ok) return;
-  const a     = await rApp.json();
-  const notes = rNotes.ok ? await rNotes.json() : [];
-  const atts  = rAtts.ok  ? await rAtts.json()  : [];
+  caseApp   = await rApp.json();
+  caseNotes = rNotes.ok ? await rNotes.json() : [];
+  caseAtts  = rAtts.ok  ? await rAtts.json()  : [];
+  showView('case');
+  renderCase();
+}
 
-  document.getElementById('drawerTitle').textContent = `#${a.queue_number||a.id} — ${a.name}`;
+function closeCase() {
+  showView(prevView || 'apps');
+}
 
-  const empOpts = employees.filter(e => e.role === 'employee').map(e =>
-    `<option value="${e.id}" ${a.assigned_employee_id == e.id ? 'selected' : ''}>${x(e.username)}</option>`
-  ).join('');
+function renderCase() {
+  const a = caseApp;
+  if (!a) return;
 
-  document.getElementById('drawerBody').innerHTML = `
-    <div class="form-grid">
-      <div class="fg"><label>${t('Name', 'Имя')}</label><input id="d_name" value="${x(a.name)}"></div>
-      <div class="fg"><label>${t('Phone', 'Телефон')}</label><input id="d_phone" value="${x(a.phone||'')}"></div>
-      <div class="fg"><label>Email</label><input id="d_email" type="email" value="${x(a.email||'')}"></div>
-      <div class="fg"><label>${t('Source', 'Источник')}</label><input id="d_source" value="${x(a.source||'')}"></div>
-      <div class="fg"><label>${t('Status', 'Статус')}</label><select id="d_status">${statusOpts(a.status)}</select></div>
-      <div class="fg"><label>${t('Assign to', 'Назначить')}</label><select id="d_emp"><option value="">${t('— Unassigned —', '— Не назначено —')}</option>${empOpts}</select></div>
-      <div class="fg span2"><label>${t('Comment', 'Комментарий')}</label><textarea id="d_comment">${x(a.comment||'')}</textarea></div>
-    </div>
-    <div class="sec-lbl">${t('Notes', 'Заметки')}</div>
-    <div id="notesList">${renderNotes(notes)}</div>
-    <div class="note-input-row">
-      <input id="noteInput" placeholder="${t('Write a note\u2026', 'Написать заметку\u2026')}">
-      <button class="btn btn-primary btn-sm" onclick="addNote()">${t('Add', 'Добавить')}</button>
-    </div>
-    <div class="sec-lbl">${t('Attachments', 'Вложения')}</div>
-    <div id="attList">${renderAtts(atts)}</div>
-    <input type="file" id="fileInput" style="display:none">
-    <div class="upload-zone" id="uploadZone">
-      <button class="upload-pick-btn" type="button" onclick="document.getElementById('fileInput').click()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
-        ${t('Choose file', 'Выбрать файл')}
-      </button>
-      <span class="upload-filename" id="fileLabel">${t('No file chosen', 'Файл не выбран')}</span>
-      <button class="btn btn-primary btn-sm" onclick="uploadFile()">${t('Upload', 'Загрузить')}</button>
-    </div>
-  `;
+  // Left panel header
+  document.getElementById('caseNum').textContent = `#${a.queue_number||a.id}`;
+  document.getElementById('caseBreadcrumb').textContent = t('Applications','Заявки');
 
-  document.getElementById('drawerFoot').innerHTML = `
-    <button class="btn-trash" onclick="softDelAndClose(${a.id})">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-      ${t('Move to Trash', 'В корзину')}
-    </button>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="closeDrawer()">${t('Cancel', 'Отмена')}</button>
-      <button class="btn btn-primary btn-sm" onclick="saveApp()">${t('Save Changes', 'Сохранить')}</button>
-    </div>
-  `;
-  openDrawer();
-  document.getElementById('noteInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); addNote(); }
+  // Identity
+  document.getElementById('caseAv').textContent = a.name.charAt(0).toUpperCase();
+  document.getElementById('caseName').textContent = a.name;
+  updateCaseStageBtn(a.status);
+
+  // Assignment
+  updateCaseAssignBtn(a.assigned_employee_id, a.assigned_username);
+
+  // Contact fields
+  document.getElementById('cf-phone').textContent = a.phone || '—';
+  document.getElementById('cf-email').textContent = a.email || '—';
+  document.getElementById('cf-source').textContent = a.source || '—';
+  document.getElementById('cf-created').textContent = fd(a.created_at);
+
+  // Age
+  const ageEl = document.getElementById('cf-age');
+  if (ageEl && a.created_at) {
+    const days = Math.floor((Date.now() - new Date(a.created_at)) / 86400000);
+    ageEl.textContent = days === 0 ? t('today','сегодня') : days === 1 ? t('1 day','1 день') : `${days} ${t('days','дней')}`;
+    ageEl.className = 'case-age-val ' + (days >= 7 ? 'age-urgent' : days >= 3 ? 'age-warn' : 'age-ok');
+  }
+
+  // Next stage button
+  updateNextStageBtn(a.status);
+
+  // Compose avatar
+  const av = document.getElementById('composeAv');
+  if (av) av.textContent = currentUsername.charAt(0).toUpperCase();
+
+  // Timeline
+  renderCaseTl();
+}
+
+function updateCaseStageBtn(status) {
+  const btn = document.getElementById('caseStageBtn');
+  if (!btn) return;
+  const labels = { new: t('New','Новая'), in_progress: t('In Progress','В работе'), completed: t('Completed','Завершено'), incomplete: t('Incomplete','Незавершено') };
+  btn.className = `case-stage-btn s-${status}`;
+  btn.querySelector('#caseStageLabel').textContent = labels[status] || status;
+  // Mark active in popover
+  ['new','in_progress','completed','incomplete'].forEach(s => {
+    document.getElementById(`ps-${s}`)?.classList.toggle('active', s === status);
   });
-  document.getElementById('fileInput').addEventListener('change', function () {
-    const label = document.getElementById('fileLabel');
-    const zone  = document.getElementById('uploadZone');
-    if (this.files[0]) {
-      label.textContent = this.files[0].name;
-      label.classList.add('selected');
-      zone.classList.add('has-file');
-    } else {
-      label.textContent = t('No file chosen', 'Файл не выбран');
-      label.classList.remove('selected');
-      zone.classList.remove('has-file');
+}
+
+function updateCaseAssignBtn(empId, empName) {
+  const av   = document.getElementById('caseAssignAv');
+  const name = document.getElementById('caseAssignName');
+  if (!av || !name) return;
+  if (empId && empName) {
+    av.className = 'case-assign-av';
+    av.textContent = x(empName).charAt(0).toUpperCase();
+    name.className = 'case-assign-name';
+    name.textContent = empName;
+  } else {
+    av.className = 'case-assign-av unset';
+    av.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>`;
+    name.className = 'case-assign-name unset';
+    name.textContent = t('Unassigned','Не назначено');
+  }
+}
+
+function updateNextStageBtn(status) {
+  const btn = document.getElementById('nextStageBtn');
+  const txt = document.getElementById('nextStageTxt');
+  if (!btn || !txt) return;
+  const next = { new: 'in_progress', in_progress: 'completed' };
+  const nextLabel = {
+    in_progress: t('Move to In Progress','В работу'),
+    completed:   t('Mark Completed','Завершить'),
+  };
+  const ns = next[status];
+  if (ns) {
+    btn.disabled = false;
+    txt.textContent = nextLabel[ns];
+  } else {
+    btn.disabled = true;
+    txt.textContent = status === 'completed' ? t('Completed ✓','Завершено ✓') : t('No next stage','Нет след. этапа');
+  }
+}
+
+function renderCaseTl() {
+  const el = document.getElementById('caseTl');
+  if (!el) return;
+  const a = caseApp;
+  const events = [];
+
+  events.push({ type:'system', color:'d-blue', text: t('Application created','Заявка создана'), time: a.created_at, sort: new Date(a.created_at||0).getTime() });
+  if (a.comment?.trim()) {
+    events.push({ type:'client-comment', text: a.comment, name: a.name, time: a.created_at, sort: new Date(a.created_at||0).getTime() + 1 });
+  }
+  caseNotes.forEach(n => events.push({ type:'note', id:n.id, text: n.content, author: n.username||'?', time: n.created_at, sort: new Date(n.created_at||0).getTime() }));
+  caseAtts.forEach(att => events.push({ type:'file', id:att.id, name: att.file_name, url:`/api/attachments/${att.id}/view`, author: att.uploaded_by||t('System','Система'), time: att.created_at, sort: new Date(att.created_at||0).getTime() }));
+  events.sort((a,b) => a.sort - b.sort);
+
+  el.innerHTML = events.map(renderCaseTlItem).join('');
+}
+
+function renderCaseTlItem(ev) {
+  const attachSvg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>`;
+  const delSvg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+
+  if (ev.type === 'system') {
+    return `<div class="tl-system">
+      <div class="tl-sys-dot-col"><div class="tl-sys-dot ${ev.color||''}"></div></div>
+      <span class="tl-sys-text">${x(ev.text)}</span>
+      <span class="tl-sys-time">${fd(ev.time)}</span>
+    </div>`;
+  }
+  if (ev.type === 'client-comment') {
+    return `<div class="tl-note">
+      <div class="tl-av tl-av-client">${x(ev.name).charAt(0).toUpperCase()}</div>
+      <div class="tl-note-body">
+        <div class="tl-note-hdr"><span class="tl-client-lbl">${t('Client comment','Комментарий клиента')}</span><span class="tl-note-time" style="margin-left:auto">${fd(ev.time)}</span></div>
+        <p class="tl-note-text">${x(ev.text)}</p>
+      </div>
+    </div>`;
+  }
+  if (ev.type === 'note') {
+    return `<div class="tl-note" id="tl-note-${ev.id}">
+      <div class="tl-av">${x(ev.author).charAt(0).toUpperCase()}</div>
+      <div class="tl-note-body">
+        <div class="tl-note-hdr">
+          <strong class="tl-note-author">${x(ev.author)}</strong>
+          <span class="tl-note-time">${fd(ev.time)}</span>
+          <button class="tl-note-del" onclick="deleteCaseNote(${ev.id})">${delSvg}</button>
+        </div>
+        <p class="tl-note-text">${x(ev.text)}</p>
+      </div>
+    </div>`;
+  }
+  if (ev.type === 'file') {
+    return `<div class="tl-note" id="tl-att-${ev.id}">
+      <div class="tl-av tl-av-file">${attachSvg}</div>
+      <div class="tl-note-body">
+        <div class="tl-note-hdr">
+          <a class="tl-file-link" href="${ev.url}" target="_blank">${x(ev.name)}</a>
+          <span class="tl-note-time" style="margin-left:auto">${fd(ev.time)}</span>
+          <button class="tl-note-del" onclick="deleteCaseAtt(${ev.id})">${delSvg}</button>
+        </div>
+        <span class="tl-file-meta">${x(ev.author)} ${t('attached this file','прикрепил(а) файл')}</span>
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+// Stage popover
+function openStagePopover(e) {
+  e.stopPropagation();
+  if (stagePopOpen) { closeStagePopover(); return; }
+  closeAssignPopover();
+  const btn  = document.getElementById('caseStageBtn');
+  const rect = btn.getBoundingClientRect();
+  const pop  = document.getElementById('stagePopover');
+  pop.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - 210)) + 'px';
+  pop.style.top  = (rect.bottom + 6) + 'px';
+  pop.style.display = 'block';
+  stagePopOpen = true;
+  setTimeout(() => document.addEventListener('click', _closeStagePop), 0);
+}
+function _closeStagePop() { closeStagePopover(); }
+function closeStagePopover() {
+  const p = document.getElementById('stagePopover');
+  if (p) p.style.display = 'none';
+  stagePopOpen = false;
+  document.removeEventListener('click', _closeStagePop);
+}
+
+async function changeStageFromCase(newStatus) {
+  closeStagePopover();
+  if (!caseApp || caseApp.status === newStatus) return;
+  const r = await fetch(`/api/applications/${caseApp.id}`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ ...caseApp, status: newStatus }),
+  });
+  if (r.ok) {
+    caseApp.status = newStatus;
+    updateCaseStageBtn(newStatus);
+    updateNextStageBtn(newStatus);
+    loadApps(); loadStats();
+  }
+}
+
+// Assign popover
+function openAssignPopover(e) {
+  e.stopPropagation();
+  if (assignPopOpen) { closeAssignPopover(); return; }
+  closeStagePopover();
+  const btn  = document.getElementById('caseAssignBtn');
+  const rect = btn.getBoundingClientRect();
+  const pop  = document.getElementById('assignPopover');
+  const emps = employees.filter(emp => emp.role === 'employee');
+  const unassignRow = caseApp?.assigned_employee_id
+    ? `<button class="pop-item" onclick="assignFromCase(null,null)"><span class="pop-dot" style="background:var(--border-dark)"></span>${t('Remove assignment','Снять назначение')}</button><div class="pop-divider"></div>`
+    : '';
+  const empRows = emps.length
+    ? emps.map(emp => `<button class="pop-item${caseApp?.assigned_employee_id==emp.id?' active':''}" onclick="assignFromCase(${emp.id},'${x(emp.username)}')"><div class="case-assign-av" style="width:20px;height:20px;font-size:.6rem;border-radius:6px;background:linear-gradient(145deg,#3b82f6,#1d4ed8);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${x(emp.username).charAt(0).toUpperCase()}</div>${x(emp.username)}</button>`).join('')
+    : `<div class="pop-item" style="color:var(--subtle);cursor:default">${t('No employees','Нет сотрудников')}</div>`;
+  pop.innerHTML = `<div class="pop-lbl" id="popAssignLbl">${t('Assign to','Назначить')}</div>${unassignRow}${empRows}`;
+  pop.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - 210)) + 'px';
+  pop.style.top  = (rect.bottom + 6) + 'px';
+  pop.style.display = 'block';
+  assignPopOpen = true;
+  setTimeout(() => document.addEventListener('click', _closeAssignPop), 0);
+}
+function _closeAssignPop() { closeAssignPopover(); }
+function closeAssignPopover() {
+  const p = document.getElementById('assignPopover');
+  if (p) p.style.display = 'none';
+  assignPopOpen = false;
+  document.removeEventListener('click', _closeAssignPop);
+}
+
+async function assignFromCase(empId, empName) {
+  closeAssignPopover();
+  if (!caseApp) return;
+  const update = { ...caseApp, assigned_employee_id: empId || null };
+  const r = await fetch(`/api/applications/${caseApp.id}`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(update),
+  });
+  if (r.ok) {
+    caseApp.assigned_employee_id = empId || null;
+    caseApp.assigned_username = empName || null;
+    updateCaseAssignBtn(empId, empName);
+    loadApps();
+  }
+}
+
+// Inline field editing (phone, email, source)
+function startCaseEdit(field) {
+  const span = document.getElementById(`cf-${field}`);
+  if (!span || span.tagName === 'INPUT') return;
+  const original = span.textContent === '—' ? '' : span.textContent;
+  const input = document.createElement('input');
+  input.className = 'case-field-input';
+  input.value = original;
+  const save = async () => {
+    const val = input.value.trim();
+    span.textContent = val || '—';
+    input.replaceWith(span);
+    if (val !== original && caseApp) {
+      const update = { ...caseApp, [field]: val };
+      const r = await fetch(`/api/applications/${caseApp.id}`, {
+        method:'PUT', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(update),
+      });
+      if (r.ok) { caseApp[field] = val; loadApps(); }
     }
+  };
+  input.onblur = save;
+  input.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } if (e.key === 'Escape') { input.value = original; input.blur(); } };
+  span.replaceWith(input);
+  input.focus(); input.select();
+}
+
+// Notes
+async function addCaseNote() {
+  const input = document.getElementById('caseNoteInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text || !currentId) return;
+  const btn = document.getElementById('caseNoteBtn');
+  if (btn) btn.disabled = true;
+  const r = await fetch(`/api/applications/${currentId}/notes`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ content: text }),
   });
+  if (btn) btn.disabled = false;
+  if (r.ok) {
+    input.value = ''; input.style.height = '';
+    const nr = await fetch(`/api/applications/${currentId}/notes`);
+    if (nr.ok) { caseNotes = await nr.json(); renderCaseTl(); scrollTlToBottom(); }
+  }
+}
+
+async function deleteCaseNote(noteId) {
+  if (!confirm(t('Delete this note?','Удалить заметку?'))) return;
+  const r = await fetch(`/api/applications/${currentId}/notes/${noteId}`, { method:'DELETE' });
+  if (r.ok) { caseNotes = caseNotes.filter(n => n.id !== noteId); renderCaseTl(); }
+  else {
+    const nr = await fetch(`/api/applications/${currentId}/notes`);
+    if (nr.ok) { caseNotes = await nr.json(); renderCaseTl(); }
+  }
+}
+
+// File upload
+async function caseUploadFile() {
+  const input = document.getElementById('caseFileInput');
+  if (!input?.files.length || !currentId) return;
+  const fd2 = new FormData(); fd2.append('file', input.files[0]);
+  const r = await fetch(`/api/applications/${currentId}/attachments`, { method:'POST', body: fd2 });
+  input.value = '';
+  if (r.ok) {
+    const ar = await fetch(`/api/applications/${currentId}/attachments`);
+    if (ar.ok) { caseAtts = await ar.json(); renderCaseTl(); scrollTlToBottom(); }
+  } else {
+    const d = await r.json().catch(()=>({}));
+    alert(d.error || t('Upload failed.','Ошибка загрузки.'));
+  }
+}
+
+async function deleteCaseAtt(attId) {
+  if (!confirm(t('Delete this file?','Удалить файл?'))) return;
+  const r = await fetch(`/api/attachments/${attId}`, { method:'DELETE' });
+  if (r.ok) { caseAtts = caseAtts.filter(a => a.id !== attId); renderCaseTl(); }
+}
+
+// Action bar
+async function moveToNextStage() {
+  if (!caseApp) return;
+  const next = { new:'in_progress', in_progress:'completed' };
+  const ns = next[caseApp.status];
+  if (ns) await changeStageFromCase(ns);
+}
+
+async function archiveCase() {
+  if (!confirm(t('Move to trash?','Переместить в корзину?'))) return;
+  const r = await fetch(`/api/applications/${currentId}`, { method:'DELETE' });
+  if (r.ok) { closeCase(); await Promise.all([loadApps(), loadStats()]); }
+}
+
+// Helpers
+function scrollTlToBottom() {
+  const s = document.getElementById('caseTlScroll');
+  if (s) setTimeout(() => { s.scrollTop = s.scrollHeight; }, 50);
+}
+
+function caseTaResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
 function openCreate() {
@@ -1440,67 +2108,6 @@ async function saveApp() {
   else { const d = await r.json(); alert(d.error || t('Error saving.', 'Ошибка сохранения.')); }
 }
 
-async function addNote() {
-  const inp = document.getElementById('noteInput');
-  if (!inp.value.trim() || !currentId) return;
-  const btn = document.querySelector('.note-input-row .btn-primary');
-  if (btn) btn.disabled = true;
-  const r = await fetch(`/api/applications/${currentId}/notes`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: inp.value.trim() }),
-  });
-  if (r.ok) {
-    inp.value = '';
-    const nr = await fetch(`/api/applications/${currentId}/notes`);
-    document.getElementById('notesList').innerHTML = renderNotes(await nr.json());
-  }
-  if (btn) btn.disabled = false;
-}
-
-async function uploadFile() {
-  const fi = document.getElementById('fileInput');
-  if (!fi.files.length || !currentId) return;
-  const upBtn = document.querySelector('#uploadZone .btn-primary');
-  if (upBtn) upBtn.disabled = true;
-  const formData = new FormData(); formData.append('file', fi.files[0]);
-  const r = await fetch(`/api/applications/${currentId}/attachments`, { method: 'POST', body: formData });
-  if (r.ok) {
-    fi.value = '';
-    const label = document.getElementById('fileLabel');
-    const zone  = document.getElementById('uploadZone');
-    if (label) { label.textContent = t('No file chosen', 'Файл не выбран'); label.classList.remove('selected'); }
-    if (zone)  zone.classList.remove('has-file');
-    const ar = await fetch(`/api/applications/${currentId}/attachments`);
-    document.getElementById('attList').innerHTML = renderAtts(await ar.json());
-  } else { const d = await r.json(); alert(d.error || t('Upload failed.', 'Ошибка загрузки.')); }
-  if (upBtn) upBtn.disabled = false;
-}
-
-async function delAtt(id) {
-  if (!confirm(t('Delete this attachment?', 'Удалить это вложение?'))) return;
-  const r = await fetch(`/api/attachments/${id}`, { method: 'DELETE' });
-  if (r.ok) document.getElementById(`att-${id}`)?.remove();
-}
-
-function renderNotes(notes) {
-  if (!notes.length) return `<p style="color:var(--subtle);font-size:.82rem;padding:6px 0">${t('No notes yet.', 'Нет заметок.')}</p>`;
-  return notes.map(n => `
-    <div class="note-item">
-      <div class="note-meta"><span class="note-author">${x(n.username)}</span><span>${fd(n.created_at)}</span></div>
-      <div class="note-body">${x(n.content)}</div>
-    </div>`).join('');
-}
-
-function renderAtts(atts) {
-  if (!atts.length) return `<p style="color:var(--subtle);font-size:.82rem;padding:6px 0">${t('No attachments.', 'Нет вложений.')}</p>`;
-  return atts.map(a => `
-    <div class="att-item" id="att-${a.id}">
-      <span class="att-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></span>
-      <a class="att-link" href="/api/attachments/${a.id}/view" target="_blank">${x(a.file_name)}</a>
-      <button class="att-del" onclick="delAtt(${a.id})" title="${t('Delete', 'Удалить')}">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-    </div>`).join('');
-}
 
 function statusOpts(cur) {
   return [
@@ -1580,8 +2187,10 @@ async function drop(e, toStatus) {
 }
 
 function copyBotLink() {
+  closeUserMenu();
   const url = window.location.origin + '/bot';
-  const txtEl = document.getElementById('botLinkTxt');
+  const txtEl = document.getElementById('tnTxtCopyLink');
+  if (!txtEl) { navigator.clipboard.writeText(url).catch(() => {}); return; }
   const prev = txtEl.textContent;
   navigator.clipboard.writeText(url).then(() => {
     txtEl.textContent = t('Link copied!', 'Ссылка скопирована!');
@@ -1589,12 +2198,17 @@ function copyBotLink() {
   }).catch(() => window.open(url, '_blank'));
 }
 
+document.addEventListener('click', (e) => {
+  const userZone = document.getElementById('tnUserAvBtn')?.contains(e.target) || document.getElementById('tnDropdown')?.contains(e.target);
+  if (!userZone) closeUserMenu();
+});
+
 applyLang();
 init();
 
-// Auto-refresh every 5 seconds, but only when the detail drawer is closed and no card is being dragged
+// Auto-refresh every 5 seconds — skip when case workspace is open or user is dragging
 setInterval(() => {
-  if (!document.getElementById('drawer').classList.contains('open') && !isDragging) {
+  if (currentView !== 'case' && !document.getElementById('drawer').classList.contains('open') && !isDragging) {
     loadApps();
     loadStats();
   }
