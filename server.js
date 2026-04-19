@@ -12,6 +12,11 @@ const PORT      = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_API_TOKEN;
 const UPLOADS   = path.join(__dirname, 'uploads');
 
+// Required when running behind Railway's (or any) reverse proxy.
+// Without this, express-session's issecure() check returns false even on HTTPS,
+// so the Set-Cookie header is silently dropped when cookie.secure = true.
+app.set('trust proxy', 1);
+
 if (!fs.existsSync(UPLOADS)) fs.mkdirSync(UPLOADS, { recursive: true });
 
 // ── Session store ─────────────────────────────────────────────────────────────
