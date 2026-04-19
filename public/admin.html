@@ -216,9 +216,78 @@
     .emp-count-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
     .emp-count-val { font-weight:700; min-width:16px; color:var(--text); }
     .emp-no-data { text-align:center; padding:48px; color:var(--subtle); font-size:.88rem; }
+
+    /* ── Mobile adaptation ── */
+    .mob-menu-btn { display:none; }
+    .mob-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:599; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position:fixed; left:-244px; top:0; height:100vh; z-index:600;
+        width:244px; transition:left .25s cubic-bezier(.4,0,.2,1);
+      }
+      .sidebar.mob-open { left:0; }
+      .mob-sidebar-overlay.open { display:block; }
+      .mob-menu-btn {
+        display:flex; align-items:center; justify-content:center;
+        width:36px; height:36px; border:none; background:none; cursor:pointer;
+        color:var(--text); border-radius:7px; flex-shrink:0; padding:0;
+      }
+      .mob-menu-btn svg { width:22px; height:22px; }
+      .mob-menu-btn:hover { background:var(--bg); }
+      .topbar { padding:0 12px; gap:8px; }
+      .topbar-actions { gap:4px; }
+      #openFormBtn span, #botLink span { display:none; }
+      #openFormBtn, #botLink { padding:7px 9px; }
+      .content { padding:14px; }
+      .stats-grid { grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+      .stat-val { font-size:1.6rem; }
+      .stat-card { padding:16px 16px 14px; }
+      .board { flex-direction:column; gap:10px; }
+      .board-col { min-width:unset; }
+      .board-cards { max-height:none; }
+      .filter-pills { flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+      .filter-pills::-webkit-scrollbar { display:none; }
+      .card-hdr { gap:8px; }
+      .search-input { width:100%; min-width:0; }
+      .form-grid { grid-template-columns:1fr; }
+      .fg.span2 { grid-column:span 1; }
+      .drawer {
+        top:auto !important; right:0 !important; left:0;
+        bottom:-100vh; width:100%; max-width:100%; height:92vh;
+        border-radius:16px 16px 0 0;
+        transition:bottom .3s cubic-bezier(.4,0,.2,1) !important;
+      }
+      .drawer.open { bottom:0; }
+      .drawer-hdr { padding:14px 18px; }
+      .drawer-body { padding:18px; }
+      .drawer-foot { padding:12px 18px; }
+      .emp-periods { grid-template-columns:repeat(2,1fr); }
+      .emp-period { border-right:none !important; border-bottom:1px solid var(--border); }
+      .emp-period:nth-child(odd) { border-right:1px solid var(--border) !important; }
+      .emp-period:nth-child(3), .emp-period:nth-child(4) { border-bottom:none; }
+      .emp-stat-card { margin-bottom:10px; }
+      .fg input, .fg select, .fg textarea,
+      .search-input, .note-input-row input { font-size:1rem; }
+      #view-dashboard .table-scroll table,
+      #view-trash .table-scroll table { min-width:520px; }
+      #view-users .table-scroll table { display:block; }
+      #view-users .table-scroll thead { display:none; }
+      #view-users .table-scroll tbody { display:block; }
+      #view-users .table-scroll tr {
+        display:flex; flex-wrap:wrap; align-items:center;
+        padding:12px 16px; border-bottom:1px solid var(--border); gap:8px;
+      }
+      #view-users .table-scroll tr:last-child { border-bottom:none; }
+      #view-users .table-scroll td { border:none; padding:0; }
+      #view-users .table-scroll td:nth-child(1) { flex:1; font-weight:600; }
+      #view-users .table-scroll td:nth-child(3) { display:none; }
+      #view-users .table-scroll td:nth-child(4) { margin-left:auto; }
+    }
   </style>
 </head>
 <body>
+<div class="mob-sidebar-overlay" id="mobOverlay" onclick="closeMobileMenu()"></div>
 <div class="layout">
 
 <aside class="sidebar">
@@ -268,6 +337,9 @@
 
 <div class="main">
   <div class="topbar">
+    <button class="mob-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+    </button>
     <h2 id="viewTitle">Dashboard</h2>
     <div class="topbar-actions">
       <button id="langToggle" onclick="toggleLanguage()">RU</button>
@@ -837,8 +909,18 @@ function updateViewTitle() {
   document.getElementById('viewTitle').textContent = titles[currentView] || currentView;
 }
 
+function toggleMobileMenu() {
+  document.querySelector('.sidebar').classList.toggle('mob-open');
+  document.getElementById('mobOverlay').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.querySelector('.sidebar').classList.remove('mob-open');
+  document.getElementById('mobOverlay').classList.remove('open');
+}
+
 function showView(v) {
   currentView = v;
+  closeMobileMenu();
   ['dashboard','apps','trash','users','empstats'].forEach(n => {
     document.getElementById(`view-${n}`).style.display = n === v ? 'block' : 'none';
     document.getElementById(`nav-${n}`)?.classList.toggle('active', n === v);

@@ -117,6 +117,13 @@
     }
     #langToggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
     #langToggle:active { transform: scale(.95); }
+
+    @media (max-width: 480px) {
+      body { align-items: flex-start; padding: 0; }
+      .card { padding: 32px 20px 24px; border-radius: 0; width: 100%; max-width: 100%; min-height: 100vh; }
+      .field input { font-size: 1rem; }
+      .submit { font-size: 1rem; padding: 13px; }
+    }
   </style>
 </head>
 <body>
