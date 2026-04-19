@@ -137,11 +137,11 @@
       <button type="submit" class="submit" id="submitBtn">Sign In</button>
       <div class="error" id="errorMsg"></div>
     </form>
-    <a class="footer-link" href="/bot.html" id="clientFormLink">Open client form</a>
+    <a class="footer-link" href="/bot" id="clientFormLink">Open client form</a>
   </div>
 
   <script>
-    var lang = localStorage.getItem('lang') || 'en';
+    let lang = localStorage.getItem('lang') || 'en';
 
     function t(en, ru) { return lang === 'ru' ? ru : en; }
 

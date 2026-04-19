@@ -70,7 +70,6 @@ if (!adminExists) {
 // Seed demo data only when the applications table is empty
 const hasApps = Number(db.prepare('SELECT COUNT(*) AS n FROM applications').get().n) > 0;
 if (!hasApps) {
-  // Demo employee
   const empR = db.prepare("INSERT INTO users (username, password, role) VALUES ('demo_employee', ?, 'employee')")
     .run(bcrypt.hashSync('employee123', 10));
   const empId = Number(empR.lastInsertRowid);

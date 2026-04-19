@@ -9,7 +9,7 @@
 
     :root {
       --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
-      --success: #059669; --success-light: #ecfdf5;
+      --success: #059669;
       --warning: #d97706; --warning-light: #fffbeb;
       --danger: #dc2626;  --danger-light: #fef2f2;
       --sidebar: #111827;
@@ -63,8 +63,6 @@
     .btn-ghost   { background:var(--surface); color:var(--text); border:1.5px solid var(--border); }
     .btn-ghost:hover { background:var(--bg); }
     .btn-sm { padding:5px 11px; font-size:.76rem; }
-    .btn-icon { padding:7px; }
-
     .stats-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:22px; }
     .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px 20px; box-shadow:var(--shadow-sm); }
     .stat-label { font-size:.72rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
@@ -232,9 +230,9 @@
     <h2 id="viewTitle">Dashboard</h2>
     <div class="topbar-actions">
       <button id="langToggle" onclick="toggleLanguage()">RU</button>
-      <button class="btn btn-ghost btn-sm" id="botLink" onclick="window.open('/bot.html','_blank')">
+      <button class="btn btn-ghost btn-sm" id="botLink" onclick="copyBotLink()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
-        <span id="botLinkTxt">Client Form</span>
+        <span id="botLinkTxt">Copy Client Link</span>
       </button>
       <button class="btn btn-primary btn-sm" id="newAppBtn" onclick="openCreate()" style="display:none">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
@@ -295,6 +293,7 @@
           <div id="recentEmpty" class="empty-state" style="display:none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
             <p id="recentEmptyMsg">No applications yet.</p>
+            <a href="/bot" target="_blank" id="emptyBotLink" class="btn btn-primary btn-sm" style="margin-top:16px;text-decoration:none">Open client form</a>
           </div>
         </div>
       </div>
@@ -426,7 +425,7 @@
 let allApps = [], employees = [], filterStatus = '', currentId = null, isNew = false;
 let currentView = 'dashboard';
 
-var lang = localStorage.getItem('lang') || 'en';
+let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
 
 function toggleLanguage() {
@@ -449,8 +448,10 @@ function applyLang() {
   document.getElementById('sbSignout').textContent = t('Sign out', 'Выйти');
 
   // Topbar
-  document.getElementById('botLinkTxt').textContent = t('Client Form', 'Форма клиента');
+  document.getElementById('botLinkTxt').textContent = t('Copy Client Link', 'Скопировать ссылку');
   document.getElementById('newAppTxt').textContent = t('New Application', 'Новая заявка');
+  const ebl = document.getElementById('emptyBotLink');
+  if (ebl) ebl.textContent = t('Open client form', 'Открыть форму клиента');
 
   // Stats
   document.getElementById('statLblTotal').textContent = t('Total', 'Всего');
@@ -507,7 +508,6 @@ function applyLang() {
   document.querySelector('#nr option[value="admin"]').textContent = t('Admin', 'Администратор');
   document.getElementById('createUserBtn').textContent = t('Create Account', 'Создать аккаунт');
 
-  // Re-render dynamic content
   updateViewTitle();
   renderApps();
   renderRecent();
@@ -930,8 +930,26 @@ async function logout() {
   location.href = '/login';
 }
 
+function copyBotLink() {
+  const url = window.location.origin + '/bot';
+  const txtEl = document.getElementById('botLinkTxt');
+  const prev = txtEl.textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    txtEl.textContent = t('Link copied!', 'Ссылка скопирована!');
+    setTimeout(() => { txtEl.textContent = prev; }, 2000);
+  }).catch(() => window.open(url, '_blank'));
+}
+
 applyLang();
 init();
+
+// Auto-refresh every 5 seconds, but only when the detail drawer is closed
+setInterval(() => {
+  if (!document.getElementById('drawer').classList.contains('open')) {
+    loadApps();
+    loadStats();
+  }
+}, 5000);
 </script>
 </body>
 </html>

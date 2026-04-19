@@ -307,7 +307,7 @@
 const D = { name: '', phone: '', email: '', comment: '', files: [] };
 let appId = null;
 
-var lang = localStorage.getItem('lang') || 'en';
+let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
 
 function toggleLanguage() {
@@ -646,12 +646,53 @@ async function stepConfirm() {
     { text: t('Shall I submit this?', 'Отправить заявку?'), delay: 700 },
   ]);
   showActions([
-    { label: t('Submit request', 'Отправить'), action: submitApp },
-    { label: t('Start over', 'Начать заново'),  action: startOver  },
+    { label: t('Submit request', 'Отправить заявку'), action: submitApp },
+    { label: t('Edit details', 'Изменить данные'),    action: stepEditDetails },
   ]);
 }
 
+async function stepEditDetails() {
+  await say({ text: t('What would you like to change?', 'Что хотите изменить?'), delay: 400 });
+  showActions([
+    { label: t('Name', 'Имя'),         action: () => stepEditField('name') },
+    { label: t('Phone', 'Телефон'),    action: () => stepEditField('phone') },
+    { label: t('Email', 'Email'),      action: () => stepEditField('email') },
+    { label: t('Message', 'Сообщение'), action: () => stepEditField('comment') },
+    { label: t('Back to summary', 'Вернуться к заявке'), action: stepConfirm },
+  ]);
+}
+
+async function stepEditField(field) {
+  if (field === 'name') {
+    await say({ text: t("What's your name?", 'Как вас зовут?'), delay: 400 });
+    showTextInput({ placeholder: t('Your name\u2026', 'Ваше имя\u2026'), onSend: v => { D.name = v; addUser(v); stepConfirm(); } });
+  } else if (field === 'phone') {
+    await say({ text: t("What's your phone number?", 'Ваш номер телефона?'), delay: 400 });
+    showTextInput({ type: 'tel', placeholder: t('+1 555 000 0000', '+7 999 000 0000'), onSend: v => { D.phone = v; addUser(v); stepConfirm(); } });
+  } else if (field === 'email') {
+    await say({ text: t('Your email address?', 'Ваш email?'), delay: 400 });
+    showTextInput({
+      type: 'email', placeholder: 'your@email.com',
+      onSend: v => { D.email = v; addUser(v); stepConfirm(); },
+      skip: { label: t('No email', 'Нет email'), action: () => { D.email = ''; addUser(t('No email', 'Нет email')); stepConfirm(); } },
+    });
+  } else if (field === 'comment') {
+    await say({ text: t('Describe your request.', 'Опишите ваш запрос.'), delay: 400 });
+    showTextarea({
+      placeholder: t('Describe your request\u2026', 'Опишите запрос\u2026'),
+      onSend: v => { D.comment = v || ''; addUser(v || t('No message', 'Нет сообщения')); stepConfirm(); },
+      skip: { label: t('Skip', 'Пропустить'), action: () => { D.comment = ''; stepConfirm(); } },
+    });
+  }
+}
+
 async function submitApp() {
+  if (!D.name.trim() || !D.phone.trim()) {
+    await say({ text: t('Please provide your name and phone number.', 'Пожалуйста, укажите имя и телефон.'), delay: 400 });
+    showActions([{ label: t('Edit details', 'Изменить данные'), action: stepEditDetails }]);
+    return;
+  }
+
   inputZone.innerHTML = '';
   await say({ text: t('Sending your request\u2026', 'Отправляем заявку\u2026'), delay: 500 });
 
@@ -670,7 +711,7 @@ async function submitApp() {
       const errData = await res.json().catch(() => ({}));
       throw new Error(errData.error || 'HTTP ' + res.status);
     }
-    const { id, queue_number } = await res.json();
+    const { id } = await res.json();
     appId = id;
 
     for (const file of D.files) {
@@ -684,9 +725,8 @@ async function submitApp() {
     }
 
     await say([
-      { text: t('Your request has been submitted!', 'Ваша заявка отправлена!'), delay: 600 },
-      { text: t('Reference number: <strong>#{n}</strong>', 'Номер заявки: <strong>#{n}</strong>').replace('{n}', queue_number), html: true, delay: 800 },
-      { text: t("We'll review it and get back to you as soon as possible.", 'Мы рассмотрим её и свяжемся с вами как можно скорее.'), delay: 900 },
+      { text: t('Thank you for your request!', 'Спасибо за заявку!'), delay: 600 },
+      { text: t('We will contact you soon.', 'Мы скоро с вами свяжемся.'), delay: 800 },
     ]);
     showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
 
@@ -706,11 +746,7 @@ function startOver() {
   stepGreeting();
 }
 
-// Init
-document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
-document.getElementById('hdrName').textContent = t('Request Assistant', 'Помощник по заявкам');
-document.getElementById('hdrOnline').textContent = t('Online', 'Онлайн');
-stepGreeting();
+applyLang();
 </script>
 </body>
 </html>

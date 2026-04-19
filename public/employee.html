@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRM — Dashboard</title>
+  <title>CRM — Employee</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -244,7 +244,7 @@
 <script>
 let allApps = [], filterStatus = '', currentTab = 'all', currentId = null;
 
-var lang = localStorage.getItem('lang') || 'en';
+let lang = localStorage.getItem('lang') || 'en';
 function t(en, ru) { return lang === 'ru' ? ru : en; }
 
 function toggleLanguage() {
@@ -255,43 +255,27 @@ function toggleLanguage() {
 
 function applyLang() {
   document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
-
-  // Sidebar
   document.getElementById('sbSection').textContent = t('Applications', 'Заявки');
   document.getElementById('navTxtAll').textContent = t('All Applications', 'Все заявки');
   document.getElementById('navTxtMine').textContent = t('Assigned to Me', 'Мои заявки');
   document.getElementById('sbRole').textContent = t('Employee', 'Сотрудник');
   document.getElementById('sbSignout').textContent = t('Sign out', 'Выйти');
-
-  // Tab title
   document.getElementById('tabTitle').textContent = currentTab === 'mine' ? t('Assigned to Me', 'Мои заявки') : t('All Applications', 'Все заявки');
-
-  // Filter pills
   document.querySelector('.pill[data-s=""]').textContent = t('All', 'Все');
   document.querySelector('.pill[data-s="new"]').textContent = t('New', 'Новые');
   document.querySelector('.pill[data-s="in_progress"]').textContent = t('In Progress', 'В работе');
   document.querySelector('.pill[data-s="completed"]').textContent = t('Completed', 'Завершено');
   document.querySelector('.pill[data-s="incomplete"]').textContent = t('Incomplete', 'Незавершено');
-
-  // Search
-  var si = document.getElementById('searchInput');
+  const si = document.getElementById('searchInput');
   if (si) si.placeholder = t('Search name or phone\u2026', 'Поиск по имени или телефону\u2026');
-
-  // Table headers
   document.querySelectorAll('.th-name').forEach(el => el.textContent = t('Name', 'Имя'));
   document.querySelectorAll('.th-phone').forEach(el => el.textContent = t('Phone', 'Телефон'));
   document.querySelectorAll('.th-source').forEach(el => el.textContent = t('Source', 'Источник'));
   document.querySelectorAll('.th-status').forEach(el => el.textContent = t('Status', 'Статус'));
   document.querySelectorAll('.th-assigned').forEach(el => el.textContent = t('Assigned', 'Назначено'));
   document.querySelectorAll('.th-date').forEach(el => el.textContent = t('Date', 'Дата'));
-
-  // Empty state
   document.getElementById('appsEmptyMsg').textContent = t('No applications found.', 'Заявки не найдены.');
-
-  // Drawer close button
   document.getElementById('closeDrawerBtn').textContent = t('Close', 'Закрыть');
-
-  // Re-render
   renderApps();
 }
 
@@ -521,6 +505,13 @@ async function logout() {
 
 applyLang();
 init();
+
+// Auto-refresh every 5 seconds, but only when the detail drawer is closed
+setInterval(() => {
+  if (!document.getElementById('drawer').classList.contains('open')) {
+    loadApps();
+  }
+}, 5000);
 </script>
 </body>
 </html>
