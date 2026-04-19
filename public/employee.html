@@ -156,6 +156,7 @@
     }
     #langToggle:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
     #langToggle:active { transform:scale(.95); }
+    .topbar-user-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; flex-shrink:0; letter-spacing:.02em; box-shadow:0 2px 8px rgba(37,99,235,.28); }
 
     /* ── Mobile adaptation ── */
     .mob-menu-btn { display:none; }
@@ -176,6 +177,7 @@
       .mob-menu-btn svg { width:22px; height:22px; }
       .mob-menu-btn:hover { background:var(--bg); }
       .topbar { padding:0 12px; gap:8px; }
+      .topbar-user-av { display:none; }
       .content { padding:14px; }
       .card-hdr { gap:8px; }
       .filter-pills { flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
@@ -252,6 +254,7 @@
     <div class="topbar-actions">
       <button id="langToggle" onclick="toggleLanguage()">RU</button>
     </div>
+    <div class="topbar-user-av" id="topbarAv">?</div>
   </div>
   <div class="content">
     <div class="card">
@@ -354,6 +357,8 @@ async function init() {
   const u = await r.json();
   if (u.role === 'admin') { location.href = '/admin'; return; }
   document.getElementById('sbUsername').textContent = u.username;
+  const topAv = document.getElementById('topbarAv');
+  if (topAv) topAv.textContent = u.username.charAt(0).toUpperCase();
   await loadApps();
 }
 

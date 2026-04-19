@@ -29,6 +29,15 @@
       padding: 20px;
       -webkit-font-smoothing: antialiased;
     }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37,99,235,.13) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .chat-window { position: relative; z-index: 1; }
 
     .chat-window {
       width: 100%;

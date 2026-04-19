@@ -75,6 +75,8 @@
     .stat-label { font-size:.67rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:12px; }
     .stat-val { font-size:2.1rem; font-weight:800; color:var(--text); line-height:1; letter-spacing:-.04em; }
     .stat-sub { font-size:.71rem; color:var(--subtle); margin-top:8px; }
+    .stat-progress { height:3px; background:var(--border); border-radius:99px; margin-top:16px; overflow:hidden; }
+    .stat-progress-fill { height:100%; border-radius:99px; background:var(--card-accent,var(--primary)); width:0%; transition:width .9s cubic-bezier(.4,0,.2,1); }
     .stat-card.s-primary { --card-accent:var(--primary); --si-bg:rgba(37,99,235,.1);   --si-c:var(--primary); } .stat-card.s-primary .stat-val { color:var(--primary); }
     .stat-card.s-blue    { --card-accent:#1d4ed8;          --si-bg:rgba(29,78,216,.1);  --si-c:#1d4ed8; }        .stat-card.s-blue    .stat-val { color:#1d4ed8; }
     .stat-card.s-amber   { --card-accent:var(--warning);   --si-bg:rgba(217,119,6,.1);  --si-c:var(--warning); } .stat-card.s-amber   .stat-val { color:var(--warning); }
@@ -184,6 +186,10 @@
     .role-tag.admin { background:var(--primary-light); color:var(--primary); border-color:rgba(37,99,235,.2); }
     .source-tag { display:inline-flex; font-size:.74rem; font-weight:500; padding:2px 8px; border-radius:5px; background:var(--surface-2); color:var(--muted); border:1px solid var(--border); }
 
+    .topbar-user-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; flex-shrink:0; letter-spacing:.02em; box-shadow:0 2px 8px rgba(37,99,235,.28); }
+    .emp-period-total { font-size:.64rem; color:var(--subtle); text-align:center; margin-top:8px; font-weight:600; letter-spacing:.02em; }
+    .ring-inner { width:38px; height:38px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:800; color:var(--text); letter-spacing:-.01em; }
+
     #langToggle {
       display:inline-flex; align-items:center; justify-content:center;
       padding:5px 12px; border:1.5px solid var(--border); border-radius:20px;
@@ -208,9 +214,18 @@
     .board-col[data-status="in_progress"] .board-col-count { background:#fef3c7; color:#92400e; border-color:#fde68a; }
     .board-col[data-status="completed"] .board-col-count { background:#d1fae5; color:#065f46; border-color:#a7f3d0; }
     .board-col[data-status="incomplete"] .board-col-count { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .board-col[data-status="new"] .board-col-hdr         { background:linear-gradient(135deg,#eff6ff 0%,var(--surface) 70%); }
+    .board-col[data-status="in_progress"] .board-col-hdr { background:linear-gradient(135deg,#fffbeb 0%,var(--surface) 70%); }
+    .board-col[data-status="completed"] .board-col-hdr   { background:linear-gradient(135deg,#ecfdf5 0%,var(--surface) 70%); }
+    .board-col[data-status="incomplete"] .board-col-hdr  { background:linear-gradient(135deg,#fef2f2 0%,var(--surface) 70%); }
     .board-cards { padding:10px; display:flex; flex-direction:column; gap:8px; max-height:62vh; overflow-y:auto; min-height:52px; transition:background .2s; }
-    .bcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:13px 13px 11px; cursor:pointer; transition:box-shadow .2s,border-color .2s,transform .15s; }
+    .bcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:13px 13px 11px; cursor:pointer; transition:box-shadow .2s,border-color .2s,transform .15s; animation:cardIn .18s ease-out both; }
+    @keyframes cardIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
     .bcard:hover { box-shadow:var(--shadow-md); border-color:var(--border-dark); transform:translateY(-1px); }
+    .bcard[data-status="new"]         { border-left:3px solid #3b82f6; padding-left:11px; }
+    .bcard[data-status="in_progress"] { border-left:3px solid #f59e0b; padding-left:11px; }
+    .bcard[data-status="completed"]   { border-left:3px solid #10b981; padding-left:11px; }
+    .bcard[data-status="incomplete"]  { border-left:3px solid #ef4444; padding-left:11px; }
     .bcard-name { font-size:.85rem; font-weight:700; color:var(--text); margin-bottom:3px; letter-spacing:-.01em; }
     .bcard-phone { font-size:.77rem; color:var(--muted); margin-bottom:6px; }
     .bcard-row { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
@@ -235,7 +250,6 @@
     .emp-period-lbl { font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:12px; }
     .emp-ring-row { display:flex; align-items:center; gap:12px; }
     .ring-outer { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,.1); }
-    .ring-inner { width:38px; height:38px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:800; color:var(--text); }
     .emp-counts { display:flex; flex-direction:column; gap:3px; }
     .emp-count-row { font-size:.7rem; color:var(--muted); display:flex; align-items:center; gap:4px; }
     .emp-count-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
@@ -271,6 +285,7 @@
       .topbar-actions { gap:4px; }
       #openFormBtn span, #botLink span { display:none; }
       #openFormBtn, #botLink { padding:7px 9px; }
+      .topbar-user-av { display:none; }
       .content { padding:14px; }
       .stats-grid { grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
       .stat-val { font-size:1.6rem; }
@@ -390,6 +405,7 @@
         <span id="newAppTxt">New Application</span>
       </button>
     </div>
+    <div class="topbar-user-av" id="topbarAv">?</div>
   </div>
 
   <div class="content">
@@ -408,24 +424,28 @@
           <div class="stat-label" id="statLblNew">New</div>
           <div class="stat-val" id="st-new">—</div>
           <div class="stat-sub" id="statSubNew">awaiting action</div>
+          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-new"></div></div>
         </div>
         <div class="stat-card s-amber">
           <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
           <div class="stat-label" id="statLblProgress">In Progress</div>
           <div class="stat-val" id="st-progress">—</div>
           <div class="stat-sub" id="statSubProgress">being handled</div>
+          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-progress"></div></div>
         </div>
         <div class="stat-card s-green">
           <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
           <div class="stat-label" id="statLblCompleted">Completed</div>
           <div class="stat-val" id="st-completed">—</div>
           <div class="stat-sub" id="statSubCompleted">resolved</div>
+          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-completed"></div></div>
         </div>
         <div class="stat-card s-red">
           <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
           <div class="stat-label" id="statLblIncomplete">Incomplete</div>
           <div class="stat-val" id="st-incomplete">—</div>
           <div class="stat-sub" id="statSubIncomplete">needs attention</div>
+          <div class="stat-progress"><div class="stat-progress-fill" id="st-bar-incomplete"></div></div>
         </div>
         <div class="stat-card s-gray">
           <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></div>
@@ -685,6 +705,8 @@ async function init() {
   if (!r.ok) { location.href = '/login'; return; }
   const u = await r.json();
   document.getElementById('sbUsername').textContent = u.username;
+  const topAv = document.getElementById('topbarAv');
+  if (topAv) topAv.textContent = u.username.charAt(0).toUpperCase();
   await Promise.all([loadEmployees(), loadApps(), loadStats()]);
   updateViewTitle();
 }
@@ -699,6 +721,9 @@ async function loadStats() {
   document.getElementById('st-completed').textContent = s.completed;
   document.getElementById('st-incomplete').textContent= s.incomplete;
   document.getElementById('st-trash').textContent     = s.in_trash;
+  const tot = Math.max(s.total, 1);
+  const bars = { 'st-bar-new': s.new, 'st-bar-progress': s.in_progress, 'st-bar-completed': s.completed, 'st-bar-incomplete': s.incomplete };
+  Object.entries(bars).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.style.width = Math.round(val / tot * 100) + '%'; });
 }
 
 async function loadEmployees() {
@@ -748,7 +773,7 @@ function renderApps() {
         ? `draggable="true" ondragstart="dragStart(event,${a.id},'${s}')" ondragend="dragEnd(event)"`
         : '';
       return `
-      <div class="bcard" ${dragCardAttrs} onclick="openDetail(${a.id})">
+      <div class="bcard" data-status="${s}" ${dragCardAttrs} onclick="openDetail(${a.id})">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px">
           <div class="bcard-name">${x(a.name)}</div>
           <span style="font-size:.7rem;color:var(--subtle);white-space:nowrap;padding-top:1px">#${a.queue_number||a.id}</span>
@@ -900,15 +925,16 @@ function renderEmpStats(emps) {
         <div class="emp-period-lbl">${p.label}</div>
         <div class="emp-ring-row">
           <div class="ring-outer" style="background:${ring}">
-            <div class="ring-inner">${s.total}</div>
+            <div class="ring-inner">${s.total > 0 ? pct + '%' : '—'}</div>
           </div>
           <div class="emp-counts">
-            <div class="emp-count-row"><span class="emp-count-dot" style="background:#3b82f6"></span><span class="emp-count-val">${s.new}</span>${t('new','новых')}</div>
-            <div class="emp-count-row"><span class="emp-count-dot" style="background:#f59e0b"></span><span class="emp-count-val">${s.in_progress}</span>${t('in progress','в работе')}</div>
-            <div class="emp-count-row"><span class="emp-count-dot" style="background:#10b981"></span><span class="emp-count-val">${s.completed}</span>${t('done','готово')}</div>
-            <div class="emp-count-row"><span class="emp-count-dot" style="background:#ef4444"></span><span class="emp-count-val">${s.incomplete}</span>${t('incomplete','незавершено')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#3b82f6"></span><span class="emp-count-val">${s.new}</span>${t('new','нов')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#f59e0b"></span><span class="emp-count-val">${s.in_progress}</span>${t('wip','раб')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#10b981"></span><span class="emp-count-val">${s.completed}</span>${t('done','гот')}</div>
+            <div class="emp-count-row"><span class="emp-count-dot" style="background:#ef4444"></span><span class="emp-count-val">${s.incomplete}</span>${t('fail','незав')}</div>
           </div>
         </div>
+        ${s.total > 0 ? `<div class="emp-period-total">${s.total} ${t('total','вс.')}</div>` : ''}
       </div>`;
     }).join('');
     return `<div class="emp-stat-card">
