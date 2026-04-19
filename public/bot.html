@@ -21,12 +21,13 @@
 
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%);
+      background: linear-gradient(145deg, #0c1120 0%, #0f1e38 40%, #130d2e 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .chat-window {
@@ -34,8 +35,8 @@
       max-width: 460px;
       height: min(720px, calc(100svh - 40px));
       background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 32px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06);
+      border-radius: 22px;
+      box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.07);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -188,15 +189,16 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,.1);
     }
     .iz-send {
-      width: 40px; height: 40px;
-      background: var(--primary); color: #fff;
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
       border: none; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; flex-shrink: 0;
-      transition: background .15s, transform .1s;
+      transition: box-shadow .15s, transform .1s;
+      box-shadow: 0 4px 12px rgba(37,99,235,.35);
     }
-    .iz-send:hover { background: var(--primary-dark); }
-    .iz-send:active { transform: scale(.94); }
+    .iz-send:hover { box-shadow: 0 6px 18px rgba(37,99,235,.45); }
+    .iz-send:active { transform: scale(.93); }
     .iz-send svg { width: 17px; height: 17px; }
     .iz-skip-row { text-align: center; margin-top: 8px; }
     .iz-skip-btn {
@@ -225,13 +227,15 @@
     .iz-ta-actions { display: flex; justify-content: space-between; align-items: center; }
     .iz-send-btn {
       padding: 8px 18px;
-      background: var(--primary); color: #fff;
+      background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
       border: none; border-radius: 20px;
       font-size: .84rem; font-weight: 600;
       cursor: pointer; font-family: inherit;
-      transition: background .15s;
+      transition: box-shadow .15s, transform .1s;
+      box-shadow: 0 3px 10px rgba(37,99,235,.3);
     }
-    .iz-send-btn:hover { background: var(--primary-dark); }
+    .iz-send-btn:hover { box-shadow: 0 5px 16px rgba(37,99,235,.4); }
+    .iz-send-btn:active { transform: scale(.97); }
 
     .iz-file-wrap { display: flex; flex-direction: column; gap: 8px; }
     .iz-dz {
@@ -264,17 +268,17 @@
     .iz-actions { display: flex; flex-direction: column; gap: 8px; }
     .iz-action-btn {
       width: 100%;
-      padding: 11px 18px;
+      padding: 12px 18px;
       border: 1.5px solid var(--primary);
-      border-radius: 10px;
+      border-radius: 12px;
       background: transparent;
       color: var(--primary);
       font-size: .88rem; font-weight: 600;
       cursor: pointer; font-family: inherit;
-      transition: background .15s, color .15s;
+      transition: background .15s, color .15s, box-shadow .15s;
       text-align: center;
     }
-    .iz-action-btn:hover { background: var(--primary); color: #fff; }
+    .iz-action-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 
     #langToggle {
       display: inline-flex; align-items: center; justify-content: center;

@@ -13,85 +13,91 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0f172a;
+      background: linear-gradient(145deg, #0c1120 0%, #0f1e38 50%, #0c1120 100%);
       padding: 20px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .card {
       background: #ffffff;
-      border-radius: 14px;
-      padding: 36px 36px 28px;
+      border-radius: 20px;
+      padding: 40px 36px 32px;
       width: 100%;
-      max-width: 380px;
-      box-shadow: 0 24px 48px rgba(0,0,0,.35);
+      max-width: 390px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
     }
 
     .card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
     }
 
     .card-title {
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 800;
       color: #0f172a;
+      letter-spacing: -.03em;
     }
 
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 18px; }
 
     .field label {
       display: block;
-      font-size: .75rem;
-      font-weight: 600;
+      font-size: .68rem;
+      font-weight: 700;
       color: #64748b;
       text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: 6px;
+      letter-spacing: .08em;
+      margin-bottom: 7px;
     }
 
     .field input {
       width: 100%;
-      padding: 10px 13px;
+      padding: 11px 14px;
       border: 1.5px solid #e2e8f0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: .95rem;
       font-family: inherit;
-      color: #1e293b;
+      color: #0f172a;
       outline: none;
-      transition: border-color .15s, box-shadow .15s;
+      transition: border-color .15s, box-shadow .15s, background .15s;
       background: #f8fafc;
     }
 
     .field input:focus {
       border-color: #2563eb;
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
     }
 
     .submit {
       width: 100%;
-      margin-top: 8px;
-      padding: 11px;
-      background: #2563eb;
+      margin-top: 10px;
+      padding: 12px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: .95rem;
-      font-weight: 600;
+      font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      transition: background .15s;
+      transition: box-shadow .15s, transform .1s;
+      box-shadow: 0 4px 14px rgba(37,99,235,.35);
+      letter-spacing: -.01em;
     }
-    .submit:hover { background: #1d4ed8; }
+    .submit:hover { box-shadow: 0 6px 20px rgba(37,99,235,.45); }
+    .submit:active { transform: scale(.98); }
+    .submit:disabled { opacity: .65; cursor: not-allowed; }
 
     .error {
       margin-top: 14px;
-      padding: 9px 13px;
+      padding: 10px 14px;
       background: #fef2f2;
       border: 1px solid #fecaca;
-      border-radius: 7px;
+      border-radius: 9px;
       font-size: .82rem;
       color: #dc2626;
       display: none;
@@ -99,21 +105,22 @@
 
     .footer-link {
       display: block;
-      margin-top: 22px;
+      margin-top: 24px;
       text-align: center;
-      font-size: .8rem;
+      font-size: .79rem;
       color: #94a3b8;
       text-decoration: none;
+      transition: color .15s;
     }
     .footer-link:hover { color: #64748b; }
 
     #langToggle {
       display: inline-flex; align-items: center; justify-content: center;
-      padding: 5px 13px; border: 1.5px solid #e2e8f0; border-radius: 20px;
-      background: #fff; cursor: pointer; font-size: .72rem; font-weight: 700;
+      padding: 5px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      background: #fff; cursor: pointer; font-size: .71rem; font-weight: 700;
       letter-spacing: .06em; color: #64748b; font-family: inherit; line-height: 1;
       transition: border-color .15s, color .15s, background .15s;
-      user-select: none; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+      user-select: none; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,.06);
     }
     #langToggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
     #langToggle:active { transform: scale(.95); }
