@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Environment — never commit secrets
+.env
+
+# SQLite database files — ephemeral on Railway, regenerated on first boot
+crm.db
+crm.db-shm
+crm.db-wal
+
+# Uploaded files — use Railway Volumes for persistence
+uploads/*
+!uploads/.gitkeep

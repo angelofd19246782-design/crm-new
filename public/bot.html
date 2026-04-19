@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Request Assistant</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --bot-bubble: #f0f4ff;
+      --user-bubble: #2563eb;
+      --border: #e8edf3;
+      --text: #1e293b;
+      --muted: #64748b;
+      --subtle: #94a3b8;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .chat-window {
+      width: 100%;
+      max-width: 460px;
+      height: min(720px, calc(100svh - 40px));
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 0; align-items: flex-end; }
+      .chat-window { max-width: 100%; height: 100svh; border-radius: 0; }
+    }
+
+    .hdr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      background: #fff;
+    }
+    .hdr-av {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hdr-av svg { width: 20px; height: 20px; color: #fff; }
+    .hdr-info { flex: 1; }
+    .hdr-name { font-size: .92rem; font-weight: 700; color: var(--text); }
+    .hdr-status { display: flex; align-items: center; gap: 5px; font-size: .73rem; color: var(--muted); margin-top: 1px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
+
+    .msgs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .msgs::-webkit-scrollbar { width: 4px; }
+    .msgs::-webkit-scrollbar-track { background: transparent; }
+    .msgs::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+    .bot-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 4px; }
+    .user-row { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+
+    .msg-av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; align-self: flex-end;
+    }
+    .msg-av svg { width: 13px; height: 13px; color: #fff; }
+    .bot-row.hide-av .msg-av { visibility: hidden; }
+
+    .col { display: flex; flex-direction: column; align-items: flex-start; }
+
+    .bubble {
+      max-width: 300px;
+      padding: 10px 14px;
+      font-size: .88rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .bot-bubble {
+      background: var(--bot-bubble);
+      color: var(--text);
+      border-radius: 18px 18px 18px 4px;
+    }
+    .user-bubble {
+      background: var(--user-bubble);
+      color: #fff;
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    .typing-bubble {
+      background: var(--bot-bubble);
+      border-radius: 18px 18px 18px 4px;
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .typing-bubble span {
+      display: block; width: 7px; height: 7px;
+      border-radius: 50%; background: #94a3b8;
+      animation: bounce 1.3s ease-in-out infinite;
+    }
+    .typing-bubble span:nth-child(2) { animation-delay: .18s; }
+    .typing-bubble span:nth-child(3) { animation-delay: .36s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .sum-card {
+      margin-top: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: .82rem;
+    }
+    .sum-row {
+      display: flex; gap: 10px;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-lbl { font-weight: 600; color: var(--muted); min-width: 64px; flex-shrink: 0; }
+    .sum-val { color: var(--text); word-break: break-word; }
+
+    .files-bubble { display: flex; flex-direction: column; gap: 5px; }
+    .fb-item {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.18);
+      border-radius: 7px; padding: 5px 10px;
+      font-size: .78rem;
+    }
+    .fb-item svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .85; }
+
+    .input-zone {
+      border-top: 1px solid var(--border);
+      padding: 12px 14px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .iz-row { display: flex; gap: 8px; align-items: center; }
+    .iz-input {
+      flex: 1;
+      padding: 10px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      font-size: .88rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #f8fafc;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .iz-input:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+    .iz-send {
+      width: 40px; height: 40px;
+      background: var(--primary); color: #fff;
+      border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      transition: background .15s, transform .1s;
+    }
+    .iz-send:hover { background: var(--primary-dark); }
+    .iz-send:active { transform: scale(.94); }
+    .iz-send svg { width: 17px; height: 17px; }
+    .iz-skip-row { text-align: center; margin-top: 8px; }
+    .iz-skip-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: .78rem; color: var(--muted); font-family: inherit;
+      text-decoration: underline; padding: 0;
+    }
+    .iz-skip-btn:hover { color: var(--text); }
+
+    .iz-ta-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .iz-ta {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      font-size: .88rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #f8fafc;
+      outline: none;
+      resize: none;
+      transition: border-color .15s;
+      line-height: 1.5;
+    }
+    .iz-ta:focus { border-color: var(--primary); background: #fff; }
+    .iz-ta-actions { display: flex; justify-content: space-between; align-items: center; }
+    .iz-send-btn {
+      padding: 8px 18px;
+      background: var(--primary); color: #fff;
+      border: none; border-radius: 20px;
+      font-size: .84rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background .15s;
+    }
+    .iz-send-btn:hover { background: var(--primary-dark); }
+
+    .iz-file-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .iz-dz {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 18px 14px;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+    .iz-dz:hover, .iz-dz.over { border-color: var(--primary); background: var(--primary-light); }
+    .iz-dz input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .dz-icon { color: var(--subtle); margin-bottom: 6px; }
+    .dz-icon svg { width: 22px; height: 22px; }
+    .dz-label { font-size: .82rem; color: var(--text); font-weight: 500; }
+    .dz-hint  { font-size: .73rem; color: var(--subtle); margin-top: 2px; }
+    .iz-flist { display: flex; flex-direction: column; gap: 5px; }
+    .iz-fitem {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--primary-light); border-radius: 8px;
+      padding: 6px 10px; font-size: .8rem; color: var(--text);
+    }
+    .iz-fitem svg { width: 13px; height: 13px; color: var(--primary); flex-shrink: 0; }
+    .iz-fitem span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .iz-fitem button { background: none; border: none; cursor: pointer; color: var(--muted); font-size: .9rem; padding: 0; line-height: 1; flex-shrink: 0; }
+    .iz-fitem button:hover { color: #dc2626; }
+    .iz-file-actions { display: flex; justify-content: space-between; align-items: center; }
+
+    .iz-actions { display: flex; flex-direction: column; gap: 8px; }
+    .iz-action-btn {
+      width: 100%;
+      padding: 11px 18px;
+      border: 1.5px solid var(--primary);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--primary);
+      font-size: .88rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background .15s, color .15s;
+      text-align: center;
+    }
+    .iz-action-btn:hover { background: var(--primary); color: #fff; }
+
+    #langToggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 5px 13px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      background: #fff; cursor: pointer; font-size: .72rem; font-weight: 700;
+      letter-spacing: .06em; color: #64748b; font-family: inherit; line-height: 1;
+      transition: border-color .15s, color .15s, background .15s;
+      user-select: none; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+      flex-shrink: 0;
+    }
+    #langToggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+    #langToggle:active { transform: scale(.95); }
+  </style>
+</head>
+<body>
+<div class="chat-window">
+
+  <div class="hdr">
+    <div class="hdr-av">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+      </svg>
+    </div>
+    <div class="hdr-info">
+      <div class="hdr-name" id="hdrName">Request Assistant</div>
+      <div class="hdr-status"><span class="status-dot"></span><span id="hdrOnline">Online</span></div>
+    </div>
+    <button id="langToggle" onclick="toggleLanguage()">RU</button>
+  </div>
+
+  <div class="msgs" id="msgs"></div>
+  <div class="input-zone" id="inputZone"></div>
+
+</div>
+
+<script>
+const D = { name: '', phone: '', email: '', comment: '', files: [] };
+let appId = null;
+
+var lang = localStorage.getItem('lang') || 'en';
+function t(en, ru) { return lang === 'ru' ? ru : en; }
+
+function toggleLanguage() {
+  lang = lang === 'en' ? 'ru' : 'en';
+  localStorage.setItem('lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+  document.getElementById('hdrName').textContent = t('Request Assistant', 'Помощник по заявкам');
+  document.getElementById('hdrOnline').textContent = t('Online', 'Онлайн');
+  startOver();
+}
+
+const msgsEl    = document.getElementById('msgs');
+const inputZone = document.getElementById('inputZone');
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function scrollDown() {
+  msgsEl.scrollTo({ top: msgsEl.scrollHeight, behavior: 'smooth' });
+}
+
+const AV_HTML = `<div class="msg-av"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div>`;
+
+function addBot(html) {
+  const lastRow = msgsEl.lastElementChild;
+  const hideAv  = lastRow && lastRow.classList.contains('bot-row');
+  const row = document.createElement('div');
+  row.className = 'bot-row' + (hideAv ? ' hide-av' : '');
+  const col = document.createElement('div');
+  col.className = 'col';
+  col.innerHTML = `<div class="bubble bot-bubble">${html}</div>`;
+  row.innerHTML = AV_HTML;
+  row.appendChild(col);
+  msgsEl.appendChild(row);
+  scrollDown();
+}
+
+function addUser(text) {
+  const row = document.createElement('div');
+  row.className = 'user-row';
+  row.innerHTML = `<div class="bubble user-bubble">${esc(text)}</div>`;
+  msgsEl.appendChild(row);
+  scrollDown();
+}
+
+function addUserRaw(html) {
+  const row = document.createElement('div');
+  row.className = 'user-row';
+  row.innerHTML = `<div class="bubble user-bubble">${html}</div>`;
+  msgsEl.appendChild(row);
+  scrollDown();
+}
+
+function showTyping() {
+  if (document.getElementById('typing-row')) return;
+  const row = document.createElement('div');
+  row.id = 'typing-row';
+  row.className = 'bot-row';
+  row.innerHTML = `${AV_HTML}<div class="col"><div class="typing-bubble"><span></span><span></span><span></span></div></div>`;
+  msgsEl.appendChild(row);
+  scrollDown();
+}
+function hideTyping() { document.getElementById('typing-row')?.remove(); }
+
+function showActions(buttons) {
+  const wrap = document.createElement('div');
+  wrap.className = 'iz-actions';
+  buttons.forEach(({ label, action }) => {
+    const btn = document.createElement('button');
+    btn.className = 'iz-action-btn';
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      inputZone.innerHTML = '';
+      addUser(label);
+      if (action) action();
+    });
+    wrap.appendChild(btn);
+  });
+  inputZone.innerHTML = '';
+  inputZone.appendChild(wrap);
+}
+
+async function say(items) {
+  inputZone.innerHTML = '';
+  for (const item of (Array.isArray(items) ? items : [items])) {
+    const text  = typeof item === 'string' ? item : item.text;
+    const html  = item.html ? text : esc(text);
+    const delay = item.delay != null ? item.delay : Math.min(400 + text.length * 14, 1400);
+    showTyping();
+    await sleep(delay);
+    hideTyping();
+    addBot(html);
+  }
+}
+
+function showTextInput({ type = 'text', placeholder = '', onSend, skip }) {
+  inputZone.innerHTML = `
+    <div class="iz-row">
+      <input class="iz-input" id="izIn" type="${type}" placeholder="${esc(placeholder)}" autocomplete="off">
+      <button class="iz-send" id="izSend" aria-label="Send">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+        </svg>
+      </button>
+    </div>
+    ${skip ? `<div class="iz-skip-row"><button class="iz-skip-btn" id="izSkip">${esc(skip.label)}</button></div>` : ''}
+  `;
+  const inp = document.getElementById('izIn');
+  inp.focus();
+
+  const submit = () => {
+    const v = inp.value.trim();
+    if (!v) { inp.style.borderColor = '#ef4444'; setTimeout(() => inp.style.borderColor = '', 400); return; }
+    inputZone.innerHTML = '';
+    onSend(v);
+  };
+
+  document.getElementById('izSend').addEventListener('click', submit);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
+
+  if (skip) {
+    document.getElementById('izSkip')?.addEventListener('click', () => {
+      inputZone.innerHTML = '';
+      skip.action();
+    });
+  }
+}
+
+function showTextarea({ placeholder = '', onSend, skip }) {
+  inputZone.innerHTML = `
+    <div class="iz-ta-wrap">
+      <textarea class="iz-ta" id="izTa" placeholder="${esc(placeholder)}" rows="3"></textarea>
+      <div class="iz-ta-actions">
+        ${skip ? `<button class="iz-skip-btn" id="izSkip">${esc(skip.label)}</button>` : '<span></span>'}
+        <button class="iz-send-btn" id="izSend">${esc(t('Send', 'Отправить'))}</button>
+      </div>
+    </div>
+  `;
+  const ta = document.getElementById('izTa');
+  ta.focus();
+
+  document.getElementById('izSend').addEventListener('click', () => {
+    inputZone.innerHTML = '';
+    onSend(ta.value.trim() || null);
+  });
+  document.getElementById('izSkip')?.addEventListener('click', () => {
+    inputZone.innerHTML = '';
+    if (skip) skip.action();
+  });
+}
+
+function showFileInput({ onDone, onSkip }) {
+  let selected = [];
+
+  inputZone.innerHTML = `
+    <div class="iz-file-wrap">
+      <div class="iz-dz" id="izDz">
+        <input type="file" id="izFiles" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt">
+        <div class="dz-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+          </svg>
+        </div>
+        <div class="dz-label">${esc(t('Drop files here or click to upload', 'Перетащите файлы или нажмите для выбора'))}</div>
+        <div class="dz-hint">${esc(t('PDF, Word, images \u00b7 max 10\u00a0MB each', 'PDF, Word, изображения \u00b7 макс. 10\u00a0МБ'))}</div>
+      </div>
+      <div class="iz-flist" id="izFlist"></div>
+      <div class="iz-file-actions">
+        <button class="iz-skip-btn" id="izSkip">${esc(t('Skip, no files', 'Пропустить'))}</button>
+        <button class="iz-send-btn" id="izDone" disabled>${esc(t('Continue', 'Продолжить'))}</button>
+      </div>
+    </div>
+  `;
+
+  const dz      = document.getElementById('izDz');
+  const fileIn  = document.getElementById('izFiles');
+  const flist   = document.getElementById('izFlist');
+  const doneBtn = document.getElementById('izDone');
+
+  function renderList() {
+    flist.innerHTML = selected.map((f, i) => `
+      <div class="iz-fitem">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+        </svg>
+        <span>${esc(f.name)}</span>
+        <button data-i="${i}" aria-label="Remove">&#x2715;</button>
+      </div>`).join('');
+    flist.querySelectorAll('button[data-i]').forEach(btn =>
+      btn.addEventListener('click', () => { selected.splice(+btn.dataset.i, 1); renderList(); updateDone(); })
+    );
+  }
+
+  function updateDone() { doneBtn.disabled = selected.length === 0; }
+
+  function addFiles(files) {
+    for (const f of files) {
+      if (!selected.find(x => x.name === f.name && x.size === f.size)) selected.push(f);
+    }
+    renderList(); updateDone();
+  }
+
+  fileIn.addEventListener('change', () => { addFiles(fileIn.files); fileIn.value = ''; });
+  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); addFiles(e.dataTransfer.files); });
+
+  doneBtn.addEventListener('click', () => {
+    inputZone.innerHTML = '';
+    D.files = selected;
+    onDone(selected);
+  });
+  document.getElementById('izSkip').addEventListener('click', () => {
+    inputZone.innerHTML = '';
+    onSkip();
+  });
+}
+
+/* ── Flow steps ── */
+
+async function stepGreeting() {
+  await say([
+    { text: t("Hi! I'm your request assistant.", 'Привет! Я ваш помощник по заявкам.'), delay: 700 },
+    { text: t("I'll help you submit a request \u2014 it only takes a minute.", 'Я помогу вам отправить заявку \u2014 это займёт всего минуту.'), delay: 1000 },
+    { text: t('Ready to get started?', 'Готовы начать?'), delay: 700 },
+  ]);
+  showActions([{ label: t('Get started', 'Начать'), action: stepName }]);
+}
+
+async function stepName() {
+  await say({ text: t("What's your full name?", 'Как вас зовут?'), delay: 500 });
+  showTextInput({
+    placeholder: t('Your name\u2026', 'Ваше имя\u2026'),
+    onSend: v => { D.name = v; addUser(v); stepPhone(); },
+  });
+}
+
+async function stepPhone() {
+  await say({ text: t("Nice to meet you, {name}! What's your phone number?", 'Приятно познакомиться, {name}! Какой у вас номер телефона?').replace('{name}', D.name), delay: 700 });
+  showTextInput({
+    type: 'tel',
+    placeholder: t('+1 555 000 0000', '+7 999 000 0000'),
+    onSend: v => { D.phone = v; addUser(v); stepEmail(); },
+  });
+}
+
+async function stepEmail() {
+  await say({ text: t('Any email address we can reach you at?', 'Есть ли у вас email для связи?'), delay: 600 });
+  showTextInput({
+    type: 'email',
+    placeholder: t('your@email.com', 'your@email.com'),
+    onSend: v => { D.email = v; addUser(v); stepComment(); },
+    skip: {
+      label: t('Skip, no email', 'Пропустить, нет email'),
+      action: () => { addUser(t('No email', 'Нет email')); stepComment(); },
+    },
+  });
+}
+
+async function stepComment() {
+  await say({ text: t("What's your request or question? Describe it briefly.", 'Опишите ваш запрос или вопрос.'), delay: 700 });
+  showTextarea({
+    placeholder: t('Describe your request\u2026', 'Опишите запрос\u2026'),
+    onSend: v => {
+      D.comment = v || '';
+      addUser(v ? (v.length > 80 ? v.slice(0, 80) + '\u2026' : v) : t('No message', 'Нет сообщения'));
+      stepFiles();
+    },
+    skip: {
+      label: t('Skip', 'Пропустить'),
+      action: () => { addUser(t('No message', 'Нет сообщения')); stepFiles(); },
+    },
+  });
+}
+
+async function stepFiles() {
+  await say([
+    { text: t('Would you like to attach any files?', 'Хотите прикрепить файлы?'), delay: 600 },
+    { text: t('Documents, photos, or anything relevant.', 'Документы, фото или другие материалы.'), delay: 700 },
+  ]);
+  showActions([
+    { label: t('Attach files', 'Прикрепить файлы'), action: showFileStep },
+    { label: t('No, skip', 'Нет, пропустить'), action: () => { D.files = []; addUser(t('No files', 'Без файлов')); stepConfirm(); } },
+  ]);
+}
+
+function showFileStep() {
+  showFileInput({
+    onDone: files => {
+      const filesHtml = `
+        <div class="files-bubble">
+          <div style="font-size:.78rem;opacity:.8;margin-bottom:4px">${t('{n} file(s) selected', 'Файлов: {n}').replace('{n}', files.length)}</div>
+          ${files.slice(0, 5).map(f => `
+            <div class="fb-item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+              </svg>
+              <span>${esc(f.name)}</span>
+            </div>`).join('')}
+          ${files.length > 5 ? `<div style="font-size:.74rem;opacity:.7">+ ${files.length - 5} more</div>` : ''}
+        </div>`;
+      addUserRaw(filesHtml);
+      stepConfirm();
+    },
+    onSkip: () => {
+      D.files = [];
+      stepConfirm();
+    },
+  });
+}
+
+async function stepConfirm() {
+  const emailVal   = D.email   || t('Not provided', 'Не указано');
+  const commentVal = D.comment || t('Not provided', 'Не указано');
+  const filesVal   = D.files.length ? t('{n} file(s) selected', 'Файлов: {n}').replace('{n}', D.files.length) : t('None', 'Нет');
+
+  const summaryHtml = `${esc(t("Here's what I have:", 'Вот что я записал:'))}
+    <div class="sum-card">
+      <div class="sum-row"><span class="sum-lbl">${esc(t('Name', 'Имя'))}</span><span class="sum-val">${esc(D.name)}</span></div>
+      <div class="sum-row"><span class="sum-lbl">${esc(t('Phone', 'Телефон'))}</span><span class="sum-val">${esc(D.phone)}</span></div>
+      <div class="sum-row"><span class="sum-lbl">Email</span><span class="sum-val">${esc(emailVal)}</span></div>
+      <div class="sum-row"><span class="sum-lbl">${esc(t('Message', 'Сообщение'))}</span><span class="sum-val">${esc(commentVal.length > 80 ? commentVal.slice(0,80)+'\u2026' : commentVal)}</span></div>
+      <div class="sum-row"><span class="sum-lbl">${esc(t('Files', 'Файлы'))}</span><span class="sum-val">${esc(filesVal)}</span></div>
+    </div>`;
+
+  await say([
+    { text: summaryHtml, html: true, delay: 800 },
+    { text: t('Shall I submit this?', 'Отправить заявку?'), delay: 700 },
+  ]);
+  showActions([
+    { label: t('Submit request', 'Отправить'), action: submitApp },
+    { label: t('Start over', 'Начать заново'),  action: startOver  },
+  ]);
+}
+
+async function submitApp() {
+  inputZone.innerHTML = '';
+  await say({ text: t('Sending your request\u2026', 'Отправляем заявку\u2026'), delay: 500 });
+
+  try {
+    const res = await fetch('/api/intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:    D.name,
+        phone:   D.phone,
+        email:   D.email   || null,
+        comment: D.comment || null,
+      }),
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || 'HTTP ' + res.status);
+    }
+    const { id, queue_number } = await res.json();
+    appId = id;
+
+    for (const file of D.files) {
+      const fd = new FormData();
+      fd.append('file', file);
+      const upRes = await fetch(`/api/intake/${id}/attachment`, { method: 'POST', body: fd });
+      if (!upRes.ok) {
+        const upErr = await upRes.json().catch(() => ({}));
+        console.warn('File upload failed:', file.name, upErr.error || upRes.status);
+      }
+    }
+
+    await say([
+      { text: t('Your request has been submitted!', 'Ваша заявка отправлена!'), delay: 600 },
+      { text: t('Reference number: <strong>#{n}</strong>', 'Номер заявки: <strong>#{n}</strong>').replace('{n}', queue_number), html: true, delay: 800 },
+      { text: t("We'll review it and get back to you as soon as possible.", 'Мы рассмотрим её и свяжемся с вами как можно скорее.'), delay: 900 },
+    ]);
+    showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
+
+  } catch (err) {
+    console.error('Submit error:', err);
+    await say({ text: t('Something went wrong: ', 'Ошибка: ') + err.message, delay: 500 });
+    showActions([{ label: t('Try again', 'Повторить'), action: submitApp }]);
+  }
+}
+
+function startOver() {
+  D.name = D.phone = D.email = D.comment = '';
+  D.files = [];
+  appId   = null;
+  msgsEl.innerHTML    = '';
+  inputZone.innerHTML = '';
+  stepGreeting();
+}
+
+// Init
+document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+document.getElementById('hdrName').textContent = t('Request Assistant', 'Помощник по заявкам');
+document.getElementById('hdrOnline').textContent = t('Online', 'Онлайн');
+stepGreeting();
+</script>
+</body>
+</html>

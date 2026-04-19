@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — CRM</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      padding: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 36px 36px 28px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 48px rgba(0,0,0,.35);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .field { margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-family: inherit;
+      color: #1e293b;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      background: #f8fafc;
+    }
+
+    .field input:focus {
+      border-color: #2563eb;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+
+    .submit {
+      width: 100%;
+      margin-top: 8px;
+      padding: 11px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .submit:hover { background: #1d4ed8; }
+
+    .error {
+      margin-top: 14px;
+      padding: 9px 13px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 7px;
+      font-size: .82rem;
+      color: #dc2626;
+      display: none;
+    }
+
+    .footer-link {
+      display: block;
+      margin-top: 22px;
+      text-align: center;
+      font-size: .8rem;
+      color: #94a3b8;
+      text-decoration: none;
+    }
+    .footer-link:hover { color: #64748b; }
+
+    #langToggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 5px 13px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      background: #fff; cursor: pointer; font-size: .72rem; font-weight: 700;
+      letter-spacing: .06em; color: #64748b; font-family: inherit; line-height: 1;
+      transition: border-color .15s, color .15s, background .15s;
+      user-select: none; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    #langToggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+    #langToggle:active { transform: scale(.95); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-top">
+      <div class="card-title" id="loginTitle">Sign In</div>
+      <button id="langToggle" onclick="toggleLanguage()">RU</button>
+    </div>
+    <form id="loginForm">
+      <div class="field">
+        <label id="lblUsername">Username</label>
+        <input type="text" id="username" autocomplete="username" placeholder="Enter username" required>
+      </div>
+      <div class="field">
+        <label id="lblPassword">Password</label>
+        <input type="password" id="password" autocomplete="current-password" placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="submit" id="submitBtn">Sign In</button>
+      <div class="error" id="errorMsg"></div>
+    </form>
+    <a class="footer-link" href="/bot.html" id="clientFormLink">Open client form</a>
+  </div>
+
+  <script>
+    var lang = localStorage.getItem('lang') || 'en';
+
+    function t(en, ru) { return lang === 'ru' ? ru : en; }
+
+    function toggleLanguage() {
+      lang = lang === 'en' ? 'ru' : 'en';
+      localStorage.setItem('lang', lang);
+      applyLang();
+    }
+
+    function applyLang() {
+      document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+      document.getElementById('loginTitle').textContent = t('Sign In', 'Вход');
+      document.getElementById('lblUsername').textContent = t('Username', 'Имя пользователя');
+      document.getElementById('lblPassword').textContent = t('Password', 'Пароль');
+      document.getElementById('submitBtn').textContent = t('Sign In', 'Войти');
+      document.getElementById('username').placeholder = t('Enter username', 'Введите имя');
+      document.getElementById('password').placeholder = t('Enter password', 'Введите пароль');
+      document.getElementById('clientFormLink').textContent = t('Open client form', 'Открыть форму клиента');
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('errorMsg');
+      errEl.style.display = 'none';
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error || t('Login failed', 'Ошибка входа'); errEl.style.display = 'block'; return; }
+        window.location.href = data.role === 'admin' ? '/admin' : '/employee';
+      } catch (_) {
+        errEl.textContent = t('Connection error. Please try again.', 'Ошибка соединения. Попробуйте снова.');
+        errEl.style.display = 'block';
+      }
+    });
+
+    applyLang();
+  </script>
+</body>
+</html>

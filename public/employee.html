@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM — Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+      --success: #059669; --danger: #dc2626; --danger-light: #fef2f2;
+      --sidebar: #111827;
+      --bg: #f8fafc; --surface: #fff;
+      --border: #e2e8f0;
+      --text: #1e293b; --muted: #64748b; --subtle: #94a3b8;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+      --r: 8px; --r-lg: 12px;
+    }
+
+    body { font-family: system-ui,-apple-system,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); }
+
+    .layout { display:flex; height:100vh; overflow:hidden; }
+    .sidebar { width:224px; background:var(--sidebar); display:flex; flex-direction:column; flex-shrink:0; }
+    .main    { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+    .sb-brand { padding:20px 20px 16px; border-bottom:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:10px; }
+    .sb-logo { width:32px; height:32px; background:var(--primary); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+    .sb-logo svg { width:18px; height:18px; color:#fff; }
+    .sb-name { font-size:.95rem; font-weight:700; color:#f1f5f9; }
+    .sb-section { padding:16px 12px 4px; font-size:.65rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:.08em; }
+    .sb-nav { padding:4px 12px; }
+    .nav-btn { display:flex; align-items:center; gap:10px; width:100%; padding:9px 10px; border:none; background:none; border-radius:7px; cursor:pointer; color:#94a3b8; font-size:.84rem; font-weight:500; font-family:inherit; transition:background .15s, color .15s; text-align:left; }
+    .nav-btn svg { width:16px; height:16px; flex-shrink:0; }
+    .nav-btn:hover { background:rgba(255,255,255,.06); color:#e2e8f0; }
+    .nav-btn.active { background:rgba(37,99,235,.18); color:#93c5fd; }
+    .sb-footer { margin-top:auto; padding:16px 20px; border-top:1px solid rgba(255,255,255,.06); }
+    .sb-user { font-size:.8rem; color:#94a3b8; margin-bottom:10px; }
+    .sb-user strong { display:block; color:#e2e8f0; font-size:.85rem; margin-bottom:1px; }
+    .sb-signout { display:flex; align-items:center; gap:7px; background:none; border:none; cursor:pointer; color:#64748b; font-size:.8rem; font-family:inherit; padding:0; transition:color .15s; }
+    .sb-signout:hover { color:#f87171; }
+    .sb-signout svg { width:14px; height:14px; }
+
+    .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; height:56px; display:flex; align-items:center; gap:16px; flex-shrink:0; }
+    .topbar h2 { font-size:.95rem; font-weight:700; flex:1; }
+    .topbar-actions { display:flex; gap:8px; align-items:center; }
+
+    .content { flex:1; overflow-y:auto; padding:24px; }
+
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+    .card-hdr { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .card-hdr h3 { font-size:.88rem; font-weight:700; flex:1; }
+
+    .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border:none; border-radius:7px; font-size:.84rem; font-weight:600; cursor:pointer; font-family:inherit; transition:background .15s; }
+    .btn svg { width:15px; height:15px; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-primary:hover { background:var(--primary-dark); }
+    .btn-ghost { background:var(--surface); color:var(--text); border:1.5px solid var(--border); }
+    .btn-ghost:hover { background:var(--bg); }
+    .btn-sm { padding:5px 11px; font-size:.76rem; }
+
+    .filter-pills { display:flex; gap:6px; flex-wrap:wrap; }
+    .pill { padding:5px 14px; border-radius:99px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; font-size:.78rem; font-weight:600; color:var(--muted); transition:all .15s; font-family:inherit; }
+    .pill:hover { color:var(--text); }
+    .pill.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+
+    .search-wrap { position:relative; }
+    .search-wrap svg { position:absolute; left:10px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--subtle); pointer-events:none; }
+    .search-input { padding:7px 12px 7px 32px; border:1.5px solid var(--border); border-radius:7px; font-size:.84rem; width:200px; outline:none; font-family:inherit; color:var(--text); background:var(--surface); }
+    .search-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.08); }
+
+    .table-scroll { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.84rem; }
+    th { padding:10px 16px; text-align:left; font-size:.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; background:#fafafa; border-bottom:1px solid var(--border); white-space:nowrap; }
+    td { padding:11px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#f8fafc; }
+    tbody tr.clickable { cursor:pointer; }
+
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:.72rem; font-weight:700; white-space:nowrap; }
+    .badge-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .badge-new         { background:#dbeafe; color:#1e40af; } .badge-new .badge-dot { background:#3b82f6; }
+    .badge-in_progress { background:#fef3c7; color:#92400e; } .badge-in_progress .badge-dot { background:#f59e0b; }
+    .badge-completed   { background:#d1fae5; color:#065f46; } .badge-completed .badge-dot { background:#10b981; }
+    .badge-incomplete  { background:#fee2e2; color:#991b1b; } .badge-incomplete .badge-dot { background:#ef4444; }
+
+    .empty-state { text-align:center; padding:56px 24px; }
+    .empty-state svg { width:40px; height:40px; color:var(--subtle); margin:0 auto 12px; display:block; }
+    .empty-state p { font-size:.88rem; color:var(--muted); }
+
+    .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:700; display:none; backdrop-filter:blur(1px); }
+    .drawer-backdrop.open { display:block; }
+    .drawer { position:fixed; top:0; right:-560px; width:540px; max-width:96vw; height:100vh; background:var(--surface); box-shadow:-12px 0 48px rgba(0,0,0,.16); z-index:800; display:flex; flex-direction:column; transition:right .28s cubic-bezier(.4,0,.2,1); }
+    .drawer.open { right:0; }
+    .drawer-hdr { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; flex-shrink:0; background:var(--surface); }
+    .drawer-hdr h3 { font-size:1rem; font-weight:700; flex:1; color:var(--text); }
+    .drawer-close { background:none; border:none; cursor:pointer; color:var(--muted); padding:6px; border-radius:7px; display:flex; transition:background .15s,color .15s; }
+    .drawer-close:hover { background:var(--bg); color:var(--text); }
+    .drawer-close svg { width:18px; height:18px; }
+    .drawer-body { flex:1; overflow-y:auto; padding:24px; }
+    .drawer-foot { padding:16px 24px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; align-items:center; flex-shrink:0; background:var(--surface); }
+
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:4px; }
+    .info-row { display:flex; flex-direction:column; gap:4px; }
+    .info-lbl { font-size:.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+    .info-val { font-size:.9rem; color:var(--text); }
+    .info-val.comment-box { background:var(--bg); border-radius:9px; padding:12px 14px; font-size:.86rem; line-height:1.55; white-space:pre-wrap; margin-top:6px; grid-column:span 2; border:1px solid var(--border); }
+
+    .status-row { display:flex; gap:8px; align-items:center; margin-top:4px; }
+    .status-row select { padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:.875rem; outline:none; font-family:inherit; flex:1; background:#fafbfc; transition:border-color .15s,box-shadow .15s; cursor:pointer; }
+    .status-row select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.08); background:#fff; }
+
+    .sec-lbl { font-size:.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin:28px 0 12px; display:flex; align-items:center; gap:10px; }
+    .sec-lbl::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .note-item { background:var(--bg); border-radius:10px; padding:12px 14px; margin-bottom:8px; border:1px solid transparent; }
+    .note-item:last-child { margin-bottom:0; }
+    .note-meta { font-size:.72rem; color:var(--muted); margin-bottom:5px; display:flex; gap:8px; align-items:center; }
+    .note-author { font-weight:700; color:var(--text); }
+    .note-body { font-size:.85rem; line-height:1.55; white-space:pre-wrap; color:var(--text); }
+    .note-input-row { display:flex; gap:8px; align-items:center; margin-top:12px; }
+    .note-input-row input { flex:1; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:.875rem; outline:none; font-family:inherit; color:var(--text); background:#fafbfc; transition:border-color .15s,box-shadow .15s; }
+    .note-input-row input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.08); background:#fff; }
+
+    .att-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; background:var(--bg); margin-bottom:6px; border:1px solid var(--border); transition:border-color .15s; }
+    .att-item:last-child { margin-bottom:0; }
+    .att-item:hover { border-color:var(--border-dark, #cbd5e1); }
+    .att-icon { color:var(--primary); flex-shrink:0; opacity:.7; }
+    .att-icon svg { width:16px; height:16px; }
+    .att-link { flex:1; color:var(--text); text-decoration:none; font-size:.84rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .att-link:hover { color:var(--primary); }
+
+    .upload-zone { display:flex; align-items:center; gap:10px; padding:12px 14px; border:2px dashed var(--border); border-radius:10px; background:#fafbfc; transition:border-color .2s,background .2s; margin-top:10px; }
+    .upload-zone.has-file { border-color:var(--primary); border-style:solid; background:var(--primary-light); }
+    .upload-pick-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid #cbd5e1; border-radius:7px; background:var(--surface); cursor:pointer; font-size:.8rem; font-weight:600; color:var(--text); font-family:inherit; transition:all .15s; white-space:nowrap; flex-shrink:0; }
+    .upload-pick-btn:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
+    .upload-pick-btn svg { width:14px; height:14px; }
+    .upload-filename { flex:1; font-size:.82rem; color:var(--subtle); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .upload-filename.selected { color:var(--text); font-weight:500; }
+
+    #langToggle {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:5px 13px; border:1.5px solid #e2e8f0; border-radius:20px;
+      background:#fff; cursor:pointer; font-size:.72rem; font-weight:700;
+      letter-spacing:.06em; color:#64748b; font-family:inherit; line-height:1;
+      transition:border-color .15s,color .15s,background .15s;
+      user-select:none; white-space:nowrap; box-shadow:0 1px 2px rgba(0,0,0,.04);
+    }
+    #langToggle:hover { border-color:#2563eb; color:#2563eb; background:#eff6ff; }
+    #langToggle:active { transform:scale(.95); }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/></svg>
+    </div>
+    <span class="sb-name">CRM</span>
+  </div>
+
+  <div class="sb-section" id="sbSection">Applications</div>
+  <div class="sb-nav">
+    <button class="nav-btn active" id="nav-all" onclick="switchTab('all')">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+      <span id="navTxtAll">All Applications</span>
+    </button>
+    <button class="nav-btn" id="nav-mine" onclick="switchTab('mine')">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+      <span id="navTxtMine">Assigned to Me</span>
+    </button>
+  </div>
+
+  <div class="sb-footer">
+    <div class="sb-user"><strong id="sbUsername">—</strong><span id="sbRole">Employee</span></div>
+    <button class="sb-signout" onclick="logout()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+      <span id="sbSignout">Sign out</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <h2 id="tabTitle">All Applications</h2>
+    <div class="topbar-actions">
+      <button id="langToggle" onclick="toggleLanguage()">RU</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="filter-pills">
+          <button class="pill active" data-s="" onclick="setFilter('')">All</button>
+          <button class="pill" data-s="new"         onclick="setFilter('new')">New</button>
+          <button class="pill" data-s="in_progress" onclick="setFilter('in_progress')">In Progress</button>
+          <button class="pill" data-s="completed"   onclick="setFilter('completed')">Completed</button>
+          <button class="pill" data-s="incomplete"  onclick="setFilter('incomplete')">Incomplete</button>
+        </div>
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+          <input class="search-input" id="searchInput" placeholder="Search name or phone…" oninput="renderApps()">
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th>#</th>
+            <th class="th-name">Name</th>
+            <th class="th-phone">Phone</th>
+            <th class="th-source">Source</th>
+            <th class="th-status">Status</th>
+            <th class="th-assigned">Assigned</th>
+            <th class="th-date">Date</th>
+          </tr></thead>
+          <tbody id="appsBody"></tbody>
+        </table>
+        <div id="appsEmpty" class="empty-state" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+          <p id="appsEmptyMsg">No applications found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="drawer-backdrop" id="drawerBack" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <h3 id="drawerTitle">Application</h3>
+    <button class="drawer-close" onclick="closeDrawer()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-ghost btn-sm" id="closeDrawerBtn" onclick="closeDrawer()">Close</button>
+  </div>
+</div>
+
+<script>
+let allApps = [], filterStatus = '', currentTab = 'all', currentId = null;
+
+var lang = localStorage.getItem('lang') || 'en';
+function t(en, ru) { return lang === 'ru' ? ru : en; }
+
+function toggleLanguage() {
+  lang = lang === 'en' ? 'ru' : 'en';
+  localStorage.setItem('lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  document.getElementById('langToggle').textContent = lang === 'en' ? 'RU' : 'EN';
+
+  // Sidebar
+  document.getElementById('sbSection').textContent = t('Applications', 'Заявки');
+  document.getElementById('navTxtAll').textContent = t('All Applications', 'Все заявки');
+  document.getElementById('navTxtMine').textContent = t('Assigned to Me', 'Мои заявки');
+  document.getElementById('sbRole').textContent = t('Employee', 'Сотрудник');
+  document.getElementById('sbSignout').textContent = t('Sign out', 'Выйти');
+
+  // Tab title
+  document.getElementById('tabTitle').textContent = currentTab === 'mine' ? t('Assigned to Me', 'Мои заявки') : t('All Applications', 'Все заявки');
+
+  // Filter pills
+  document.querySelector('.pill[data-s=""]').textContent = t('All', 'Все');
+  document.querySelector('.pill[data-s="new"]').textContent = t('New', 'Новые');
+  document.querySelector('.pill[data-s="in_progress"]').textContent = t('In Progress', 'В работе');
+  document.querySelector('.pill[data-s="completed"]').textContent = t('Completed', 'Завершено');
+  document.querySelector('.pill[data-s="incomplete"]').textContent = t('Incomplete', 'Незавершено');
+
+  // Search
+  var si = document.getElementById('searchInput');
+  if (si) si.placeholder = t('Search name or phone\u2026', 'Поиск по имени или телефону\u2026');
+
+  // Table headers
+  document.querySelectorAll('.th-name').forEach(el => el.textContent = t('Name', 'Имя'));
+  document.querySelectorAll('.th-phone').forEach(el => el.textContent = t('Phone', 'Телефон'));
+  document.querySelectorAll('.th-source').forEach(el => el.textContent = t('Source', 'Источник'));
+  document.querySelectorAll('.th-status').forEach(el => el.textContent = t('Status', 'Статус'));
+  document.querySelectorAll('.th-assigned').forEach(el => el.textContent = t('Assigned', 'Назначено'));
+  document.querySelectorAll('.th-date').forEach(el => el.textContent = t('Date', 'Дата'));
+
+  // Empty state
+  document.getElementById('appsEmptyMsg').textContent = t('No applications found.', 'Заявки не найдены.');
+
+  // Drawer close button
+  document.getElementById('closeDrawerBtn').textContent = t('Close', 'Закрыть');
+
+  // Re-render
+  renderApps();
+}
+
+async function init() {
+  const r = await fetch('/auth/me');
+  if (!r.ok) { location.href = '/login'; return; }
+  const u = await r.json();
+  if (u.role === 'admin') { location.href = '/admin'; return; }
+  document.getElementById('sbUsername').textContent = u.username;
+  await loadApps();
+}
+
+async function loadApps() {
+  const qs = currentTab === 'mine' ? '?assigned_to_me=1' : '';
+  const r  = await fetch('/api/applications' + qs);
+  if (r.ok) allApps = await r.json();
+  renderApps();
+}
+
+function renderApps() {
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const list = allApps.filter(a => {
+    if (filterStatus && a.status !== filterStatus) return false;
+    if (q && !a.name.toLowerCase().includes(q) && !(a.phone||'').includes(q)) return false;
+    return true;
+  });
+  const tbody = document.getElementById('appsBody');
+  const empty = document.getElementById('appsEmpty');
+  tbody.innerHTML = '';
+  if (empty) empty.style.display = list.length ? 'none' : 'block';
+  list.forEach(a => {
+    const tr = document.createElement('tr');
+    tr.className = 'clickable';
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:.78rem">#${a.queue_number||a.id}</td>
+      <td style="font-weight:600">${x(a.name)}</td>
+      <td style="color:var(--muted)">${x(a.phone||'—')}</td>
+      <td><span style="font-size:.75rem;background:var(--bg);border-radius:4px;padding:2px 7px;color:var(--muted)">${x(a.source||'—')}</span></td>
+      <td><span class="badge badge-${a.status}"><span class="badge-dot"></span>${sl(a.status)}</span></td>
+      <td style="color:var(--muted)">${x(a.assigned_username||'—')}</td>
+      <td style="color:var(--muted);font-size:.78rem;white-space:nowrap">${fd(a.created_at)}</td>`;
+    tr.addEventListener('click', () => openDetail(a.id));
+    tbody.appendChild(tr);
+  });
+}
+
+function setFilter(s) {
+  filterStatus = s;
+  document.querySelectorAll('.pill').forEach(b => b.classList.toggle('active', b.dataset.s === s));
+  renderApps();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('nav-all').classList.toggle('active', tab === 'all');
+  document.getElementById('nav-mine').classList.toggle('active', tab === 'mine');
+  document.getElementById('tabTitle').textContent = tab === 'mine' ? t('Assigned to Me', 'Мои заявки') : t('All Applications', 'Все заявки');
+  loadApps();
+}
+
+async function openDetail(id) {
+  currentId = id;
+  const [rApp, rNotes, rAtts] = await Promise.all([
+    fetch(`/api/applications/${id}`),
+    fetch(`/api/applications/${id}/notes`),
+    fetch(`/api/applications/${id}/attachments`),
+  ]);
+  const a     = await rApp.json();
+  const notes = rNotes.ok ? await rNotes.json() : [];
+  const atts  = rAtts.ok  ? await rAtts.json()  : [];
+
+  document.getElementById('drawerTitle').textContent = `#${a.queue_number||a.id} — ${a.name}`;
+
+  document.getElementById('drawerBody').innerHTML = `
+    <div class="info-grid">
+      <div class="info-row"><span class="info-lbl">${t('Name', 'Имя')}</span><span class="info-val">${x(a.name)}</span></div>
+      <div class="info-row"><span class="info-lbl">${t('Phone', 'Телефон')}</span><span class="info-val">${x(a.phone||'—')}</span></div>
+      <div class="info-row"><span class="info-lbl">Email</span><span class="info-val">${x(a.email||'—')}</span></div>
+      <div class="info-row"><span class="info-lbl">${t('Source', 'Источник')}</span><span class="info-val">${x(a.source||'—')}</span></div>
+      <div class="info-row"><span class="info-lbl">${t('Assigned', 'Назначено')}</span><span class="info-val">${x(a.assigned_username||'—')}</span></div>
+      <div class="info-row"><span class="info-lbl">${t('Date', 'Дата')}</span><span class="info-val">${fd(a.created_at)}</span></div>
+    </div>
+    ${a.comment ? `<div class="info-val comment-box">${x(a.comment)}</div>` : ''}
+
+    <div class="sec-lbl">${t('Update Status', 'Обновить статус')}</div>
+    <div class="status-row">
+      <select id="statusSel">${statusOpts(a.status)}</select>
+      <button class="btn btn-primary btn-sm" onclick="updateStatus()">${t('Save Changes', 'Сохранить')}</button>
+    </div>
+
+    <div class="sec-lbl">${t('Notes', 'Заметки')}</div>
+    <div id="notesList">${renderNotes(notes)}</div>
+    <div class="note-input-row">
+      <input id="noteInput" placeholder="${t('Write a note\u2026', 'Написать заметку\u2026')}">
+      <button class="btn btn-primary btn-sm" onclick="addNote()">${t('Add', 'Добавить')}</button>
+    </div>
+
+    <div class="sec-lbl">${t('Attachments', 'Вложения')}</div>
+    <div id="attList">${renderAtts(atts)}</div>
+    <input type="file" id="fileInput" style="display:none">
+    <div class="upload-zone" id="uploadZone">
+      <button class="upload-pick-btn" type="button" onclick="document.getElementById('fileInput').click()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+        ${t('Choose file', 'Выбрать файл')}
+      </button>
+      <span class="upload-filename" id="fileLabel">${t('No file chosen', 'Файл не выбран')}</span>
+      <button class="btn btn-primary btn-sm" onclick="uploadFile()">${t('Upload', 'Загрузить')}</button>
+    </div>
+  `;
+
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBack').classList.add('open');
+  document.getElementById('noteInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addNote(); }
+  });
+  document.getElementById('fileInput').addEventListener('change', function () {
+    const label = document.getElementById('fileLabel');
+    const zone  = document.getElementById('uploadZone');
+    if (this.files[0]) {
+      label.textContent = this.files[0].name;
+      label.classList.add('selected');
+      zone.classList.add('has-file');
+    } else {
+      label.textContent = t('No file chosen', 'Файл не выбран');
+      label.classList.remove('selected');
+      zone.classList.remove('has-file');
+    }
+  });
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBack').classList.remove('open');
+  loadApps();
+}
+
+async function updateStatus() {
+  const btn = document.querySelector('.status-row .btn-primary');
+  const status = document.getElementById('statusSel').value;
+  const res = await fetch(`/api/applications/${currentId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }),
+  });
+  if (res.ok) {
+    if (btn) {
+      btn.textContent = t('Saved', 'Сохранено');
+      btn.style.background = '#16a34a';
+      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; }, 1500);
+    }
+  } else {
+    if (btn) {
+      btn.textContent = t('Error', 'Ошибка');
+      btn.style.background = '#dc2626';
+      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; }, 2000);
+    }
+  }
+}
+
+async function addNote() {
+  const inp = document.getElementById('noteInput');
+  if (!inp.value.trim() || !currentId) return;
+  const r = await fetch(`/api/applications/${currentId}/notes`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: inp.value.trim() }),
+  });
+  if (r.ok) {
+    inp.value = '';
+    const nr = await fetch(`/api/applications/${currentId}/notes`);
+    document.getElementById('notesList').innerHTML = renderNotes(await nr.json());
+  }
+}
+
+async function uploadFile() {
+  const fi = document.getElementById('fileInput');
+  if (!fi.files.length || !currentId) return;
+  const formData = new FormData(); formData.append('file', fi.files[0]);
+  const r = await fetch(`/api/applications/${currentId}/attachments`, { method: 'POST', body: formData });
+  if (r.ok) {
+    fi.value = '';
+    const label = document.getElementById('fileLabel');
+    const zone  = document.getElementById('uploadZone');
+    if (label) { label.textContent = t('No file chosen', 'Файл не выбран'); label.classList.remove('selected'); }
+    if (zone)  zone.classList.remove('has-file');
+    const ar = await fetch(`/api/applications/${currentId}/attachments`);
+    document.getElementById('attList').innerHTML = renderAtts(await ar.json());
+  } else { const d = await r.json(); alert(d.error || t('Upload failed.', 'Ошибка загрузки.')); }
+}
+
+function renderNotes(notes) {
+  if (!notes.length) return `<p style="color:var(--subtle);font-size:.82rem;padding:6px 0">${t('No notes yet.', 'Нет заметок.')}</p>`;
+  return notes.map(n => `
+    <div class="note-item">
+      <div class="note-meta"><span class="note-author">${x(n.username)}</span><span>${fd(n.created_at)}</span></div>
+      <div class="note-body">${x(n.content)}</div>
+    </div>`).join('');
+}
+function renderAtts(atts) {
+  if (!atts.length) return `<p style="color:var(--subtle);font-size:.82rem;padding:6px 0">${t('No attachments.', 'Нет вложений.')}</p>`;
+  return atts.map(a => `
+    <div class="att-item">
+      <span class="att-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></span>
+      <a class="att-link" href="/api/attachments/${a.id}/view" target="_blank">${x(a.file_name)}</a>
+    </div>`).join('');
+}
+function statusOpts(cur) {
+  return [
+    ['new',         t('New', 'Новый')],
+    ['in_progress', t('In Progress', 'В работе')],
+    ['completed',   t('Completed', 'Завершено')],
+    ['incomplete',  t('Incomplete', 'Незавершено')],
+  ].map(([v, l]) => `<option value="${v}" ${cur === v ? 'selected' : ''}>${l}</option>`).join('');
+}
+function x(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sl(s) {
+  const map = { new: t('New','Новый'), in_progress: t('In Progress','В работе'), completed: t('Completed','Завершено'), incomplete: t('Incomplete','Незавершено') };
+  return map[s] || s;
+}
+function fd(dt) {
+  if (!dt) return '—';
+  return new Date(dt).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
+}
+async function logout() {
+  await fetch('/auth/logout', { method: 'POST' });
+  location.href = '/login';
+}
+
+applyLang();
+init();
+</script>
+</body>
+</html>
