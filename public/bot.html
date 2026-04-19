@@ -714,6 +714,7 @@ async function submitApp() {
     const { id } = await res.json();
     appId = id;
 
+    const failedUploads = [];
     for (const file of D.files) {
       const fd = new FormData();
       fd.append('file', file);
@@ -721,13 +722,18 @@ async function submitApp() {
       if (!upRes.ok) {
         const upErr = await upRes.json().catch(() => ({}));
         console.warn('File upload failed:', file.name, upErr.error || upRes.status);
+        failedUploads.push(file.name);
       }
     }
 
-    await say([
+    const successMsgs = [
       { text: t('Thank you for your request!', 'Спасибо за заявку!'), delay: 600 },
       { text: t('We will contact you soon.', 'Мы скоро с вами свяжемся.'), delay: 800 },
-    ]);
+    ];
+    if (failedUploads.length) {
+      successMsgs.push({ text: t('Note: some files could not be uploaded: ', 'Примечание: не удалось загрузить: ') + failedUploads.map(esc).join(', '), delay: 600 });
+    }
+    await say(successMsgs);
     showActions([{ label: t('Submit another request', 'Отправить ещё одну заявку'), action: startOver }]);
 
   } catch (err) {

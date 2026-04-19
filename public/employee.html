@@ -343,6 +343,7 @@ async function openDetail(id) {
     fetch(`/api/applications/${id}/notes`),
     fetch(`/api/applications/${id}/attachments`),
   ]);
+  if (!rApp.ok) return;
   const a     = await rApp.json();
   const notes = rNotes.ok ? await rNotes.json() : [];
   const atts  = rAtts.ok  ? await rAtts.json()  : [];
@@ -415,6 +416,7 @@ function closeDrawer() {
 async function updateStatus() {
   const btn = document.querySelector('.status-row .btn-primary');
   const status = document.getElementById('statusSel').value;
+  if (btn) btn.disabled = true;
   const res = await fetch(`/api/applications/${currentId}`, {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }),
   });
@@ -422,13 +424,13 @@ async function updateStatus() {
     if (btn) {
       btn.textContent = t('Saved', 'Сохранено');
       btn.style.background = '#16a34a';
-      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; }, 1500);
+      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; btn.disabled = false; }, 1500);
     }
   } else {
     if (btn) {
       btn.textContent = t('Error', 'Ошибка');
       btn.style.background = '#dc2626';
-      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; }, 2000);
+      setTimeout(() => { btn.textContent = t('Save Changes', 'Сохранить'); btn.style.background = ''; btn.disabled = false; }, 2000);
     }
   }
 }
@@ -436,6 +438,8 @@ async function updateStatus() {
 async function addNote() {
   const inp = document.getElementById('noteInput');
   if (!inp.value.trim() || !currentId) return;
+  const btn = document.querySelector('.note-input-row .btn-primary');
+  if (btn) btn.disabled = true;
   const r = await fetch(`/api/applications/${currentId}/notes`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: inp.value.trim() }),
   });
@@ -444,11 +448,14 @@ async function addNote() {
     const nr = await fetch(`/api/applications/${currentId}/notes`);
     document.getElementById('notesList').innerHTML = renderNotes(await nr.json());
   }
+  if (btn) btn.disabled = false;
 }
 
 async function uploadFile() {
   const fi = document.getElementById('fileInput');
   if (!fi.files.length || !currentId) return;
+  const upBtn = document.querySelector('#uploadZone .btn-primary');
+  if (upBtn) upBtn.disabled = true;
   const formData = new FormData(); formData.append('file', fi.files[0]);
   const r = await fetch(`/api/applications/${currentId}/attachments`, { method: 'POST', body: formData });
   if (r.ok) {
@@ -460,6 +467,7 @@ async function uploadFile() {
     const ar = await fetch(`/api/applications/${currentId}/attachments`);
     document.getElementById('attList').innerHTML = renderAtts(await ar.json());
   } else { const d = await r.json(); alert(d.error || t('Upload failed.', 'Ошибка загрузки.')); }
+  if (upBtn) upBtn.disabled = false;
 }
 
 function renderNotes(notes) {

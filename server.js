@@ -161,6 +161,10 @@ app.get('/api/applications/:id', requireAuth, (req, res) => {
 app.post('/api/applications', requireAdmin, (req, res) => {
   const { source, external_id, name, phone, email, comment, status, assigned_employee_id } = req.body;
   if (!name?.trim()) return res.status(400).json({ error: 'Name is required' });
+  if (name.trim().length > 200)  return res.status(400).json({ error: 'Name too long' });
+  if (phone   && phone.length   > 50)   return res.status(400).json({ error: 'Phone too long' });
+  if (email   && email.length   > 254)  return res.status(400).json({ error: 'Email too long' });
+  if (comment && comment.length > 5000) return res.status(400).json({ error: 'Message too long' });
   const VALID = ['new', 'in_progress', 'completed', 'incomplete'];
   const queueNum = (Number(db.prepare('SELECT MAX(queue_number) AS m FROM applications').get().m) || 0) + 1;
   const result = db.prepare(`INSERT INTO applications (source,external_id,name,phone,email,comment,status,assigned_employee_id,queue_number)
@@ -183,6 +187,10 @@ app.put('/api/applications/:id', requireAuth, (req, res) => {
   }
 
   const { source, name, phone, email, comment, status, assigned_employee_id } = req.body;
+  if (name    !== undefined && String(name).trim().length  > 200)  return res.status(400).json({ error: 'Name too long' });
+  if (phone   !== undefined && String(phone).length        > 50)   return res.status(400).json({ error: 'Phone too long' });
+  if (email   !== undefined && String(email).length        > 254)  return res.status(400).json({ error: 'Email too long' });
+  if (comment !== undefined && String(comment).length      > 5000) return res.status(400).json({ error: 'Message too long' });
   const assignedId = assigned_employee_id !== undefined ? (assigned_employee_id||null) : existing.assigned_employee_id;
   db.prepare(`UPDATE applications SET source=?,name=?,phone=?,email=?,comment=?,status=?,assigned_employee_id=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`)
     .run(source??existing.source, name??existing.name, phone??existing.phone, email??existing.email,
@@ -231,7 +239,7 @@ app.get('/api/attachments/:id/view', requireAuth, (req, res) => {
   const att = db.prepare('SELECT * FROM attachments WHERE id=?').get(req.params.id);
   if (!att || !fs.existsSync(att.file_path)) return res.status(404).json({ error: 'Not found' });
   res.setHeader('Content-Type', att.mime_type || 'application/octet-stream');
-  res.setHeader('Content-Disposition', `inline; filename="${att.file_name}"`);
+  res.setHeader('Content-Disposition', `inline; filename="${att.file_name.replace(/"/g, '')}"`);
   res.sendFile(path.resolve(att.file_path));
 });
 
@@ -254,6 +262,8 @@ app.get('/api/users', requireAdmin, (req, res) =>
 app.post('/api/users', requireAdmin, (req, res) => {
   const { username, password, role } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  if (username.length > 50)  return res.status(400).json({ error: 'Username too long' });
+  if (password.length > 200) return res.status(400).json({ error: 'Password too long' });
   if (!['admin','employee'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
   if (db.prepare('SELECT id FROM users WHERE username=?').get(username))
     return res.status(409).json({ error: 'Username already exists' });
@@ -271,11 +281,16 @@ app.delete('/api/users/:id', requireAdmin, (req, res) => {
 // ── Public web intake (no auth — for bot.html) ────────────────────────────────
 app.post('/api/intake', (req, res) => {
   const { name, phone, email, comment } = req.body;
-  if (!name?.trim()) return res.status(400).json({ error: 'Name is required' });
+  if (!name?.trim())  return res.status(400).json({ error: 'Name is required' });
+  if (!phone?.trim()) return res.status(400).json({ error: 'Phone is required' });
+  if (name.trim().length  > 200)  return res.status(400).json({ error: 'Name too long' });
+  if (phone.trim().length > 50)   return res.status(400).json({ error: 'Phone too long' });
+  if (email   && email.length   > 254)  return res.status(400).json({ error: 'Email too long' });
+  if (comment && comment.length > 5000) return res.status(400).json({ error: 'Message too long' });
   const queueNum = (Number(db.prepare('SELECT MAX(queue_number) AS m FROM applications').get().m) || 0) + 1;
   const result = db.prepare(`INSERT INTO applications (source,name,phone,email,comment,status,queue_number)
     VALUES ('web_form',?,?,?,?,'new',?)`)
-    .run(name.trim(), phone||null, email||null, comment||null, queueNum);
+    .run(name.trim(), phone.trim(), email||null, comment||null, queueNum);
   res.json({ id: Number(result.lastInsertRowid), queue_number: queueNum });
 });
 
@@ -292,6 +307,10 @@ app.post('/api/intake/:id/attachment', upload.single('file'), (req, res) => {
 app.post('/api/bot/application', requireBotToken, (req, res) => {
   const { source, external_id, name, phone, email, comment } = req.body;
   if (!name?.trim()) return res.status(400).json({ error: 'Name is required' });
+  if (name.trim().length  > 200)  return res.status(400).json({ error: 'Name too long' });
+  if (phone   && phone.length   > 50)   return res.status(400).json({ error: 'Phone too long' });
+  if (email   && email.length   > 254)  return res.status(400).json({ error: 'Email too long' });
+  if (comment && comment.length > 5000) return res.status(400).json({ error: 'Message too long' });
   if (external_id) {
     const dupe = db.prepare('SELECT id FROM applications WHERE external_id=?').get(external_id);
     if (dupe) return res.json({ id: Number(dupe.id), duplicate: true });
